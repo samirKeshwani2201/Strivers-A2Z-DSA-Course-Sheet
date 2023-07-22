@@ -827,7 +827,331 @@ using namespace std;
 
 // Notice that the solution set must not contain duplicate triplets.
 
-vector<vector<int>> threeSum(vector<int> &nums)
+// vector<vector<int>> threeSum(vector<int> &nums)
+// {
+//     vector<vector<int>> ans;
+//     sort(nums.begin(), nums.end());
+//     for (int i = 0; i < nums.size() - 2; i++)
+//     {
+//         if (i == 0 || (i > 0 && nums[i] != nums[i - 1]))
+//         {
+//             int lo = i + 1;
+//             int hi = nums.size() - 1;
+//             while (lo < hi)
+//             {
+//                 if (nums[i] + nums[lo] + nums[hi] == 0)
+//                 {
+//                     vector<int> temp;
+//                     temp.push_back(nums[i]);
+//                     temp.push_back(nums[lo]);
+//                     temp.push_back(nums[hi]);
+//                     ans.push_back(temp);
+//                     while (lo < hi && nums[lo] == nums[lo + 1])
+//                         lo++;
+//                     while (lo < hi && nums[hi] == nums[hi - 1])
+//                         hi--;
+//                     lo++;
+//                     hi--;
+//                 }
+//                 else if (nums[i] + nums[lo] + nums[hi] < 0)
+//                 {
+//                     lo++;
+//                 }
+//                 else
+//                 {
+//                     hi--;
+//                 }
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// vector<vector<int>> threeSum(vector<int> &nums)
+// {
+//     set<vector<int>> an;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         set<int> hashset;
+//         for (int j = i + 1; j < nums.size(); j++)
+//         {
+//             int third = -1 * (nums[i] + nums[j]);
+//             if (hashset.find(third) != hashset.end())
+//             {
+//                 vector<int> temp = {nums[i],
+//                                     nums[j],
+//                                     third};
+//                 sort(temp.begin(), temp.end());
+//                 an.insert(temp);
+//             }
+//             hashset.insert(nums[j]);
+//         }
+//     }
+//     vector<vector<int>> ans(an.begin(), an.end());
+//     return ans;
+// }
+
+// // using hashmap:
+
+// vector<vector<int>> threeSum(vector<int> &nums)
+// {
+//     vector<vector<int>> ans;
+//     sort(nums.begin(), nums.end());
+//     if (nums.size() < 3)
+//     {
+//         return {};
+//     }
+//     if (nums[0] > 0)
+//     {
+//         return {};
+//     }
+//     unordered_map<int, int> mp;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         mp[nums[i]] = i;
+//     }
+//     for (int i = 0; i < nums.size() - 2; i++)
+//     {
+//         if (nums[i] > 0)
+//             return ans;
+//         for (int j = i + 1; j < nums.size() - 1; j++)
+//         {
+//             int target = -(nums[i] + nums[j]);
+//             if (mp.count(target) && mp.find(target)->second > j)
+//             {
+//                 ans.push_back({nums[i], nums[j], target});
+//             }
+// j = mp.find(nums[j])->second;
+//         }
+//         i = mp.find(nums[i])->second;
+//     }
+//     return ans;
+// }
+
+// Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+
+// 0 <= a, b, c, d < n
+// a, b, c, and d are distinct.
+// nums[a] + nums[b] + nums[c] + nums[d] == target
+// You may return the answer in any order.
+
+// vector<vector<int>> fourSum(vector<int> &nums, int target)
+// {
+//     sort(nums.begin(), nums.end());
+//     vector<vector<int>> ans;
+//     if (nums.size() < 4)
+//         return {};
+//     for (int i = 0; i < nums.size() - 3; i++)
+//     {
+//         for (int j = i + 1; j < nums.size() - 2; j++)
+//         {
+//             int lo = j + 1;
+//             int hi = nums.size() - 1;
+//             while (lo < hi)
+//             {
+//                 if ((long long)nums[i] + (long long)nums[j] + (long long)nums[lo] + (long long)nums[hi] == target)
+//                 {
+//                     ans.push_back({nums[i], nums[lo], nums[j], nums[hi]});
+//                     while (lo < hi && nums[lo] == nums[lo + 1])
+//                         lo++;
+//                     while (lo < hi && nums[hi] == nums[hi - 1])
+//                         hi--;
+//                     lo++;
+//                     hi--;
+//                 }
+//                 else if ((long long)nums[i] + (long long)nums[j] + (long long)nums[lo] + (long long)nums[hi] < target)
+//                 {
+//                     lo++;
+//                 }
+//                 else
+//                 {
+//                     hi--;
+//                 }
+//             }
+//             while (j + 1 < nums.size() && nums[j] == nums[j + 1])
+//                 j++;
+//         }
+//         while (i + 1 < nums.size() && nums[i] == nums[i + 1])
+//             i++;
+//     }
+//     return ans;
+// }
+
+// vector<vector<int>> fourSum(vector<int> &nums, int target)
+// {
+//     vector<vector<int>> ans;
+//     sort(nums.begin(), nums.end());
+//     if (nums.size() < 4)
+//     {
+//         return {};
+//     }
+//     unordered_map<int, int> mp;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         mp[nums[i]] = i;
+//     }
+//     for (int i = 0; i < nums.size() - 2; i++)
+//     {
+//         for (int j = i + 1; j < nums.size() - 1; j++)
+//         {
+//             for (int k = j + 1; k < nums.size(); k++)
+//             {
+//                 long long tar = nums[i];
+//                 tar += nums[j];
+//                 tar += nums[k];
+//                 if (mp.count(target - tar) && mp.find(target - tar)->second > k)
+//                 {
+//                     ans.push_back({nums[i], nums[j], nums[k], target - (int)tar});
+//                 }
+//                 k = mp.find(nums[k])->second;
+//             }
+//             j = mp.find(nums[j])->second;
+//         }
+//         i = mp.find(nums[i])->second;
+//     }
+//     return ans;
+// }
+
+// // For k Sum :
+
+// vector<vector<int>> twoSum(vector<int> &nums, int target, int si)
+// {
+//     int n = nums.size();
+//     vector<vector<int>> res;
+//     if (n - si < 2)
+//     {
+//         return res;
+//     }
+//     int left = si;
+//     int right = n - 1;
+//     while (left < right)
+//     {
+//         if (left != si && nums[left] == nums[left - 1])
+//         {
+//             left++;
+//             continue;
+//         }
+//         int sum = nums[left] + nums[right];
+//         if (sum == target)
+//         {
+//             vector<int> subres = {nums[left], nums[right]};
+//             res.push_back(subres);
+//             left++;
+//             right--;
+//         }
+//         else if (sum > target)
+//         {
+//             right--;
+//         }
+//         else
+//         {
+//             left++;
+//         }
+//     }
+//     return res;
+// }
+
+// vector<vector<int>> kSumHelper(vector<int> &nums, int target, int k, int si)
+// {
+//     if (k == 2)
+//     {
+//         return twoSum(nums, target, si);
+//     }
+//     vector<vector<int>> res;
+//     int n = nums.size();
+//     if (n - si < k)
+//         return res;
+//     for (int i = si; i <= n - k; i++)
+//     {
+//         if (i != si && nums[i] == nums[i - 1])
+//         {
+//             continue;
+//         }
+//         vector<vector<int>> subres = kSumHelper(nums, target - nums[i], k - 1, i + 1);
+//         for (auto it : subres)
+//         {
+//             it.push_back(nums[i]);
+//             res.push_back(it);
+//         }
+//     }
+//     return res;
+// }
+
+// vector<vector<int>> kSum(vector<int> &nums, int target, int k)
+// {
+//     sort(nums.begin(), nums.end());
+//     return kSumHelper(nums,target,k,0);
+// }
+
+//  ninja-is-given-an-array-arr-of-size-n-you-have-to-help-him-find-the-longest-subarray-of-arr-whose-sum-is-0-you-must-return-the-length-of-the-longest-subarray-whose-sum-is-0
+
+// int getLongestZeroSumSubarrayLength(vector<int> &arr)
+// {
+//     int sum = 0;
+//     int ans = 0;
+//     map<int, int> mp;
+//     for (int i = 0; i < arr.size(); i++)
+//     {
+//         sum += arr[i];
+//         mp[i] = sum;
+//     }
+//     for (int i = 1; i < arr.size(); i++)
+//     {
+//         if (mp[i - 1] + arr[i] == 0)
+//         {
+//             ans = max(ans, i + 1);
+//         }
+//     }
+//     return ans;
+// }
+
+// int getLongestZeroSumSubarrayLength(vector<int> &arr)
+// {
+//     map<int, int> mp;
+//     int sum = 0;
+//     mp[0] = -1;
+//     int ans = 0;
+//     for (int i = 0; i < arr.size(); i++)
+//     {
+//         sum += arr[i];
+//         if (mp.find(sum) == mp.end())
+//         {
+//             mp[sum] = i;
+//         }
+//         else
+//         {
+//             ans = max(ans, i -mp[sum]);
+//         }
+//     }
+//     return ans;
+// }
+
+// int getLongestZeroSumSubarrayLength(vector<int> &arr)
+// {
+//     map<int, int> mp;
+//     int sum = 0;
+//     int ans = 0;
+//     for (int i = 0; i < arr.size(); i++)
+//     {
+//         sum += arr[i];
+//         if (sum == 0)
+//         {
+//             ans = i + 1;
+//         }
+//         if (mp.find(sum) != mp.end())
+//         {
+//             ans = max(ans, i - mp[sum]);
+//         }
+//         else
+//         {
+//             mp[sum] = i;
+//         }
+//     }return ans;
+// }
+
+// given-an-array-a-consisting-of-n-integers-and-an-integer-b-find-the-number-of-subarrays-of-array-a-whose-bitwise-xor-of-all-elements-is-equal-to-b
+
+int subarraysWithSumK(vector<int> a, int b)
 {
     
 }
