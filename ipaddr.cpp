@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 long long decToBin(int num)
 {
     string ans;
@@ -189,6 +188,5 @@ int main()
 {
     cout << "Total range: " << returnTotalRange("190.87.140.200/16") << endl;
     firstAndLast("190.87.140.200/16");
-    
     return 0;
 }

@@ -1151,20 +1151,608 @@ using namespace std;
 
 // given-an-array-a-consisting-of-n-integers-and-an-integer-b-find-the-number-of-subarrays-of-array-a-whose-bitwise-xor-of-all-elements-is-equal-to-b
 
-int subarraysWithSumK(vector<int> a, int b)
+// int subarraysWithSumK(vector<int> a, int b)
+// {
+//     int ans = 0;
+//     for (int i = 0; i < a.size(); i++)
+//     {
+//         int xorr = a[i];
+//         if (xorr == b)
+//         {
+//             ans++;
+//         }
+//         for (int j = i + 1; j < a.size(); j++)
+//         {
+//             xorr = xorr ^ a[j];
+//             if (xorr == b)
+//             {
+//                 ans++;
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// int subarraysWithSumK(vector<int> a, int b)
+// {
+//     int ans = 0;
+//     map<int, int> mp;
+//     int xorr = 0;
+//     mp[xorr] = 1;
+//     for (int i = 0; i < a.size(); i++)
+//     {
+//         xorr = xorr ^ a[i];
+//         if (mp.find(xorr ^ b) != mp.end())
+//         {
+//             ans += mp[xorr ^ b];
+//         }
+//         mp[xorr]++;
+//     }
+//     return ans;
+// }
+
+// Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+// n2 time
+
+// vector<vector<int>> merge(vector<vector<int>> &intervals)
+// {
+//     sort(intervals.begin(), intervals.end());
+//     for (int i = 0; i < intervals.size() - 1; i++)
+//     {
+//         if (intervals[i].back() >= intervals[i + 1].front())
+//         {
+//             int front = min(intervals[i].front(), intervals[i + 1].front());
+//             int back = max(intervals[i + 1].back(), intervals[i].back());
+//             intervals[i + 1].clear();
+//             intervals[i + 1].push_back(front);
+//             intervals[i + 1].push_back(back);
+//             intervals.erase(intervals.begin() + i);
+//             i--;
+//         }
+//     }
+//     return intervals;
+// }
+
+// n time
+
+// vector<vector<int>> merge(vector<vector<int>> &intervals)
+// {
+//     sort(intervals.begin(), intervals.end());
+//     vector<vector<int>> ans;
+//     for (int i = 0; i < intervals.size(); i++)
+//     {
+//         if (ans.empty() || intervals[i][0] > ans.back()[1])
+//         {
+//             // add to ans list
+//             ans.push_back(intervals[i]);
+//         }
+//         else if( intervals[i][0] <=ans.back()[1])
+//         {
+//             ans.back()[1]=max(ans.back()[1],intervals[i][1]);
+//         }
+//     }
+//     return ans;
+// }
+
+// You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+
+// Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+
+// The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
+
+// void merge(vector<int> &nums1, int m, vector<int> &nums2, int n)
+// {
+//     vector<int> ans;
+//     int i = 0;
+//     int j = 0;
+//     while (i < m && j < n)
+//     {
+//         if (nums1[i] <= nums2[j])
+//         {
+//             ans.push_back(nums1[i]);
+//             i++;
+//         }
+//         else
+//         {
+//             ans.push_back(nums2[j]);
+//             j++;
+//         }
+//     }
+//     for (; j < n; j++)
+//         ans.push_back(nums2[j]);
+//     for (; i < m; i++)
+//         ans.push_back(nums1[i]);
+//     nums1 = ans;
+// }
+
+// Optimal approach 1
+
+// void merge(vector<int> &nums1, int m, vector<int> &nums2, int n)
+// {
+//     int i = m - 1;
+//     int j = n - 1;
+//     int k = m + n - 1;
+//     while (j >= 0)
+//     {
+//         if (i >= 0 && nums1[i] >= nums2[j])
+//         {
+//             nums1[k] = nums1[i];
+//             i--;
+//             k--;
+//         }
+//         else
+//         {
+//             nums1[k] = nums2[j];
+//             j--;
+//             k--;
+//         }
+//     }
+//     return;
+// }
+
+// Optimal approach 2 gap method
+
+// void merge(vector<int> &nums1, int m, vector<int> &nums2, int n)
+// {
+//     int len = (m + n);
+//     int gap = (len / 2) + (len % 2);
+//     while (gap > 0)
+//     {
+//         int left = 0;
+//         int right = gap;
+//         while (right < len)
+//         {
+//             if (left < n && right >= n)
+//             {
+//                 // 1 and 2
+//                 if (nums1[left] > nums2[right - m])
+//                 {
+//                     swap(nums1[left], nums2[right - m]);
+//                 }
+//             }
+//             else if (left >= n)
+//             {
+//                 // both in 2
+//                 if (nums2[left - n] > nums2[right - n])
+//                 {
+//                     swap(nums2[left], nums2[right]);
+//                 }
+//             }
+//             else
+//             {
+//                 // both in 1
+//                 if (nums1[left] > nums1[right])
+//                 {
+//                     swap(nums1[left], nums2[right]);
+//                 }
+//             }
+//             left++;
+//             right++;
+//         }
+//         if (gap == 1)
+//             break;
+//         gap = (gap / 2) + (gap % 2);
+//     }
+// }
+
+// you-are-given-an-array-of-n-integers-where-each-integer-value-is-between-1-and-n
+// each-integer-appears-exactly-once-except-for-p-which-appears-exactly-twice-and-q-which-is-missing"
+// Your task is to find ‘P’ and ‘Q’ and return them respectively
+
+// Bruteforce:
+
+// vector<int> findMissingRepeatingNumbers(vector<int> a)
+// {
+//     int sum = 0;
+//     int t;
+//     sort(a.begin(), a.end());
+//     for (int i = 0; i < a.size() - 1; i++)
+//     {
+//         if (a[i] == a[i + 1])
+//         {
+//             t = a[i];
+//         }
+//         sum += a[i];
+//     }
+//     sum += a[a.size() - 1];
+//     sum = sum - t;
+//     int misii;
+//     int asum = (a.size() * (a.size() + 1)) / 2;
+//     misii = asum - sum;
+//     return {t, misii};
+// }
+
+// vector<int> findMissingRepeatingNumbers(vector<int> a)
+// {
+//     int sum = 0;
+//     int twice;
+//     map<int, int> mp;
+//     for (int i = 0; i < a.size(); i++)
+//     {
+//         mp[a[i]]++;
+//         sum += a[i];
+//     }
+//     for (auto it : mp)
+//     {
+//         if (it.second == 2)
+//         {
+//             twice = it.first;
+//             break;
+//         }
+//     }
+//     sum = sum - twice;
+//     int misii;
+//     int asum = (a.size() * (a.size() + 1)) / 2;
+//     misii = asum - sum;
+//     return {twice, misii};
+// }
+
+// Optimal: form 2 equation
+
+// vector<int> findMissingRepeatingNumbers(vector<int> a)
+// {
+//     long long n = a.size();
+//     long long asum = (n * (n + 1)) / 2;
+//     long long aasum = (n * (n + 1) * ((2 * n) + 1)) / 6;
+//     long long sum = 0;
+//     long long summ = 0;
+//     for (auto it : a)
+//     {
+//         sum += it;
+//         summ += ((long long)it * (long long)it);
+//     }
+//     // m-d
+//     long long val1 = asum - sum;
+//     // m2-d2=m-d * m+d
+//     long long val2 = aasum - summ;
+//     // m+d
+//     long long eqn2 = val2 / val1;
+//     long long missing = (eqn2 + val1) / 2;
+//     long long duplicate = missing - val1;
+//     return {(int)duplicate, (int)missing};
+// }
+
+// Optimal:  by xor
+
+// vector<int> findMissingRepeatingNumbers(vector<int> a)
+// {
+//     long long n = a.size();
+//     int xr = 0;
+//     for (int i = 0; i < n; i++)
+//     {
+//         xr = xr ^ a[i];
+//         xr = xr ^ (i + 1);
+//     }
+//     // now we will find the first set bit in xr from right :
+//     // int bitno = 0;
+//     // while (1)
+//     // {
+//     //     if ((xr & (1 << bitno)) != 0)
+//     //     {
+//     //         break;
+//     //     }
+//     //     bitno++;
+//     // }
+//     int number = (xr & ~(xr - 1));
+//     int one = 0, zero = 0;
+//     for (int i = 0; i < n; i++)
+//     {
+//         if ((a[i] & number) != 0)
+//         {
+//             // part of one club
+//             one = one ^ a[i];
+//         }
+//         else
+//         {
+//             zero = zero ^ a[i];
+//         }
+//     }
+//     for (int i = 1; i <= n; i++)
+//     {
+//         if ((i & number) != 0)
+//         {
+//             // part of one club
+//             one = one ^ i;
+//         }
+//         else
+//         {
+//             zero = zero ^ i;
+//         }
+//     }
+//     int cnt = 0;
+//     // now one and zero contains ans but which that we are not confirmed
+//     for (int i = 0; i < n; i++)
+//     {
+//         if (a[i] == one)
+//         {
+//             cnt++;
+//         }
+//     }
+//     if (cnt == 2)
+//     {
+//         return {one, zero};
+//     }
+//     return {zero, one};
+// }
+
+//   There is an integer array ‘A’ of size ‘N’.Number of inversions in an array can be defined as the number of pairs of ‘i’, ‘j’ such that ‘i’ < ‘j’ and ‘A[i]’ > ‘A[j]’.You must return the number of inversions in the array.
+
+// int numberOfInversions(vector<int> &a, int n)
+// {
+//     int ans = 0;
+//     for (int i = 0; i < a.size(); i++)
+//     {
+//         for (int j = i + 1; j < a.size(); j++)
+//         {
+//             if (a[i] > a[j])
+//                 ans++;
+//         }
+//     }
+//     return ans;
+// }
+
+// Optimal:
+
+// int merge(vector<int> &arr, int low, int mid, int high)
+// {
+//     int ans = 0;
+//     vector<int> temp;    // temporary array
+//     int left = low;      // starting index of left half of arr
+//     int right = mid + 1; // starting index of right half of arr
+//     // storing elements in the temporary array in a sorted manner//
+//     while (left <= mid && right <= high)
+//     {
+//         if (arr[left] <= arr[right])
+//         {
+//             temp.push_back(arr[left]);
+//             left++;
+//         }
+//         else
+//         {
+//             temp.push_back(arr[right]);
+//             right++;
+//             ans += (mid - left + 1);
+//         }
+//     }
+//     // if elements on the left half are still left //
+//     while (left <= mid)
+//     {
+//         temp.push_back(arr[left]);
+//         left++;
+//     }
+//     //  if elements on the right half are still left //
+//     while (right <= high)
+//     {
+//         temp.push_back(arr[right]);
+//         right++;
+//     }
+//     // transfering all elements from temporary to arr //
+//     for (int i = low; i <= high; i++)
+//     {
+//         arr[i] = temp[i - low];
+//     }
+//     return ans;
+// }
+
+// int mergeSort(vector<int> &arr, int low, int high)
+// {
+//     int ans = 0;
+//     if (low >= high)
+//         return ans;
+//     int mid = (low + high) / 2;
+//     ans += mergeSort(arr, low, mid) +
+//            mergeSort(arr, mid + 1, high) + merge(arr, low, mid, high);
+//     // merging sorted halves
+//     return ans;
+// }
+
+// int numberOfInversions(vector<int> &a, int n)
+// {
+//     return mergeSort(a, 0, n - 1);
+// }
+
+// Given an integer array nums, return the number of reverse pairs in the array.
+// A reverse pair is a pair (i, j) where:
+// 0 <= i < j < nums.length and
+// nums[i] > 2 * nums[j].
+
+// int reversePairs(vector<int> &nums)
+// {
+//     int ans = 0;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         for (int j = i + 1; j < nums.size(); j++)
+//         {
+//             if (nums[i] > 2 * nums[j])
+//             {
+//                 ans++;
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// Optimal:
+
+// void merge(vector<int> &arr, int low, int mid, int high)
+// {
+//     vector<int> temp;    // temporary array
+//     int left = low;      // starting index of left half of arr
+//     int right = mid + 1; // starting index of right half of arr
+//     // storing elements in the temporary array in a sorted manner//
+//     while (left <= mid && right <= high)
+//     {
+//         if (arr[left] <= arr[right])
+//         {
+//             temp.push_back(arr[left]);
+//             left++;
+//         }
+//         else
+//         {
+//             temp.push_back(arr[right]);
+//             right++;
+//         }
+//     }
+//     // if elements on the left half are still left //
+//     while (left <= mid)
+//     {
+//         temp.push_back(arr[left]);
+//         left++;
+//     }
+//     //  if elements on the right half are still left //
+//     while (right <= high)
+//     {
+//         temp.push_back(arr[right]);
+//         right++;
+//     }
+//     // transfering all elements from temporary to arr //
+//     for (int i = low; i <= high;i++)
+//     {
+//         arr[i] = temp[i - low];
+//     }
+// }
+
+// int countPairs(vector<int> &nums, int low, int mid, int high)
+// {
+//     int left = low;
+//     int right = mid + 1;
+//     int cnt = 0;
+//     for (int i = left; i <= mid; i++)
+//     {
+//         while (right <= high && nums[i] > (long long)2 * nums[right])
+//         {
+//             right++;
+//         }
+//         cnt += (right - (mid + 1));
+//     }
+//     return cnt;
+// }
+
+// int mergeSort(vector<int> &arr, int low, int high)
+// {
+//     int ans = 0;
+//     if (low >= high)
+//         return ans;
+//     int mid = (low + high) / 2;
+//     ans += mergeSort(arr, low, mid);
+//     ans += mergeSort(arr, mid + 1, high);
+//     ans += countPairs(arr, low, mid, high);
+//     merge(arr, low, mid, high);
+//     return ans;
+// }
+
+// int reversePairs(vector<int> &nums)
+// {
+//     return mergeSort(nums, 0, nums.size() - 1);
+// }
+
+// Given an integer array nums, find a subarray that has the largest product, and return the product.
+// The test cases are generated so that the answer will fit in a 32-bit integer.
+
+// Brute
+
+// int maxProduct(vector<int> &nums)
+// {
+//     int ans = INT_MIN;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         int temp = nums[i];
+//         ans = max(temp, ans);
+//         for (int j = i + 1; j < nums.size(); j++)
+//         {
+//             temp = temp * nums[j];
+//             ans = max(temp, ans);
+//         }
+//     }
+//     return ans;
+// }
+
+// int maxProduct(vector<int> &nums)
+// {
+//     int prefix = 1;
+//     int ans = INT_MIN;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         if (nums[i] == 0)
+//         {
+//             prefix = 1;
+//             ans = max(ans, 0);
+//         }
+//         else
+//         {
+//             prefix = prefix * nums[i];
+//             ans = max(ans, prefix);
+//         }
+//     }
+//     prefix = 1;
+//     for (int i = nums.size() - 1; i >= 0; i--)
+//     {
+//         if (nums[i] == 0)
+//         {
+//             prefix = 1;
+//             ans = max(ans, 0);
+//         }
+//         else
+//         {
+//             prefix = prefix * nums[i];
+//             ans = max(ans, prefix);
+//         }
+//     }
+//     return ans;
+// }
+
+int maxProduct(vector<int> &nums)
 {
-    
+    int p = 1, s = 1;
+    int ans = INT_MIN;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (p == 0)
+            p = 1;
+        if (s == 0)
+            s = 1;
+        p = p * nums[i];
+        s = s * nums[nums.size() - i - 1];
+        ans = max(ans, max(p, s));
+    }
+    return ans;
 }
+
+// by kadanes algo :
+
+int maxProduct(vector<int> &nums)
+{
+    int p1 = nums[0], p2 = nums[0], result = nums[0];
+
+    for (int i = 1; i < nums.size(); i++)
+    {
+        int t = max({nums[i], nums[i] * p1, nums[i] * p2});
+        p2 = min({nums[i], nums[i] * p2, nums[i] * p1});
+        p1 = t;
+        result = max(result, p1);
+    }
+    return result;
+}
+
+
 
 int main()
 {
-    vector<int> v = {0, 0, 1, 2, 3, 4, 5, 6, 7, 8};
-    vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    vector<int> a = {1, 3, 2, 3, 1};
+    // vector<vector<int>> matrix = {
+    //     {1, 3}, {2, 6}, {8, 10}, {15, 18}};
+    // findMissingRepeatingNumbers(v);
 
-    // for (auto it : v)
+    // for (auto it : matrix)
     // {
-    //     cout << it << " ";
-    // }
+    //     for (auto bt : it)
+    //     {
+    //         cout << bt << " ";
+    //     }
+    //     cout << endl;
+    // // }
+    // cout << (1 ^ 2 ^ 3 ^ 4 ^ 5 ^ 6);
 
     return 0;
 }
