@@ -850,17 +850,474 @@ using namespace std;
 // and ’m’.
 // You have to return the 'nth' root of 'm', i.e.
 //  m^(1/n).
-// If the 'nth root is not on integer, return -1.  
+// If the 'nth root is not on integer, return -1.
 
-int NthRoot(int n, int m) {
-        
-}   
+// int NthRoot(int n, int m)
+// {
+//     int low = 0;
+//     int high = m;
+//     while (low < high)
+//     {
+//         int mid = low + (high - low) / 2;
+//         if (pow(mid, n) == m)
+//         {
+//             return mid;
+//         }
+//         if (pow(mid, n) > m)
+//         {
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return -1;
+// }
+
+// Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+
+// Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+
+// Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+
+// Return the minimum integer k such that she can eat all the bananas within h hours.
+
+// int minEatingSpeed(vector<int> &piles, int h)
+// {
+//     int ans = *max_element(piles.begin(), piles.end());
+//     int ele = *max_element(piles.begin(), piles.end());
+//     for (int i = 1; i <= ele; i++)
+//     {
+//         long long time = 0;
+//         for (auto it : piles)
+//         {
+//             time += ceil((double)it / i);
+//         }
+//         if (time <= h)
+//         {
+//             return i;
+//         }
+//     }
+//     return ans;
+// }
+
+// Binary approach :
+
+// int minEatingSpeed(vector<int> &piles, int h)
+// {
+//     int ans = *max_element(piles.begin(), piles.end());
+//     int ele = *max_element(piles.begin(), piles.end());
+//     int low = 1;
+//     int high = ele;
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         long long time = 0;
+//         for (auto it : piles)
+//         {
+//             time += ceil((double)it / mid);
+//         }
+//         if (time <= h)
+//         {
+//             ans = min(ans, mid);
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return ans;
+// }
+
+// You are given an integer array bloomDay, an integer m and an integer k.
+
+// You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+
+// The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+
+// Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
+
+// int minDays(vector<int> &bloomDay, int m, int k)
+// {
+//     if (m * k > bloomDay.size())
+//     {
+//         return -1;
+//     }
+//     int maxiDay = *max_element(bloomDay.begin(), bloomDay.end());
+//     int highest = maxiDay;
+//     for (int i = 1; i <= maxiDay; i++)
+//     {
+//         int ans = -1;
+//         int select = 0;
+//         int bokeBaniya = 0;
+//         for (int j = 0; j < bloomDay.size(); j++)
+//         {
+//             if (bloomDay[j] - i <= 0)
+//             {
+//                 // we can select flower :
+//                 select++;
+//             }
+//             else
+//             {
+//                 select = 0;
+//             }
+//             // a boke completed
+//             if (select == k)
+//             {
+//                 bokeBaniya++;
+//                 select = 0;
+//             }
+//             // target boke achieved
+//             if (bokeBaniya == m)
+//             {
+//                 ans = i;
+//                 break;
+//             }
+//         }
+//         if (bokeBaniya == m)
+//         {
+//             highest = min(highest, ans);
+//         }
+//     }
+//     return highest;
+// }
+
+// Binary approach:
+
+// vector<int> bookMadei(vector<int> &bloomDay, int m, int k, int day)
+// {
+//     int ans = -1;
+//     int select = 0;
+//     int bokeBaniya = 0;
+//     for (int j = 0; j < bloomDay.size(); j++)
+//     {
+//         if (bloomDay[j] - day <= 0)
+//         {
+//             // we can select flower :
+//             select++;
+//         }
+//         else
+//         {
+//             select = 0;
+//         }
+//         // a boke completed
+//         if (select == k)
+//         {
+//             bokeBaniya++;
+//             select = 0;
+//         }
+//         // target boke achieved
+//         if (bokeBaniya == m)
+//         {
+//             ans = day;
+//             break;
+//         }
+//     }
+//     vector<int> ansv;
+//     ansv = {bokeBaniya, ans};
+//     return ansv;
+// }
+
+// int minDays(vector<int> &bloomDay, int m, int k)
+// {
+//     if ((m) > bloomDay.size() / k)
+//     {
+//         return -1;
+//     }
+//     int maxiDay = *max_element(bloomDay.begin(), bloomDay.end());
+//     int highest = maxiDay;
+//     int low = 1;
+//     int high = maxiDay;
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         if (bookMadei(bloomDay, m, k, mid)[0] >= m)
+//         {
+//             int ans = bookMadei(bloomDay, m, k, mid)[1];
+//             highest = min(highest, ans);
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return highest;
+// }
+
+// structured binary code :
+
+// int minDays(vector<int> &bloomDay, int m, int k)
+// {
+//     int cnt = 0;
+//     int maxi = *max_element(bloomDay.begin(), bloomDay.end());
+//     if ((m) > bloomDay.size() / k)
+//     {
+//         return -1;
+//     }
+//     int low = *min_element(bloomDay.begin(), bloomDay.end());
+//     int high = maxi + 1;
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         int bb = 0;
+//         int select = 0;
+//         for (int j = 0; j < bloomDay.size(); j++)
+//         {
+//             if (bloomDay[j] <= mid)
+//             {
+//                 select++;
+//             }
+//             else
+//             {
+//                 select = 0;
+//             }
+//             if (select == k)
+//             {
+//                 bb++;
+//                 select = 0;
+//             }
+//             if (bb == m)
+//             {
+//                 break;
+//             }
+//         }
+//         if (bb >= m)
+//         {
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return high;
+// }
+
+// Given an array of integers nums and an integer threshold, we will choose a positive integer divisor, divide all the array by it, and sum the division's result. Find the smallest divisor such that the result mentioned above is less than or equal to threshold.
+
+// Each result of the division is rounded to the nearest integer greater than or equal to that element. (For example: 7/3 = 3 and 10/2 = 5).
+
+// The test cases are generated so that there will be an answer.
+
+// int smallestDivisor(vector<int> &nums, int threshold)
+// {
+//     int mini = *min_element(nums.begin(), nums.end());
+//     int maxi = *max_element(nums.begin(), nums.end());
+//     long long sum = 0;
+//     for (int i = mini; i <= maxi; i++)
+//     {
+//         for (auto it : nums)
+//         {
+//             sum += ceil((double)it / i);
+//         }
+//         if (sum <= threshold)
+//         {
+//             return i;
+//         }
+//         sum = 0;
+//     }
+//     return -1;
+// }
+
+// int smallestDivisor(vector<int> &nums, int threshold)
+// {
+//     int mini = 1;
+//     int maxi = *max_element(nums.begin(), nums.end());
+//     long long sum = 0;
+//     int ans;
+//     while (mini < maxi)
+//     {
+//         int mid = (mini) + (maxi - mini) / 2;
+//         for (auto it : nums)
+//         {
+//             sum += ceil((double)it / mid);
+//         }
+//         if (sum > threshold)
+//         {
+//             mini = mid + 1;
+//         }
+//         else
+//         {
+//             maxi = mid;
+//         }
+//         sum = 0;
+//     }
+//     return mini;
+// }
+
+// A conveyor belt has packages that must be shipped from one port to another within days days.
+
+// The ith package on the conveyor belt has a weight of weights[i]. Each day, we load the ship with packages on the conveyor belt (in the order given by weights). We may not load more weight than the maximum weight capacity of the ship.
+
+// Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within days days.
+
+// int shipWithinDays(vector<int> &weights, int days)
+// {
+//     int miniWtDay = 1;
+//     int maxiwtDay = 0;
+//     for (auto it : weights)
+//     {
+//         maxiwtDay += it;
+//     }
+//     for (int i = miniWtDay; i <= maxiwtDay; i++)
+//     {
+//         int wtCap = i;
+//         int day = 1;
+//         for (int j = 0; j < weights.size(); j++)
+//         {
+//             if (wtCap - weights[j] >= 0)
+//             {
+//                 // can be shipped;
+//                 wtCap -= weights[j];
+//             }
+//             else
+//             {
+//                 // postpon to other day
+//                 if (i - weights[j] >= 0)
+//                 {
+//                     // can be possible
+//                     wtCap = i - weights[j];
+//                     day++;
+//                 }
+//                 else
+//                 {
+//                     day = -1;
+//                     // not possible
+//                     break;
+//                 }
+//             }
+//         }
+//         if (day != -1 && day <= days)
+//         {
+//             return i;
+//         }
+//     }
+//     return maxiwtDay;
+// }
+
+// int shipWithinDays(vector<int> &weights, int days)
+// {
+//     int miniWtDay = *max_element(weights.begin(), weights.end());
+//     long long maxiwtDay =accumulate(weights.begin(),weights.end(),0);
+//     long long ans;
+//     while (miniWtDay < maxiwtDay)
+//     {
+//         int mid = (miniWtDay) + (maxiwtDay - miniWtDay) / 2;
+//         int wtCap = mid;
+//         int day = 1;
+//         for (int j = 0; j < weights.size(); j++)
+//         {
+//             if (wtCap - weights[j] >= 0)
+//             {
+//                 // can be shipped;
+//                 wtCap -= weights[j];
+//             }
+//             else
+//             {
+//                 // postpon to other day
+//                 if (mid - weights[j] >= 0)
+//                 {
+//                     // can be possible
+//                     wtCap = mid - weights[j];
+//                     day++;
+//                 }
+//                 else
+//                 {
+//                     day = -1;
+//                     // not possible
+//                     break;
+//                 }
+//             }
+//         }
+//         if (day != -1 && day <= days)
+//         {
+//             ans = mid;
+//             maxiwtDay = mid;
+//         }
+//         else
+//         {
+//             miniWtDay = mid + 1;
+//         }
+//     }
+//     return ans;
+// }
+
+// Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
+
+// Return the kth positive integer that is missing from this array.
+
+// n^2
+int findKthPositive(vector<int> &arr, int k)
+{
+    int c = 0;
+    for (int i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
+    {
+        bool flag = false;
+        for (int j = 0; j < arr.size(); j++)
+        {
+            if (arr[j] == i)
+            {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag)
+        {
+            c++;
+        }
+        if (k == c)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+// n
+
+int findKthPositive(vector<int> &arr, int k)
+{
+    int cnt = 0;
+    int ac = 0;
+    int i;
+    for (i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
+    {
+        if (i == arr[ac])
+        {
+            // ok its present
+            ac++;
+        }
+        else
+        {
+            // i is not present in arr
+            cnt++;
+        }
+        if (cnt == k)
+        {
+            return i;
+        }
+    
+    }
+    int j;
+    if (cnt < k)
+    { 
+        i = i + (k - 1-cnt);
+    }
+    return i;
+}
+
+
 
 int main()
 {
     vector<int> a = {1, 2, 3, 2, 1};
     // vector<vector<int>> matrix = {
     //     {1, 3}, {2, 6}, {8, 10}, {15, 18}};
+    cout << ((ceil((double)11 / 4)));
 
     // for (auto it : matrix)
     // {
