@@ -1250,74 +1250,481 @@ using namespace std;
 // Return the kth positive integer that is missing from this array.
 
 // n^2
-int findKthPositive(vector<int> &arr, int k)
-{
-    int c = 0;
-    for (int i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
-    {
-        bool flag = false;
-        for (int j = 0; j < arr.size(); j++)
-        {
-            if (arr[j] == i)
-            {
-                flag = true;
-                break;
-            }
-        }
-        if (!flag)
-        {
-            c++;
-        }
-        if (k == c)
-        {
-            return i;
-        }
-    }
-    return -1;
-}
 
+// int findKthPositive(vector<int> &arr, int k)
+// {
+//     int c = 0;
+//     for (int i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
+//     {
+//         bool flag = false;
+//         for (int j = 0; j < arr.size(); j++)
+//         {
+//             if (arr[j] == i)
+//             {
+//                 flag = true;
+//                 break;
+//             }
+//         }
+//         if (!flag)
+//         {
+//             c++;
+//         }
+//         if (k == c)
+//         {
+//             return i;
+//         }
+//     }
+//     return -1;
+// }
 
 // n
 
-int findKthPositive(vector<int> &arr, int k)
-{
-    int cnt = 0;
-    int ac = 0;
-    int i;
-    for (i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
-    {
-        if (i == arr[ac])
-        {
-            // ok its present
-            ac++;
-        }
-        else
-        {
-            // i is not present in arr
-            cnt++;
-        }
-        if (cnt == k)
-        {
-            return i;
-        }
-    
-    }
-    int j;
-    if (cnt < k)
-    { 
-        i = i + (k - 1-cnt);
-    }
-    return i;
-}
+// int findKthPositive(vector<int> &arr, int k)
+// {
+//     int cnt = 0;
+//     int ac = 0;
+//     int i;
+//     for (i = 1; i <= *max_element(arr.begin(), arr.end()); i++)
+//     {
+//         if (i == arr[ac])
+//         {
+//             // ok its present
+//             ac++;
+//         }
+//         else
+//         {
+//             // i is not present in arr
+//             cnt++;
+//         }
+//         if (cnt == k)
+//         {
+//             return i;
+//         }
+//     }
+//     int j;
+//     if (cnt < k)
+//     {
+//         i = i + (k - 1 - cnt);
+//     }
+//     return i;
+// }
+
+// Farmer John has built a new long barn, with N (2 <= N <= 100,000) stalls. The stalls are located along a straight line at positions x1 ... xN (0 <= xi <= 1,000,000,000).
+
+// His C (2 <= C <= N) cows don't like this barn layout and become aggressive towards each other once put into a stall. To prevent the cows from hurting each other, FJ wants to assign the cows to the stalls, such that the minimum distance between any two of them is as large as possible. What is the largest minimum distance?
+
+// LinearBased:
+
+// bool canWePlace(vector<int> &stalls, int C, int K)
+// {
+//     int totalCowPlace = 1;
+//     int last = stalls[0];
+//     for (int i = 1; i < stalls.size(); i++)
+//     {
+//         if (stalls[i] - last >= K)
+//         {
+//             // we can place the cow
+//             totalCowPlace++;
+//             last = stalls[i];
+//         }
+//         if (totalCowPlace >= C)
+//         {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
+
+// int agrresiveCows(vector<int> &stalls, int C)
+// {
+//     sort(stalls.begin(), stalls.end());
+//     int limit = stalls[stalls.size() - 1] - stalls[0];
+//     for (int i = 1; i <= limit; i++)
+//     {
+//         if (canWePlace(stalls, C, i) == false)
+//         {
+//             return (i - 1);
+//         }
+//     }
+//     return limit;
+// }
+
+// Binary Based:
+
+// bool canWePlace(vector<int> &stalls, int C, int K)
+// {
+//     int totalCowPlace = 1;
+//     int last = stalls[0];
+//     for (int i = 1; i < stalls.size(); i++)
+//     {
+//         if (stalls[i] - last >= K)
+//         {
+//             // we can place the cow
+//             totalCowPlace++;
+//             last = stalls[i];
+//         }
+//         if (totalCowPlace == C)
+//         {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
+
+// int agrresiveCows(vector<int> &stalls, int C)
+// {
+//     sort(stalls.begin(), stalls.end());
+//     int limit = stalls[stalls.size() - 1] - stalls[0];
+//     int ans = limit;
+//     int low = 1;
+//     int high = limit + 1;
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         if (canWePlace(stalls, C, mid))
+//         {
+//             ans = mid;
+//             low = mid + 1;
+//         }
+//         else
+//         {
+//             high = mid;
+//         }
+//     }
+//     return ans;
+// }
+
+// Given an array ‘arr’of integer numbers, ‘arr[i]' represents the number of
+// pages in the ‘i-th‘ book.
+// There are ‘m’number of students, and the task is to allocate all the books
+// to the students.
+// Allocate books in such 0 way that:
+// 1. Each student gets at least one book.
+// 2. Each book should be allocated to only one student.
+// 3. Book allocation should be in a contiguous manner.
+// You have to allocate the book to ‘m‘ students such that the maximum number of pages assigned to a student is minimum.
+// If the allocation of books is not possible, return -1.
+
+// int isPossible(vector<int> &arr, int K)
+// {
+//     int stu = 1;
+//     int sum = 0;
+//     for (int i = 0; i < arr.size(); i++)
+//     {
+//         if (sum + arr[i] <= K)
+//         {
+//             sum += arr[i];
+//         }
+//         else
+//         {
+//             stu++;
+//             sum = arr[i];
+//         }
+//     }
+//     return stu;
+// }
+
+// // Linear approach
+
+// int findPages(vector<int> &arr, int n, int m)
+// {
+//     if (m > n)
+//         return -1;
+//     int mini = *max_element(arr.begin(), arr.end());
+//     int maxi = accumulate(arr.begin(), arr.end(), 0);
+//     for (int i = mini; i <= maxi; i++)
+//     {
+//         if (isPossible(arr, i) == m)
+//         {
+//             return i;
+//         }
+//     }
+//     return mini;
+// }
+
+// // Binary approach:
+
+// int findPages(vector<int> &arr, int n, int m)
+// {
+//     if (m > n)
+//         return -1;
+//     int low = *max_element(arr.begin(), arr.end());
+//     long long high = accumulate(arr.begin(), arr.end(), 0) + 1;
+//     int ans = high;
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         if (isPossible(arr, mid) == m)
+//         {
+//             ans = mid;
+//             high = mid;
+//         }
+//         else if (isPossible(arr, mid) > m)
+//         {
+//             low = mid + 1;
+//         }
+//         else
+//         {
+//             high = mid;
+//         }
+//     }
+//     return low;
+// }
+
+// Given an integer array nums and an integer k, split nums into k non-empty subarrays such that the largest sum of any subarray is minimized.
+
+// Return the minimized largest sum of the split.
+
+// A subarray is a contiguous part of the array.
+
+// int isPossible(vector<int> &nums, int tar)
+// {
+//     long long sum = 0;
+//     int total = 1;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         if (sum + nums[i] > tar)
+//         {
+//             total++;
+//             sum = nums[i];
+//         }
+//         else
+//         {
+//             sum += nums[i];
+//         }
+//     }
+//     return total;
+// }
+
+// int splitArray(vector<int> &nums, int k)
+// {
+//     int low = *max_element(nums.begin(), nums.end());
+//     long long high = accumulate(nums.begin(), nums.end(), 0);
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         if (isPossible(nums, mid) == k)
+//         {
+//             high = mid;
+//         }
+//         else if (isPossible(nums, mid) > k)
+//         {
+//             low = mid + 1;
+//         }
+//         else
+//         {
+//             high = mid;
+//         }
+//     }
+//     return low;
+// }
+
+// int splitArray(vector<int> &nums, int k)
+// {
+//     int mini = *max_element(nums.begin(), nums.end());
+//     long long maxi = accumulate(nums.begin(), nums.end(), 0);
+//     for (int i = mini; i <= maxi; i++)
+//     {
+//         if (isPossible(nums, i) == k)
+//         {
+//             return i;
+//         }
+//     }
+//     return mini;
+// }
+
+//  Given an arroy/list of length ‘N’, where the
+// array/list represents the boards and each
+// element of the given array/list represents the
+// length of each board. Some ‘K’ numbers of
+// pointers are available to paint these boards.
+// Consider that each unit of a board takes 1 unit
+// of time to point.
+// You are supposed to return the area of the
+// minimum time to get thisjob done of pointing
+// all the ‘N’ boards under a constraint that any
+// painter will only point the continuous sections
+// of boards.
+
+// int isPossible(vector<int> &boards, int tar)
+// {
+//     long long sum = 0;
+//     long long painters = 1;
+//     for (int i = 0; i < boards.size(); i++)
+//     {
+//         if (sum + boards[i] <= tar)
+//         {
+//             sum += boards[i];
+//         }
+//         else
+//         {
+//             painters++;
+//             sum = boards[i];
+//         }
+//     }
+//     return painters;
+// }
+
+// int findLargestMinDistance(vector<int> &boards, int k)
+// {
+//     int low = *max_element(boards.begin(), boards.end());
+//     long long high = accumulate(boards.begin(), boards.end(), 0);
+//     while (low < high)
+//     {
+//         int mid = (low) + (high - low) / 2;
+//         if (isPossible(boards, mid) <= k)
+//         {
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return low;
+// }
+
+// int findLargestMinDistance(vector<int> &boards, int k)
+// {
+//     int mini = *max_element(boards.begin(), boards.end());
+//     long long maxi = accumulate(boards.begin(), boards.end(), 0);
+//     for (int i = mini; i <= maxi; i++)
+//     {
+//         if (isPossible(boards, i) <= k)
+//         {
+//             return i;
+//         }
+//     }
+//     return -1;
+// }
+
+// You are given a sorted array ‘arr’ of length ‘n’, which contains positive integer positions of ‘n’ gas stations on the X-axis. You are also given an integer ‘k’. You have to place ‘k’ new gas stations on the X-axis. You can place them anywhere on the non-negative side of the X-axis, even on non-integer positions. Let ‘dist’ be the maximum value of the distance between adjacent gas stations after adding k new gas stations.
+// Find the minimum value of ‘dist’.
+// Note: Answers within 10^-6 of the actual answer will be accepted. For example, if the actual answer is 0.65421678124, it is okay to return 0.654216. Our answer will be accepted if that is the same as the actual answer up to the 6th decimal place.
+
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     // Create a vector to keep track of how many times each segment has been divided.
+//     vector<int> howMany(arr.size() - 1, 0);
+//     // Loop for 'k' iterations to divide segments and adjust their lengths.
+//     for (int i = 1; i <= k; i++)
+//     {
+//         // Initialize variables to find the segment with the maximum increase in section length.
+//         long double maxSection = -1;
+//         int maxInd = -1;
+//         // Iterate through each segment and find the one that can be divided to maximize section length.
+//         for (int j = 0; j < arr.size() - 1; j++)
+//         {
+//             // Calculate the difference between consecutive elements in the segment.
+//             long double diff = (arr[j + 1] - arr[j]);
+//             // Calculate the section length if this segment is divided one more time.
+//             long double sectionLength = diff / (long double)(howMany[j] + 1);
+//             // Check if dividing this segment increases the section length the most so far.
+//             if (maxSection < sectionLength)
+//             {
+//                 maxSection = sectionLength;
+//                 maxInd = j; // Record the index of the segment to divide.
+//             }
+//         }
+//         // Increment the division count for the segment that maximizes the section length increase.
+//         howMany[maxInd]++;
+//     }
+//     // Find the maximum section length among all segments after division iterations.
+//     long double maxAns = -1;
+//     for (int i = 0; i < arr.size() - 1; i++)
+//     {
+//         // Calculate the section length of the current segment based on the division count.
+//         long double diff = (arr[i + 1] - arr[i]);
+//         long double sectionLength = (diff) / (long double)(howMany[i] + 1);
+//         // Update the maximum section length if the current segment has a larger section length.
+//         maxAns = max(maxAns, sectionLength);
+//     }
+//     // Return the maximum section length achieved after all iterations.
+//     return maxAns;
+// }
+
+// Linear search:
+
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     vector<int> howMany(arr.size() - 1, 0);
+//     for (int i = 1; i <= k; i++)
+//     {
+//         long double maxSection = -1;
+//         int maxInd = -1;
+//         for (int j = 0; j < arr.size() - 1; j++)
+//         {
+//             long double diff = (arr[j + 1] - arr[j]);
+//             long double sectionLength = diff / (long double)(howMany[j] + 1);
+//             if (maxSection < sectionLength)
+//             {
+//                 maxSection = sectionLength;
+//                 maxInd = j;
+//             }
+//         }
+//         howMany[maxInd]++;
+//     }
+//     long double maxAns = -1;
+//     for (int i = 0; i < arr.size() - 1; i++)
+//     {
+//         long double diff = (arr[i + 1] - arr[i]);
+//         long double sectionLength = (diff) / (long double)(howMany[i] + 1);
+//         maxAns = max(maxAns, sectionLength);
+//     }
+//     return maxAns;
+// }
+
+// OPTIMIZED APPROACH(Priority queue):
+
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     vector<int> howMany(arr.size() - 1, 0);
+//     priority_queue<pair<long double, int>> pq; 
+//     for (int i = 0; i < arr.size() - 1; i++)
+//     {
+//         pq.push({arr[i + 1] - arr[i], i});
+//     }
+//     for (int i = 1; i <= k; i++)
+//     {
+//         auto tp = pq.top();
+//         pq.pop();
+//         int secInd = tp.second;
+//         howMany[secInd]++;
+//         long double inLen = arr[secInd + 1] - arr[secInd];
+//         long double secLen = inLen / (long double)(howMany[secInd] + 1);
+//         pq.push({secLen, secInd});
+//     }
+//     return pq.top().first;
+// }
+
+
+// OPTIMIZED APPROACH(Binary search):
 
 
 
 int main()
 {
-    vector<int> a = {1, 2, 3, 2, 1};
-    // vector<vector<int>> matrix = {
-    //     {1, 3}, {2, 6}, {8, 10}, {15, 18}};
-    cout << ((ceil((double)11 / 4)));
+
+    // int t;
+    // cin >> t;
+    // while (t--)
+    // {
+    //     int N, C;
+    //     cin >> N >> C;
+    //     vector<int> as;
+    //     for (int i = 0; i < N; i++)
+    //     {
+    //         int temp;
+    //         cin >> temp;
+    //         as.push_back(temp);
+    //     }
+    //     return agrresiveCows(as, C);
+    // }
+
+    // vector<int> a = {1, 2, 3, 2, 1};
+    // // vector<vector<int>> matrix = {
+    // //     {1, 3}, {2, 6}, {8, 10}, {15, 18}};
+    // cout << ((ceil((double)11 / 4)));
 
     // for (auto it : matrix)
     // {
@@ -1331,3 +1738,7 @@ int main()
 
     return 0;
 }
+
+// 20 12
+// 7 12 11 19 0 7 18 6 9 9 15 9 12 13 20 8 15 1 11 17
+// 25
