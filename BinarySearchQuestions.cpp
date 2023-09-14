@@ -1679,7 +1679,7 @@ using namespace std;
 // long double minimiseMaxDistance(vector<int> &arr, int k)
 // {
 //     vector<int> howMany(arr.size() - 1, 0);
-//     priority_queue<pair<long double, int>> pq; 
+//     priority_queue<pair<long double, int>> pq;
 //     for (int i = 0; i < arr.size() - 1; i++)
 //     {
 //         pq.push({arr[i + 1] - arr[i], i});
@@ -1697,13 +1697,443 @@ using namespace std;
 //     return pq.top().first;
 // }
 
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     vector<int> count(arr.size() - 1, 0);
+//     for (int i = 0; i < k; i++)
+//     {
+//         long double maxiAns = -1;
+//         long double maxiInd = -1;
+//         for (int j = 0; j < arr.size() - 1; j++)
+//         {
+//             long double diff =( arr[j + 1] - arr[j]);
+//             long double sectionLength = diff / (long double)(count[j] + 1);
+//             if (sectionLength > maxiAns)
+//             {
+//                 maxiInd = j;
+//                 maxiAns = sectionLength;
+//             }
+//         }
+//         count[maxiInd]++;
+//     }
+//     long double ans = -1;
+//     for (int i = 0; i < arr.size()-1; i++)
+//     {
+//         long double diff =( arr[i + 1] - arr[i]);
+//         long double secLen = (diff) / (long double)(count[i] + 1);
+//         ans = max(ans, secLen);
+//     }
+//     return ans;
+// }
 
-// OPTIMIZED APPROACH(Binary search):
+// OPTIMIZED APPROACH(Priority queue):
+
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     vector<int> count(arr.size() - 1, 0);
+//     priority_queue<pair<long double, int>> pq;
+//     for (int i = 0; i < arr.size() - 1; i++)
+//     {
+//         pq.push({arr[i + 1] - arr[i], i});
+//     }
+//     for (int i = 0; i < k; i++)
+//     {
+//         int secInd = pq.top().second;
+//         long double iniDiff = arr[secInd + 1] - arr[secInd];
+//         pq.pop();
+//         count[secInd]++;
+//         long double newDiff = iniDiff / (long double)(count[secInd] + 1);
+//         pq.push({newDiff, secInd});
+//     }
+//     return pq.top().first;
+// }
+
+// OPTIMIZED APPROACH(Binary search ):
+
+// int noReq(long double dist, vector<int> &arr)
+// {
+//     int cnt = 0;
+//     for (int i = 0; i < arr.size() - 1; i++)
+//     {
+//         int noInBw = ((arr[i + 1] - arr[i]) / (dist));
+//         // case of exactly divisible
+//         if ((arr[i + 1] - arr[i]) == (dist * noInBw))
+//         {
+//             noInBw--;
+//         }
+//         cnt += noInBw;
+//     }
+//     return cnt;
+// }
+
+// long double minimiseMaxDistance(vector<int> &arr, int k)
+// {
+//     int n = arr.size();
+//     long double low = 0;
+//     long double high = 0;
+//     for (int i = 0; i < n - 1; i++)
+//     {
+//         high = max(high, (long double)(arr[i + 1] - arr[i]));
+//     }
+//     long double diff = 1e-6;
+//     long double ans = high;
+//     while (high - low > diff)
+//     {
+//         long double mid = (low + high) / (2.0);
+//         if (noReq(mid, arr) > k)
+//         {
+//             low = mid;
+//         }
+//         else
+//         {
+//             high = mid;
+//             ans = high;
+//         }
+//     }
+//     return ans;
+// }
+
+// Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+// The overall run time complexity should be O(log (m+n)).
+
+// Brute extra space :
+
+// double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
+// {
+//     int i = 0, j = 0;
+//     vector<double> ans;
+//     while (i < nums1.size() && j < nums2.size())
+//     {
+//         if (nums1[i] >= nums2[j])
+//         {
+//             ans.push_back(nums2[j++]);
+//         }
+//         else
+//         {
+//             ans.push_back(nums1[i++]);
+//         }
+//     }
+//     while (i < nums1.size())
+//     {
+//         ans.push_back(nums1[i++]);
+//     }
+//     while (j < nums2.size())
+//     {
+//         ans.push_back(nums2[j++]);
+//     }
+//     if (ans.size() % 2)
+//     {
+//         // odd
+//         return ans[ans.size() / 2];
+//     }
+//     else
+//     {
+//         return (ans[ans.size() / 2] + ans[(ans.size() / 2) + 1]) / 2;
+//     }
+// }
+
+// Optimiesd NO extra space and time o(m+n):
+
+// double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
+// {
+//     int i = 0, j = 0;
+//     int cnt = 0;
+//     vector<int> ans;
+//     int n = nums1.size() + nums2.size();
+//     int fel, sel;
+//     int find = n / 2;
+//     int sind = find - 1;
+//     while (i < nums1.size() && j < nums2.size())
+//     {
+//         if (nums1[i] >= nums2[j])
+//         {
+//             if (cnt == find)
+//             {
+//                 fel = nums2[j];
+//             }
+//             if (cnt == sind)
+//             {
+//                 sel = nums2[j];
+//             }
+//             cnt++;
+//             j++;
+//         }
+//         else
+//         {
+//             if (cnt == find)
+//             {
+//                 fel = nums1[i];
+//             }
+//             if (cnt == sind)
+//             {
+//                 sel = nums1[i];
+//             }
+//             cnt++;
+//             i++;
+//         }
+//     }
+//     while (i < nums1.size())
+//     {
+//         if (cnt == find)
+//         {
+//             fel = nums1[i];
+//         }
+//         if (cnt == sind)
+//         {
+//             sel = nums1[i];
+//         }
+//         cnt++;
+//         i++;
+//     }
+//     while (j < nums2.size())
+//     {
+//         if (cnt == find)
+//         {
+//             fel = nums2[j];
+//         }
+//         if (cnt == sind)
+//         {
+//             sel = nums2[j];
+//         }
+//         cnt++;
+//         j++;
+//     }
+//     if (n % 2 == 1)
+//     {
+//         return (double)fel;
+//     }
+//     else
+//     {
+//         return (double(fel + sel) / 2.0);
+//     }
+// }
+
+// o(log(min(m,n)))
+
+// double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
+// {
+//     int n1 = nums1.size();
+//     int n2 = nums2.size();
+//     // left one is short array
+//     if (nums1.size() > nums2.size())
+//     {
+//         return findMedianSortedArrays(nums2, nums1);
+//     }
+//     int total = n1 + n2;
+//     int left = (n1 + n2 + 1) / 2;
+//     int low = 0;
+//     int high = n1;
+//     while (low <= high)
+//     {
+//         int mid1 = (low + high)/2;
+//         int mid2 = left - mid1;
+//         int l1 = INT_MIN, l2 = INT_MIN;
+//         int r1 = INT_MAX, r2 = INT_MAX;
+//         if (mid1 - 1 >= 0)
+//         {
+//             l1 = nums1[mid1 - 1];
+//         }
+//         if (mid1 < n1)
+//         {
+//             r1 = nums1[mid1];
+//         }
+//         if (mid2 - 1 >= 0)
+//         {
+//             l2 = nums2[mid2 - 1];
+//         }
+//         if (mid2 < n2)
+//         {
+//             r2 = nums2[mid2];
+//         }
+//         if (l1 <= r2 && l2 <= r1)
+//         {
+//             // success case
+//             if (total % 2 == 0)
+//             {
+//                 return ((double)(max(l1, l2) + min(r1, r2))) / 2.0;
+//             }
+//             else
+//             {
+//                 return max(l1, l2);
+//             }
+//         }
+//         else if (l1 > r2)
+//         {
+//             high = mid1 - 1;
+//         }
+//           else
+//         {
+//             low = mid1 + 1;
+//         }
+//     }
+//     return 0;
+// }
+
+// You're given two sorted arrays ’arr1’and ’arr2’of
+// size 'n'ond 'm'respectively and an element 'k’.
+// Find the element that would be at the 'kth‘ position of
+// the combined sorted array.
+// Position 'k' is given according to 1 - based indexing,
+// but arrays 'orrl‘ 0nd 'arrZ' are using 0 - based
+// indexing.
+
+// Naive apporach : space complexity : o(n+m)
+//  time complexity :o(n+m)
+
+// int kthElement(vector<int> &arr1, vector<int> &arr2, int n, int m, int k)
+// {
+//     vector<int> combined;
+//     int i = 0, j = 0;
+//     while (i < arr2.size() && j < arr1.size())
+//     {
+//         if (arr1[j] < arr2[i])
+//         {
+//             combined.push_back(arr1[j]);
+//             j++;
+//         }
+//         else
+//         {
+//             combined.push_back(arr2[i]);
+//             i++;
+//         }
+//     }
+//     while (i < arr2.size())
+//     {
+//         combined.push_back(arr2[i]);
+//         i++;
+//     }
+//     while (j < arr1.size())
+//     {
+//         combined.push_back(arr1[j]);
+//         j++;
+//     }
+//     return combined[k - 1];
+// }
+
+// Space optimised : time o(m+n)
+//                   space o(1) hurrah!
+
+// int kthElement(vector<int> &arr1, vector<int> &arr2, int n, int m, int k)
+// {
+//     int i = 0, j = 0;
+//     int counter = 0;
+//     while (i < arr2.size() && j < arr1.size())
+//     {
+//         if (arr1[j] < arr2[i])
+//         {
+//             counter++;
+//             if (counter == k)
+//             {
+//                 return arr1[j];
+//             }
+//             j++;
+//         }
+//         else
+//         {
+//             counter++;
+//             if (counter == k)
+//             {
+//                 return arr2[i];
+//             }
+//             i++;
+//         }
+//     }
+//     while (i < arr2.size())
+//     {
+//         counter++;
+//         if (counter == k)
+//         {
+//             return arr2[i];
+//         }
+//         i++;
+//     }
+//     while (j < arr1.size())
+//     {
+//         counter++;
+//         if (counter == k)
+//         {
+//             return arr1[j];
+//         }
+//         j++;
+//     }
+//     return 0;
+// }
+
+// Optimised approach:
+
+//  int kthElement(vector<int> &nums1, vector<int> &nums2, int n1, int n2, int k)
+// { 
+//     if (n1 > n2)
+//     {
+//         return kthElement(nums2, nums1, n2, n1, k);
+//     }
+//     int total = n1 + n2;
+//     int left = k;
+//     // at 9:55 explained claerly:low condition
+//     int low = max(0, k - n2);
+//     int high = min(n1, k);
+//     // 8:33 b22 video explained 
+//     while (low <= high)
+//     {
+//         int mid1 = (low + high) / 2;
+//         int mid2 = left - mid1;
+//         int l1 = INT_MIN, l2 = INT_MIN;
+//         int r1 = INT_MAX, r2 = INT_MAX;
+//         if (mid1 - 1 >= 0)
+//         {
+//             l1 = nums1[mid1 - 1];
+//         }
+//         if (mid1 < n1)
+//         {
+//             r1 = nums1[mid1];
+//         }
+//         if (mid2 - 1 >= 0)
+//         {
+//             l2 = nums2[mid2 - 1];
+//         }
+//         if (mid2 < n2)
+//         {
+//             r2 = nums2[mid2];
+//         }
+//         if (l1 <= r2 && l2 <= r1)
+//         {
+//             // success case
+//             return max(l1, l2);
+//         }
+//         else if (l1 > r2)
+//         {
+//             high = mid1 - 1;
+//         }
+//         else
+//         {
+//             low = mid1 + 1;
+//         }
+//     }
+//     return 0;
+// }
+
+// You are given 0 2D matrix 54RR’(contoining either ‘0'
+// or ‘1’) of size ’N’x 'M', where each row is in sorted
+// order.
+// Find the O-based index of the ?rst row with the
+// maximum number of 1's.
+// Note :
+// If two rows have the same number of 1’s,
+// return the row with a lower index.
+// If no row exists where at-least one '1'
+// is present, return -1.   
 
 
+int rowWithMax1s(vector<vector<int>> &matrix, int n, int m)
+{
+     
+}
 
 int main()
 {
+    // vector<int> a = {};
+    // cout << a.size();
 
     // int t;
     // cin >> t;
