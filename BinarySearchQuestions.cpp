@@ -2063,7 +2063,7 @@ using namespace std;
 // Optimised approach:
 
 //  int kthElement(vector<int> &nums1, vector<int> &nums2, int n1, int n2, int k)
-// { 
+// {
 //     if (n1 > n2)
 //     {
 //         return kthElement(nums2, nums1, n2, n1, k);
@@ -2073,7 +2073,7 @@ using namespace std;
 //     // at 9:55 explained claerly:low condition
 //     int low = max(0, k - n2);
 //     int high = min(n1, k);
-//     // 8:33 b22 video explained 
+//     // 8:33 b22 video explained
 //     while (low <= high)
 //     {
 //         int mid1 = (low + high) / 2;
@@ -2122,13 +2122,416 @@ using namespace std;
 // If two rows have the same number of 1’s,
 // return the row with a lower index.
 // If no row exists where at-least one '1'
-// is present, return -1.   
+// is present, return -1.
+
+// int rowWithMax1s(vector<vector<int>> &matrix, int n, int m)
+// {
+//      for(int i=0;i<m;i++)
+//      {
+//         for(int j=0;j<n;j++)
+//         {
+//             if(matrix[j][i]==1)
+//             {
+//                 return j;
+//             }
+//         }
+//      }
+//      return -1;
+// }
+
+// int bs(vector<int> &matrix, int row)
+// {
+//     int low = 0;
+//     int high = matrix.size();
+//     int ans = matrix.size();
+//     while (low < high)
+//     {
+//         int mid = (low + high) / 2;
+//         if (matrix[mid] == 1)
+//         {
+//             ans = mid;
+//             high = mid;
+//         }
+//         else if (matrix[mid] == 0)
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return ans;
+// }
+
+// int rowWithMax1s(vector<vector<int>> &matrix, int n, int m)
+// {
+//     int ans = m;
+//     int rans = -1;
+//     for (int row = 0; row < n; row++)
+//     {
+//         // apply bs to get first occurence of 1:
+//         int o = bs(matrix[row], row);
+//         if (ans > o)
+//         {
+//             ans = o;
+//             rans = row;
+//         }
+//     }
+//     return rans;
+// }
+
+// You are given an m x n integer matrix matrix with the following two properties:
+
+// Each row is sorted in non-decreasing order.
+// The first integer of each row is greater than the last integer of the previous row.
+// Given an integer target, return true if target is in matrix or false otherwise.
+
+// bool searchMatrix(vector<vector<int>> &matrix, int target)
+// {
+//     vector<int> t;
+//     for (auto it : matrix)
+//     {
+//         for (auto bt : it)
+//         {
+//             t.push_back(bt);
+//         }
+//     }
+//     int low = 0;
+//     int high = matrix.size() * matrix[0].size();
+//     while (low < high)
+//     {
+//         int mid = (low + high) / 2;
+//         if (t[mid] == target)
+//         {
+//             return true;
+//         }
+//         else if (t[mid] > target)
+//         {
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return false;
+// }
+
+// Time complexity :
+// o(N+log(m))
+
+// bool searchMatrix(vector<vector<int>> &matrix, int target)
+// {
+//     int rows = 0;
+//     for (int i = 0; i < matrix.size(); i++)
+//     {
+//         if (matrix[i][0] > target)
+//         {
+//             rows = i - 1;
+//             break;
+//         }
+//         else
+//         {
+//             rows = i;
+//         }
+//     }
+//     if (rows >= 0)
+//     {
+//         int low = 0;
+//         int high = matrix[rows].size();
+//         while (low < high)
+//         {
+//             int mid = (low + high) / 2;
+//             if (matrix[rows][mid] == target)
+//             {
+//                 return true;
+//             }
+//             else if (matrix[rows][mid] > target)
+//             {
+//                 high = mid;
+//             }
+//             else
+//             {
+//                 low = mid + 1;
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+// Time complexity :
+// o(log(m*n))
+// We will map the index of 2D array to the 1D array by the formula :i corresponds to the (i/col,i%col) in 2d array
+
+// bool searchMatrix(vector<vector<int>> &matrix, int target)
+// {
+//     int low = 0;
+//     int high = matrix[0].size() * matrix.size();
+//     int colom = matrix[0].size();
+//     while (low < high)
+//     {
+//         int mid = (low + high) / 2;
+//         if (matrix[mid / colom][mid % colom] == target)
+//         {
+//             return true;
+//         }
+//         else if (matrix[mid / colom][mid % colom] > target)
+//         {
+//             high = mid;
+//         }
+//         else
+//         {
+//             low = mid + 1;
+//         }
+//     }
+//     return false;
+// }
+
+// Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+
+// Integers in each row are sorted in ascending from left to right.
+// Integers in each column are sorted in ascending from top to bottom.
+
+// bool searchMatrix(vector<vector<int>> &matrix, int target)
+// {
+//     int n = matrix.size();
+//     int m = matrix[0].size();
+//     int row = 0;
+//     int col = m - 1;
+//     while (row < n && col >= 0)
+//     {
+//         if (matrix[row][col] == target)
+//         {
+//             return true;
+//         }
+//         else if (matrix[row][col] > target)
+//         {
+//             col--;
+//         }
+//         else
+//         {
+//             row++;
+//         }
+//     }
+//     return false;
+// }
+
+// A peak element in a 2D grid is an element that is strictly greater than all of its adjacent neighbors to the left, right, top, and bottom.
+
+// Given a 0-indexed m x n matrix mat where no two adjacent cells are equal, find any peak element mat[i][j] and return the length 2 array [i,j].
+
+// You may assume that the entire matrix is surrounded by an outer perimeter with the value -1 in each cell.
+
+// You must write an algorithm that runs in O(m log(n)) or O(n log(m)) time.
+
+// Extreme Naive:
+// o(n*m) :tc
+
+// vector<int> findPeakGrid(vector<vector<int>> &mat)
+// {
+//     for (int i = 0; i < mat.size(); i++)
+//     {
+//         for (int j = 0; j < mat[i].size(); j++)
+//         {
+//             if ((i - 1 >= 0 ? mat[i][j] > mat[i - 1][j] : true) &&
+//                 (j - 1 >= 0 ? mat[i][j] > mat[i][j - 1] : true) &&
+//                 (i + 1 < mat.size() ? mat[i][j] > mat[i + 1][j] : true) &&
+//                 (j + 1 < mat[i].size() ? mat[i][j] > mat[i][j + 1] : true))
+//             {
+//                 return {i, j};
+//             }
+//         }
+//     }
+//     return {};
+// }
+
+// o(n *log(m)):tc
+
+// vector<int> findPeakGrid(vector<vector<int>> &mat)
+// {
+//     int stcol = 0;
+//     int endcol = mat[0].size();
+//     while (stcol < endcol)
+//     {
+//         int mid = (stcol + endcol) / 2;
+//         int maxind = 0;
+//         for (int ro = 0; ro < mat.size(); ro++)
+//         {
+//             if (mat[maxind][mid] < mat[ro][mid])
+//             {
+//                 maxind = ro;
+//             }
+//         }
+//         bool left = (mid - 1 >= stcol ? (mat[maxind][mid] < mat[maxind][mid - 1]) : false);
+//         bool right = (mid + 1 < endcol ? (mat[maxind][mid] < mat[maxind][mid + 1]) : false);
+//         if (!left && !right)
+//         {
+//             return {maxind, mid};
+//         }
+//         else if (left)
+//         {
+//             endcol = mid;
+//         }
+//         else
+//         {
+//             stcol = mid + 1;
+//         }
+//     }
+//     return {};
+// }
+
+// o(n+m):tc
+
+// vector<int> findPeakGrid(vector<vector<int>> &mat)
+// {
+//     int i = 0, j = 0;
+//     int n = mat.size();
+//     int m = mat[0].size();
+//     while (1)
+//     {
+//         int el = mat[i][j];
+//         int left = (j - 1 >= 0) ? mat[i][j - 1] : -1;
+//         int right = (j + 1 < m) ? mat[i][j + 1] : -1;
+//         int up = (i - 1 >= 0) ? mat[i - 1][j] : -1;
+//         int down = (i + 1 < n) ? mat[i + 1][j] : -1;
+//         if (el < left)
+//             el = left;
+//         if (el < right)
+//             el = right;
+//         if (el < up)
+//             el = up;
+//         if (el < down)
+//             el = down;
+//         if (el == left)
+//         {
+//             j--;
+//         }
+//         else if (el == right)
+//         {
+//             j++;
+//         }
+//         else if (el == up)
+//         {
+//             i--;
+//         }
+//         else if (el == down)
+//         {
+//             i++;
+//         }
+//         else
+//         {
+//             return {i, j};
+//         }
+//     }
+//     return {};
+// }
+
+// left to understand:
+// vector<int> quadSearch(vector<vector<int>> &a, vector<int> &s, vector<int> &e, const vector<int> &prev)
+// {
+//     vector<int> m = {(s[0] + e[0]) / 2, (s[1] + e[1]) / 2};
+//     // get Max
+//     int i = m[0], j = m[1];
+//     for (int ii = m[0], jj = s[1]; jj < e[1]; jj++)
+//         if (a[ii][jj] > a[i][j])
+//             i = ii, j = jj;
+//     for (int ii = s[0], jj = m[1]; ii < e[0]; ii++)
+//         if (a[ii][jj] > a[i][j])
+//             i = ii, j = jj;
+//     // test for Peak
+//     int cur = a[i][j];
+//     int up = i > 0 ? a[i - 1][j] : -1;
+//     int down = i < a.size() - 1 ? a[i + 1][j] : -1;
+//     int left = j > 0 ? a[i][j - 1] : -1;
+//     int right = j < a[0].size() - 1 ? a[i][j + 1] : -1;
+//     if (up < cur && down < cur && left < cur && right < cur)
+//         return {i, j};
+//     // @Synopoly testcase check
+//     if (prev[0] > cur)
+//     {
+//         // We want to update range but
+//         // it must include some Peak
+//         // if cur_max < previous_max
+//         // the Peak is only guaranteed if we move into a quadrant
+//         // that is connected to prev_max
+//         i = prev[1], j = prev[2];
+//     }
+//     // range updates
+//     if (i < m[0] || (i == m[0] && up > cur))
+//         e[0] = m[0];
+//     else
+//         s[0] = m[0] + 1;
+//     if (j < m[1] || (j == m[1] && left > cur))
+//         e[1] = m[1];
+//     else
+//         s[1] = m[1] + 1;
+//     return quadSearch(a, s, e, {a[i][j], i, j});
+// }
+// vector<int> findPeakGrid(vector<vector<int>> &a)
+// {
+//     vector<int> s = {0, 0};
+//     vector<int> e = {(int)a.size(), (int)a[0].size()};
+//     return quadSearch(a, s, e, {0, 0, 0});
+// }
+
+// You are given a row-wise sorted matrix ’mat’ of size m x n
+// where 'm'ond ’n'ore the numbers of rows and columns of
+// the matrix, respectively.
+// Your task is to find and return the median of the matrix.
+
+// tc : log(1e9)*n*log(m)
+
+// int lessthanMid(vector<int> row, int t)
+// {
+//     int low = 0;
+//     int high = row.size();
+//     while (low < high)
+//     {
+//         int mid = (low + high) / 2;
+//         if (row[mid] <= t)
+//         {
+//             low = mid + 1;
+//         }
+//         else if (row[mid] > t)
+//         {
+//             high = mid;
+//         }
+//     }
+//     return low;
+// }
+
+// int median(vector<vector<int>> &matrix, int n, int m)
+// {
+//     int mini = INT_MAX;
+//     int maxi = INT_MIN;
+//     for (int i = 0; i < matrix.size(); i++)
+//     {
+//         mini = min(mini, matrix[i][0]);
+//     }
+//     for (int i = 0; i < matrix.size(); i++)
+//     {
+//         maxi = max(maxi, matrix[i][matrix[0].size() - 1]);
+//     }
+//     maxi++;
+//     int ans;
+//     while (mini < maxi)
+//     {
+//         int mid = (mini + maxi) / 2;
+//         int cnt = 0;
+//         for (int i = 0; i < matrix.size(); i++)
+//         {
+//             cnt += lessthanMid(matrix[i], mid);
+//         }
+//         if (cnt <= (n * m) / 2)
+//         {
+//             mini = mid + 1;
+//         }
+//         else if (cnt > (n * m) / 2)
+//         {
+//             maxi = mid;
+//         }
+//     }
+//     return mini;
+// }
 
 
-int rowWithMax1s(vector<vector<int>> &matrix, int n, int m)
-{
-     
-}
 
 int main()
 {
@@ -2168,7 +2571,3 @@ int main()
 
     return 0;
 }
-
-// 20 12
-// 7 12 11 19 0 7 18 6 9 9 15 9 12 13 20 8 15 1 11 17
-// 25

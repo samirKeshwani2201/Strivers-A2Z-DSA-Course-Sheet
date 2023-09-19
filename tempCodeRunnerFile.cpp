@@ -1,1 +1,2 @@
-0
+
+    cout << "Before reversing words: " << endl;
