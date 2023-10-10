@@ -625,16 +625,348 @@ using namespace std;
 //         return r;
 //     }
 
-// Given a string s, return the longest palindromic substring in s.
+//  You are given a string ’str’of lowercase alphabets and an
+// integer ’k'.
+// Your task is to return the count all the possible substrings
+// that have exactly 'k' distinct characters.
 
-string longestPalindrome(string s)
-{
-    
-}
+// Naive approach:
+
+// int countSubStrings(string str, int k)
+// {
+//     int cnt = 0;
+//     for (int j = 0; j < str.size(); j++)
+//     {
+//         map<char, int> mp;
+//         for (int i = j; i < str.size(); i++)
+//         {
+//             mp[str[i]]++;
+//             if (mp.size() == k)
+//             {
+//                 // include in answer
+//                 cnt++;
+//             }
+//             else if (mp.size() > k)
+//             {
+//                 break;
+//             }
+//         }
+//     }
+//     return cnt;
+// }
+
+// tc :n2 and sc constant
+
+// int countSubStrings(string str, int k)
+// {
+//     vector<int> mp(26, 0);
+//     int cnt = 0;
+//     int ans = 0;
+//     for (int j = 0; j < str.size(); j++)
+//     {
+//         cnt = 0;
+//         for (int i = j; i < str.size(); i++)
+//         {
+//             mp[str[i] - 'a']++;
+//             if (mp[str[i] - 'a'] == 1)
+//             {
+//                 // first time
+//                 cnt++;
+//             }
+//             if (cnt == k)
+//             {
+//                 ans=max(ans,i-j+1);
+//             }
+//             else if (cnt > k)
+//             {
+//                 break;
+//             }
+//         }
+//         fill(mp.begin(), mp.end(), 0);
+//     }
+//     return ans;
+// }
+
+// tc :n  and sc constant
+/*
+        Time Complexity: O(N)
+        Space complexity: O(1)
+
+        Where N denotes the length of the given string.
+*/
+
+// int helper(string s, int k)
+// {
+//     vector<int> mp(26, 0);
+//     int cnt = 0;
+//     int ans = 0;
+//     int i = 0;
+//     int j = 0;
+//     while (j < s.size())
+//     {
+//         mp[s[j] - 'a']++;
+//         if (mp[s[j] - 'a'] ==1)
+//         {
+//             cnt++;
+//         }
+//         while (cnt > k)
+//         {
+//             mp[s[i] - 'a']--;
+//             if (mp[s[i] - 'a'] == 0)
+//             {
+//                 cnt -= 1;
+//             }
+//             i++;
+//         }
+//         ans += (j - i + 1);
+//         j++;
+//     }
+//     return ans;
+// }
+
+// int countSubStrings(string str, int k)
+// {
+//     int ans = helper(str, k) - helper(str, k - 1);
+//     return ans;
+// }
+
+// Longest K unique characters substring
+
+//  int longestKSubstr(string s , int k) {
+//     vector<int> mp(26, 0);
+//     int cnt = 0;
+//     int ans = 0;
+//     int i = 0;
+//     int j = 0;
+//     while (j < s.size())
+//     {
+//         mp[s[j] - 'a']++;
+//         if (mp[s[j] - 'a'] ==1)
+//         {
+//             cnt++;
+//         }
+//         while (cnt > k)
+//         {
+//             mp[s[i] - 'a']--;
+//             if (mp[s[i] - 'a'] == 0)
+//             {
+//                 cnt -= 1;
+//             }
+//             i++;
+//         }
+//         ans= max(j - i + 1,ans);
+//         j++;
+//     }
+//     return ans;
+//     }
+
+// int longestKSubstr(string s, int k)
+// {
+//     int i = 0;
+//     int j = 0;
+//     int ans = INT_MIN;
+//     map<char, int> mp;
+//     while (j < s.size())
+//     {
+//         mp[s[j]]++;
+//         if (mp.size() == k)
+//         {
+//             ans = max(ans, j - i + 1);
+//         }
+//         else if (mp.size() > k)
+//         {
+//             while (mp.size() > k)
+//             {
+//                 mp[s[i]]--;
+//                 if (mp[s[i]] == 0)
+//                 {
+//                     mp.erase(s[i]);
+//                 }
+//                 i++;
+//             }
+//         }
+//         j++;
+//     }
+//     return ans;
+// }
+
+// Given a string s, return the longest palindromic substring in s
+
+// Naive approach : tc: n3
+
+// bool isPali(string s)
+// {
+//     int i = 0;
+//     int j = s.size() - 1;
+//     while (i < j)
+//     {
+//         if (s[i] != s[j])
+//         {
+//             return false;
+//         }
+//         i++;
+//         j--;
+//     }
+//     return true;
+// }
+
+// string longestPalindrome(string s)
+// {
+//     for (int l = s.size(); l > 0; l--)
+//     {
+//         for (int st = 0; st <= s.size() - l; st++)
+//         {
+//             string sub = s.substr(st,  l);
+//             if (isPali(sub))
+//             {
+//                 return sub;
+//             }
+//         }
+//     }
+//     return s;
+// }
+
+// DP approach:
+
+// string longestPalindrome(string s)
+// {
+//     int n = s.size();
+//     int dp[n][n];
+//     int ans[2] = {0, 0};
+//     for (int i = 0; i < n; i++)
+//     {
+//         dp[i][i] = 1;
+//     }
+//     for (int i = 0; i < n - 1; i++)
+//     {
+//         if (s[i] == s[i + 1])
+//         {
+//             dp[i][i + 1] = 1;
+//             ans[0] = i;
+//             ans[1] = i + 1;
+//         }
+//     }
+//     for (int diff = 2; diff < n; diff++)
+//     {
+//         for (int i = 0; i < n - diff; i++)
+//         {
+//             int j = i + diff;
+//             if (s[i] == s[j] && dp[i + 1][j - 1])
+//             {
+//                 dp[i][j] = 1;
+//                 ans[0] = i;
+//                 ans[1] = j;
+//             }
+//         }
+//     }
+//     return s.substr(ans[0], ans[1] - ans[0] + 1);
+// }
+
+// Without dp but optimised approach:
+
+// string longestPalindrome(string s)
+// {
+//     int start = 0;
+//     int end = 0;
+//     for (int i = 0; i < s.size(); i++)
+//     {
+//         // odd case
+//         int len1 = expanCal(s, i, i);
+//         // even case
+//         int len2 = expanCal(s, i, i + 1);
+//         int len = max(len1, len2);
+//         if (len > end - start)
+//         {
+//             start = i - ((len - 1) / 2);
+//             end = i + (len) / 2;
+//         }
+//     }
+//     return s.substr(start, end - start + 1);
+// }
+
+// int expanCal(string s, int left, int right)
+// {
+//     if (s == " " || left > right)
+//         return 0;
+//     while (left >= 0 && right < s.size() && s[left] == s[right])
+//     {
+//         left--;
+//         right++;
+//     }
+//     return right - left - 1;
+// }
+
+// The beauty of a string is the difference in frequencies between the most frequent and least frequent characters.
+// For example, the beauty of "abaacc" is 3 - 1 = 2.
+// Given a string s, return the sum of beauty of all of its substrings.
+
+// TC :O(n3)
+//  SC :o(27) idk
+
+// int getB(string s)
+// {
+//     int mp[26] = {0};
+//     int mini = INT_MAX; // Initialize to maximum possible value.
+//     int maxi = 0;
+//     for (int i = 0; i < s.size(); i++)
+//     {
+//         mp[s[i] - 'a']++;
+//     }
+//     for (int i = 0; i < 26; i++)
+//     {
+//         if (mp[i] >= maxi)
+//         {
+//             maxi = mp[i];
+//         }
+//         if (mp[i] <= mini && mp[i] != 0)
+//         {
+//             mini = mp[i];
+//         }
+//     }
+//     if (maxi - mini >= 0)
+//         return maxi - mini;
+//     else
+//         return 0;
+// }
+
+// int beautySum(string s)
+// {
+//     long int sum = 0;
+//     for (int i = 0; i < s.size(); i++)
+//     {
+//         for (int j = i; j < s.size(); j++)
+//         {
+//             sum += getB(s.substr(i, j - i + 1));
+//         }
+//     }
+//     return sum;
+// }
+
+// Optimised code :
+
+// int beautySum(string s) {
+//         int sum = 0; //  to store ans;
+//         int n = s.length();
+//         for (int i = 0; i < n; i++) {
+//             unordered_map<char, int> mp;
+//             for (int j = i; j < n; j++) {
+//                 mp[s[j]]++; // storing every possible substring
+//                 int maxFreq = 0, minFreq = INT_MAX;
+//                 for (auto it : mp) {
+//                     maxFreq = max(maxFreq, it.second);
+//                     minFreq = min(minFreq, it.second);
+//                 }
+//                 sum += (maxFreq - minFreq);
+//             }
+//         }
+//         return sum;
+//     }
+
+ 
 
 int main()
 {
-    string ans = "   ";
-    cout << "c" << ans.size() << "c";
+    string ans = "aabcb";
+
     return 0;
 }
