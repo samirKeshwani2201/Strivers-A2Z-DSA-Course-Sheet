@@ -9,15 +9,15 @@ using namespace std;
 // of the array, and the tail of the linked list is the
 // lost element.
 
-class Node
-{
-public:
-    int data;
-    Node *next;
-    Node() : data(0), next(nullptr) {}
-    Node(int x) : data(x), next(nullptr) {}
-    Node(int x, Node *next) : data(x), next(next) {}
-};
+// class Node
+// {
+// public:
+//     int data;
+//     Node *next;
+//     Node() : data(0), next(nullptr) {}
+//     Node(int x) : data(x), next(nullptr) {}
+//     Node(int x, Node *next) : data(x), next(next) {}
+// };
 
 // Node *constructLL(vector<int> &arr)
 // {
@@ -177,7 +177,7 @@ struct ListNode
 
 // recusive:
 
-// ListNode *reverseList(ListNode *head) 
+// ListNode *reverseList(ListNode *head)
 // {
 //     if (head == NULL || head->next == NULL)
 //     {
@@ -1020,31 +1020,31 @@ struct ListNode
 // You’re given a doubly-Iinked list and a key ’k’.
 // Delete all the nodes having data equal to ‘k’.
 
-class Node
-{
-public:
-    int data;
-    Node *prev;
-    Node *next;
-    Node()
-    {
-        this->data = 0;
-        this->prev = NULL;
-        this->next = NULL;
-    }
-    Node(int data)
-    {
-        this->data = data;
-        this->prev = NULL;
-        this->next = NULL;
-    }
-    Node(int data, Node *next, Node *prev)
-    {
-        this->data = data;
-        this->prev = prev;
-        this->next = next;
-    }
-};
+// class Node
+// {
+// public:
+//     int data;
+//     Node *prev;
+//     Node *next;
+//     Node()
+//     {
+//         this->data = 0;
+//         this->prev = NULL;
+//         this->next = NULL;
+//     }
+//     Node(int data)
+//     {
+//         this->data = data;
+//         this->prev = NULL;
+//         this->next = NULL;
+//     }
+//     Node(int data, Node *next, Node *prev)
+//     {
+//         this->data = data;
+//         this->prev = prev;
+//         this->next = next;
+//     }
+// };
 
 // void dele(Node *t)
 // {
@@ -1255,6 +1255,8 @@ public:
 //     return cnt;
 // }
 
+// dh dummyHead
+
 // ListNode *reverseKGroup(ListNode *head, int k)
 // {
 //     if (!head || head->next == NULL)
@@ -1280,44 +1282,613 @@ public:
 //     return dh->next;
 // }
 
-// Recursive Approach:
+// Recursive Approach: sc:o(n/k)
+// tc:o(n)
 
-void reverse(ListNode *s, ListNode *e)
+// void reverse(ListNode *s, ListNode *e)
+// {
+//     ListNode *p = NULL, *curr = s, *nex = s->next;
+//     while (p != e)
+//     {
+//         curr->next = p;
+//         p = curr;
+//         curr = nex;
+//         if (nex != NULL)
+//             nex = nex->next;
+//     }
+// }
+
+// ListNode *reverseKGroup(ListNode *head, int k)
+// {
+//     if (!head || !(head->next) || k == 1)
+//         return head;
+//     ListNode *s = head;
+//     ListNode *e = head;
+//     int cnt = 1;
+//     while (cnt != (k))
+//     {
+//         cnt++;
+//         e = e->next;
+//         if (!e)
+//             return head;
+//     }
+//     ListNode *newHead = reverseKGroup(e->next, k);
+//     reverse(s, e);
+//     s->next = newHead;
+//     return e;
+// }
+
+// Iterative   Approach FRAZ:good one
+
+// void reverse(ListNode *s, ListNode *e)
+// {
+//     ListNode *p = NULL, *curr = s, *nex = s->next;
+//     while (p != e)
+//     {
+//         curr->next = p;
+//         p = curr;
+//         curr = nex;
+//         if (nex != NULL)
+//             nex = nex->next;
+//     }
+// }
+
+// ListNode *reverseKGroup(ListNode *head, int k)
+// {
+//     if (!head || k == 1 || head->next == NULL)
+//         return head;
+//     ListNode *dummy = new ListNode(-1);
+//     dummy->next = head;
+//     ListNode *beforeStart = dummy, *e = head;
+//     int i = 0;
+//     while (e != NULL)
+//     {
+//         i++;
+//         if (i % k == 0)
+//         {
+//             // reversal
+//             ListNode *temp = e->next;
+//             ListNode *s = beforeStart->next;
+//             reverse(s, e);
+//             beforeStart->next = e;
+//             s->next = temp;
+//             beforeStart = s;
+//             e = temp;
+//         }
+//         else
+//         {
+//             e = e->next;
+//         }
+//     }
+//     return dummy->next;
+// }
+
+// Given the head of a linked list, rotate the list to the right by k places.
+
+// ListNode *getTail(ListNode *p)
+// {
+//     ListNode *temp = p;
+//     while (temp && temp->next)
+//     {
+//         temp = temp->next;
+//     }
+//     return temp;
+// }
+
+// int gsz(ListNode *he)
+// {
+//     ListNode *temp = he;
+//     int cnt = 0;
+//     while (temp)
+//     {
+//         cnt++;
+//         temp = temp->next;
+//     }
+//     return cnt;
+// }
+
+// Gives tle  tc:o(k*n)
+// sc:o(1)
+
+// ListNode *rotateRight(ListNode *head, int k)
+// {
+//     if (!head || !head->next || k == 0)
+//         return head;
+//     for (int i = 1; i <= k; i++)
+//     {
+//         ListNode *curr = head;
+//         int temp;
+//         temp = curr->val;
+//         while (curr && curr->next)
+//         {
+//             int d = curr->next->val;
+//             curr->next->val = temp;
+//             temp = d;
+//             curr = curr->next;
+//         }
+//         head->val = temp;
+//     }
+//     return head;
+// }
+
+// int gsz(ListNode *he)
+// {
+//     ListNode *temp = he;
+//     int cnt = 0;
+//     while (temp)
+//     {
+//         cnt++;
+//         temp = temp->next;
+//     }
+//     return cnt;
+// }
+
+// ListNode *getTail(ListNode *p)
+// {
+//     ListNode *temp = p;
+//     while (temp && temp->next)
+//     {
+//         temp = temp->next;
+//     }
+//     return temp;
+// }
+
+// ListNode *rotateRight(ListNode *head, int k)
+// {
+//     if (!head || !head->next)
+//         return head;
+//     int sz = gsz(head);
+//     int cnt = 0;
+//     k = k % sz;
+//     if (k == 0)
+//         return head;
+//     ListNode *temp = head;
+//     while (cnt != sz - k - 1 && temp && temp->next)
+//     {
+//         temp = temp->next;
+//         cnt++;
+//     }
+//     ListNode *newHead = temp->next;
+//     ListNode *tail = getTail(head);
+//     tail->next = head;
+//     temp->next = NULL;
+//     head = newHead;
+//     return head;
+// }
+
+// ListNode *rotateRight(ListNode *head, int k)
+// {
+//     if (!head || !head->next || k == 0)
+//         return head;
+//     ListNode *tail = head;
+//     int cnt = 1;
+//     while (tail->next)
+//     {
+//         cnt++;
+//         tail = tail->next;
+//     }
+//     tail->next = head;
+//     k = k % cnt;
+//     int end = cnt - k;
+//     while (end--)
+//     {
+//         tail = tail->next;
+//     }
+//     head = tail->next;
+//     tail->next = NULL;
+//     return head;
+// }
+
+// You are given a doubly linked list, which contains nodes that have a next pointer, a previous pointer, and an additional child pointer. This child pointer may or may not point to a separate doubly linked list, also containing these special nodes. These child lists may have one or more children of their own, and so on, to produce a multilevel data structure as shown in the example below.
+
+// Given the head of the first level of the list, flatten the list so that all the nodes appear in a single-level, doubly linked list. Let curr be a node with a child list. The nodes in the child list should appear after curr and before curr.next in the flattened list.
+
+// Return the head of the flattened list. The nodes in the list must have all of their child pointers set to null.
+
+// Multilevel dll:leetcode
+// class Node
+// {
+// public:
+//     int val;
+//     Node *prev;
+//     Node *next;
+//     Node *child;
+// };
+
+// Recursive approach:
+
+// Node *pre = NULL;
+// Node *flatten(Node *head)
+// {
+//     if (head == NULL)
+//         return head;
+//     if (pre != NULL)
+//     {
+//         pre->next = head;
+//         head->prev = pre;
+//     }
+//     pre = head;
+//     Node *nex = head->next;
+//     flatten(head->child);
+//     head->child = NULL;
+//     flatten(nex);
+//     return head;
+// }
+
+// Iterative approach:
+
+// Node *flatten(Node *head)
+// {
+//     for (Node *h = head; h; h = h->next)
+//     {
+//         if (h->child)
+//         {
+//             Node *next = h->next;
+//             h->next = h->child;
+//             h->next->prev = h;
+//             h->child = NULL;
+//             Node *p = h->next;
+//             while (p->next)
+//                 p = p->next;
+//             p->next = next;
+//             if (next)
+//                 next->prev = p;
+//         }
+//     }
+//     return head;
+// }
+
+// Take eg will make sense:
+
+// Node *flatten(Node *head)
+// {
+//     if (head == NULL)
+//         return NULL;
+//     Node *p = head;
+//     while (p)
+//     {
+//         if (p->child)
+//         {
+//             Node *nex = p->next;
+//             p->next = p->child;
+//             p->next->prev = p;
+//             p->child = NULL;
+//             Node *temp = p;
+//             while (temp->next)
+//             {
+//                 temp = temp->next;
+//             }
+//             temp->next = nex;
+//             if (nex)
+//                 nex->prev = temp;
+//         }
+//         else
+//         {
+//             // do nothing
+//         }
+//         p = p->next;
+//     }
+//     return head;
+// }
+
+// using stack:
+
+// Node *flatten(Node *head)
 {
-    ListNode *p = NULL, *curr = s, *nex = s->next;
-    while (p != e)
+    stack<Node *> st;
+    Node *curr = head;
+    while (curr)
     {
-        curr->next = p;
-        p = curr;
-        curr = nex;
-        if (nex != NULL)
-            nex = nex->next;
+        if (curr->child)
+        {
+            Node *nex = curr->next;
+            if (nex)
+                st.push(nex);
+            curr->next = curr->child;
+            curr->child->prev = curr;
+            curr->child = NULL;
+        }
+        else if (curr->next == NULL && !(st.empty()))
+        {
+            // somethings there in stack
+            Node *temp = st.top();
+            st.pop();
+            curr->next = temp;
+            temp->prev = curr;
+        }
+        curr = curr->next;
     }
+    return head;
 }
 
-ListNode *reverseKGroup(ListNode *head, int k)
-{
-    if (!head || !(head->next) || k == 1)
-        return head;
-    ListNode *s = head;
-    ListNode *e = head;
-    int cnt = 1;
-    while (cnt != (k))
-    {
-        cnt++;
-        e = e->next;
-        if (!e)
-            return head;
-    }
+// Coding Ninjas:singly ll :
 
-    ListNode *newHead = reverseKGroup(e->next, k);
-    reverse(s, e);
-    s->next = newHead;
-    return e;
-}
+// The returned Linked List shouLd be in a sorted
+// order. ALL the eLements in this returned Linked
+// List are connected by 'chiLd' pointers and
+// 'next' pointers point to nuLL.
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node *child;
+};
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node *child;
+};
+
+// Worst approach:
+
+// sc o(totalNodes)
+// tc:o(totalNodes+totalNodes+totalNodes*log(totalNodes))
+
+// Node *flattenLinkedList(Node *head)
+// {
+//     Node *temp = head;
+//     vector<int> ans;
+//     while (temp)
+//     {
+//         ans.push_back(temp->data);
+//         Node *ch = temp->child;
+//         while (ch)
+//         {
+//             ans.push_back(ch->data);
+//             ch = ch->child;
+//         }
+//         temp = temp->next;
+//     }
+//     sort(ans.begin(), ans.end());
+//     Node *he = NULL;
+//     Node *t = NULL;
+//     for (auto it : ans)
+//     {
+//         Node *ne = new Node();
+//         ne->data = it;
+//         ne->next = NULL;
+//         if (!he)
+//         {
+//             he = ne;
+//             t = ne;
+//         }
+//         else
+//         {
+//             t->child = ne;
+//             t = ne;
+//         }
+//     }
+//     return he;
+// }
+
+// Gud one :
+
+// Node *merge(Node *a, Node *b)
+// {
+//     if (!a)
+//     {
+//         b->next = NULL;
+//         return b;
+//     }
+//     if (!b)
+//     {
+//         a->next = NULL;
+//         return a;
+//     }
+//     Node *merged = NULL;
+//     if (a->data < b->data)
+//     {
+//         merged = a;
+//         merged->child = merge(a->child, b);
+//     }
+//     else
+//     {
+//         merged = b;
+//         merged->child = merge(a, b->child);
+//     }
+//     merged->next = NULL;
+//     return merged;
+// }
+
+// Node *flattenLinkedList(Node *head)
+// {
+//     if (!head || !head->next)
+//         return head;
+//     head->next = flattenLinkedList(head->next);
+//     head = merge(head, head->next);
+//     return head;
+// }
+
+// Love babbar soln:
+
+// Node *merge(Node *a, Node *b)
+// {
+//     if (!a)
+//     {
+//         b->next = NULL;
+//         return b;
+//     }
+//     if (!b)
+//     {
+//         a->next = NULL;
+//         return a;
+//     }
+//     Node *merged = NULL;
+//     if (a->data < b->data)
+//     {
+//         merged = a;
+//         merged->child = merge(a->child, b);
+//     }
+//     else
+//     {
+//         merged = b;
+//         merged->child = merge(a, b->child);
+//     }
+//     merged->next = NULL;
+//     return merged;
+// }
+
+// tc:o(n*n*k)
+// sc:o(n*k)
+
+// esy merge version:
+// Node *merge(Node *a, Node *b)
+// {
+//     if (!a)
+//     {
+//          return b;
+//     }
+//     if (!b)
+//     {
+//            return a;
+//     }
+//     Node *du = new Node();
+//     Node *ptr = du;
+//     while (a && b)
+//     {
+//         if (a->data > b->data)
+//         {
+//             ptr->child = b;
+//             ptr = b;
+//             b=b->child;
+//         }
+//         else
+//         {
+//             ptr->child = a;
+//             ptr = a;
+//             a=a->child;
+//         }
+//     }
+//    while (a)
+//     {
+//         ptr->child = a;
+//         ptr = a;
+//         a=a->child;
+//     }
+//     while (b)
+//     {
+//         ptr->child = b;
+//         ptr = b;
+//         b=b->child;
+//     }
+//     return du->child;
+// }
+
+// Node *flattenLinkedList(Node *head)
+// {
+//     if (!head || !head->next)
+//         return head;
+//     Node *down = head;
+//     Node *right = flattenLinkedList(head->next);
+//     down->next = NULL;
+//     Node *ans = merge(down, right);
+//     return ans;
+// }
+
+// A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.
+
+// Construct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+
+// For example, if there are two nodes X and Y in the original list, where X.random --> Y, then for the corresponding two nodes x and y in the copied list, x.random --> y.
+
+// Return the head of the copied linked list.
+
+// The linked list is represented in the input/output as a list of n nodes. Each node is represented as a pair of [val, random_index] where:
+
+// val: an integer representing Node.val
+// random_index: the index of the node (range from 0 to n-1) that the random pointer points to, or null if it does not point to any node.
+// Your code will only be given the head of the original linked list.
+class Node
+{
+public:
+    int val;
+    Node *next;
+    Node *random;
+
+    Node(int _val)
+    {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+
+// Brute force:
+
+// Node *copyRandomList(Node *head)
+// {
+//     unordered_map<Node *, Node *> mp;
+//     Node *te = head;
+//     while (te)
+//     {
+//         mp[te] = new Node(te->val);
+//         te = te->next;
+//     }
+//     te = head;
+//     while (te)
+//     {
+//         Node *nod = mp[te];
+//         nod->next = (te->next != NULL) ? mp[te->next] : NULL;
+//         nod->random = (te->random != NULL) ? mp[te->random] : NULL;
+//         te = te->next;
+//     }
+//     return mp[head];
+// }
+
+// Optimised Approach:
+
+// Not gud in looking and more vairables may be used then required
+
+// tc:O(n)
+// sc:o(1)
+
+// Node *copyRandomList(Node *head)
+// {
+//     Node *temp = head;
+//     // stored the clone at the next of original node
+//     while (temp)
+//     {
+//         Node *nn = new Node(temp->val);
+//         Node *ogn = temp->next;
+//         temp->next = nn;
+//         nn->next = ogn;
+//         temp = temp->next->next;
+//     }
+//     temp = head;
+//     // Point the randoms of cloned link
+//     while (temp && temp->next)
+//     {
+//         if (temp->random)
+//             temp->next->random = temp->random->next;
+//         temp = temp->next->next;
+//     }
+//     // separate the link:
+//     temp = head;Node *fast;
+//     Node *dummy = new Node(-1);
+//     Node *ttemp = dummy;
+//     if (temp && temp->next)
+//         fast = temp->next->next;
+//     while (temp)
+//     {
+//         Node *tt = temp->next;
+//         ttemp->next = tt;
+//         ttemp = tt;
+//         temp->next = fast;
+//         temp = fast;
+//         if (temp && temp->next)
+//             fast = temp->next->next;
+//     }
+//     return dummy->next;
+// }
+
+
 
 int main()
 {
-
     return 0;
 }

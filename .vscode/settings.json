@@ -1,5 +1,8 @@
 {
     "files.associations": {
+        "*.embeddedhtml": "html",
+        "*.js": "javascript",
+        "*.jsx": "typescriptreact",
         "iostream": "cpp",
         "vector": "cpp",
         "ostream": "cpp",
@@ -22,6 +25,7 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "random": "cpp"
     }
 }
