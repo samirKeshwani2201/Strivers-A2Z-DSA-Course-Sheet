@@ -1642,7 +1642,10 @@ using namespace std;
 
 // Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.
 // Note that operands in the returned expressions should not contain leading zeros.
- 
+
+// tc=o(4^n)
+// sc:o(n)
+
 vector<string> ans;
 void help(int ind, long long prev, long long sum, int target, string curr, string &num)
 {
@@ -1654,7 +1657,6 @@ void help(int ind, long long prev, long long sum, int target, string curr, strin
         }
         return;
     }
-
     for (int i = ind; i < num.size(); i++)
     {
         if (i > ind && num[ind] == '0')
@@ -1678,20 +1680,16 @@ void help(int ind, long long prev, long long sum, int target, string curr, strin
     }
 }
 vector<string> addOperators(string num, int target)
-{ 
+{
     long long prev = 0;
     long long sum = 0;
     help(0, 0, 0, target, "", num);
     return ans;
 }
 
+
 int main()
 {
-    vector<string> a = addOperators("123", 6);
-    for (auto i : a)
-    {
-        cout << i << " ";
-    }
     // vector<int> nums = {2, 0, 2, 0};
     // vector<int> nums2 = {1, 4, 0};
     // stack<int> s;

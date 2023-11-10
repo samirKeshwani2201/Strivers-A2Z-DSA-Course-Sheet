@@ -1,3 +1,5 @@
+#include <bits/stdc++.h>
+using namespace std;
 
 // You are given a 0-indexed integer array nums, and an integer k.
 // The K-or of nums is a non-negative integer that satisfies the following:
@@ -123,3 +125,38 @@
 // long long minIncrementOperations(vector<int> &nums, int k)
 // {
 // }
+
+// 370
+
+//  There are n teams numbered from 0 to n - 1 in a tournament; each team is also a node in a DAG.
+
+// You are given the integer n and a 0-indexed 2D integer array edges of length m representing the DAG, where edges[i] = [ui, vi] indicates that there is a directed edge from team ui to team vi in the graph.
+
+// A directed edge from a to b in the graph means that team a is stronger than team b and team b is weaker than team a.
+
+// Team a will be the champion of the tournament if there is no team b that is stronger than team a.
+
+// Return the team that will be the champion of the tournament if there is a unique champion, otherwise, return -1.
+
+int findChampion(int n, vector<vector<int>> &edges)
+{
+    if( edges.size()==0 && n!=1)return -1;
+     if( edges.size()==0 && n==1)return 0;
+    map<int, int> mp;
+    for (auto it : edges)
+    {
+        mp[it[0]] = it[1];
+    }
+    if (mp.size() !=n-1 )
+    {
+        return -1;
+    }
+    sort(edges.begin(), edges.end());
+    return edges[0][0];
+}
+
+int main()
+{
+    cout << findChampion(3, {{0, 1}, {1, 2}});
+    return 0;
+}
