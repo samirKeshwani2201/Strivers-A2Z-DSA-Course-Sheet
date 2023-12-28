@@ -140,14 +140,16 @@ using namespace std;
 
 int findChampion(int n, vector<vector<int>> &edges)
 {
-    if( edges.size()==0 && n!=1)return -1;
-     if( edges.size()==0 && n==1)return 0;
+    if (edges.size() == 0 && n != 1)
+        return -1;
+    if (edges.size() == 0 && n == 1)
+        return 0;
     map<int, int> mp;
     for (auto it : edges)
     {
         mp[it[0]] = it[1];
     }
-    if (mp.size() !=n-1 )
+    if (mp.size() != n - 1)
     {
         return -1;
     }
@@ -155,8 +157,51 @@ int findChampion(int n, vector<vector<int>> &edges)
     return edges[0][0];
 }
 
+vector<int> numberGame(vector<int> &nums)
+{
+    vector<int> arr;
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < nums.size() - 1; i += 2)
+    {
+        int alice = nums[i];
+        int bob = nums[i + 1];
+        arr.push_back(bob);
+        arr.push_back(alice);
+    }
+    return arr;
+}
+
+int maximizeSquareArea(int m, int n, vector<int> &h, vector<int> &v)
+{
+    h.push_back(1);
+    h.push_back(m);
+    v.push_back(1);
+    v.push_back(n);
+    unordered_set<long long> s;
+    for (int i = 0; i < h.size(); i++)
+    {
+        for (int j = 0; j < h.size(); j++)
+        {
+            if (i != j)
+                s.insert(abs(h[j] - h[i]));
+        }
+    }
+    long long ans = -1;
+    int mod = 1E9 + 7;
+    for (int i = 0; i < v.size(); i++)
+    {
+        for (int j = 0; j < v.size(); j++)
+        {
+            if ((i != j) && s.find(abs(v[j] - v[i])) != s.end())
+            {
+                ans = max(ans, (abs(v[j] - v[i]) * 1ll * abs(v[j] - v[i])));
+            }
+        }
+    }
+    return ans == 0 ? -1 : ans % mod;
+}
+
 int main()
 {
-    cout << findChampion(3, {{0, 1}, {1, 2}});
     return 0;
 }
