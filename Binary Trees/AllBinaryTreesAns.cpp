@@ -1467,13 +1467,615 @@ struct Node
 
 // Check for Children Sum Property in a Binary Tree:  Write a program that converts any binary tree to one that follows the children sum property.The children sum property is defined as, For every node of the tree, the value of a node is equal to the sum of values of its children(left child and right child). Children Sum Parent:Given a Binary Tree. Check whether all of its nodes have the value equal to the sum of their child nodes.
 
-int help(Node *root)
-{
-}
+// bool help(Node *root)
+// {
+//     if (!root || (!root->left) && (!root->right))
+//     {
+//         return true;
+//     }
+//     int l = 0, r = 0;
+//     if (root->left)
+//         l = root->left->data;
+//     if (root->right)
+//         r = root->right->data;
+//     if (l + r == root->data)
+//     {
+//         return help(root->left) && help(root->right);
+//     }
+//     else
+//     {
+//         return false;
+//     }
+// }
 
-int isSumProperty(Node *root)
+// int isSumProperty(Node *root)
+// {
+//     return help(root);
+// }
+
+// strivers question:
+struct node
 {
-}
+    int data;
+    struct node *left, *right;
+};
+
+// void help(node *root)
+// {
+//     if (!root || (root->left == NULL && root->right == NULL))
+//     {
+//         return;
+//     }
+//     int left = 0;
+//     int right = 0;
+//     if (root->left)
+//     {
+//         left = root->left->data;
+//     }
+//     if (root->right)
+//     {
+//         right = root->right->data;
+//     }
+//     if (root->data > (left + right))
+//     {
+//         if (root->left)
+//         {
+//             root->left->data = left + right;
+//         }
+//         else if (root->right)
+//         {
+//             root->right->data = left + right;
+//         }
+//     }
+//     help(root->left);
+//     help(root->right);
+//     int tot = 0;
+//     if (root->left)
+//         tot += root->left->data;
+//     if (root->right)
+//         tot += root->right->data;
+//     if (root->left || root->right)
+//     {
+//         root->data = tot;
+//     }
+// }
+
+// void changeTree(node *root)
+// {
+//     help(root);
+//     return;
+// }
+
+// other approach:
+
+// https://www.codingninjas.com/studio/library/convert-an-arbitrary-binary-tree-to-one-that-holds-the-children-sum-property-in-its-nodes
+
+// void help(node *root)
+// {
+//     if (!root || (root->left == NULL && root->right == NULL))
+//     {
+//         return;
+//     }
+//     else
+//     {
+//         int left = 0, right = 0;
+//         help(root->left);
+//         help(root->right);
+//         if (root->left)
+//         {
+//             left = root->left->data;
+//         }
+//         if (root->right)
+//         {
+//             right = root->right->data;
+//         }
+//         if (root->data > left + right)
+//         {
+//             increment(root, root->data - (left + right));
+//         }
+//         if (root->data < left + right)
+//         {
+//             root->data = left + right;
+//         }
+//     }
+// }
+
+// void increment(node *root, int diff)
+// {
+//     if (root->left)
+//     {
+//         root->left->data += diff;
+//         increment(root->left, diff);
+//     }
+//     else if (root->right)
+//     {
+//         root->right->data += diff;
+//         increment(root->right, diff);
+//     }
+// }
+// void change(node *root)
+// {
+//     help(root);
+// }
+
+// 863. All Nodes Distance K in Binary Tree:Given the root of a binary tree, the value of a target node target, and an integer k, return an array of the values of all nodes that have a distance k from the target node.You can return the answer in any order.
+
+// // (son,parent)
+// unordered_map<TreeNode *, TreeNode *> mp;
+// // so that we dont traverse the parent once again :
+// set<TreeNode *> visited;
+// vector<int> ans;
+// void sonParentMapping(TreeNode *root)
+// {
+//     if (root->left)
+//     {
+//         mp[root->left] = root;
+//         sonParentMapping(root->left);
+//     }
+//     if (root->right)
+//     {
+//         mp[root->right] = root;
+//         sonParentMapping(root->right);
+//     }
+// }
+
+// void dfs(TreeNode *root, int k)
+// {
+//     if (!root || visited.find(root)!=visited.end())
+//     {
+//         return;
+//     }
+//     visited.insert(root);
+//     if (k == 0)
+//     {
+//         ans.push_back(root->val);
+//         return;
+//     }
+//     dfs(root->left, k - 1);
+//     dfs(root->right, k - 1);
+//     if (mp[root])
+//     {
+//         dfs(mp[root], k - 1);
+//     }
+// }
+
+// vector<int> distanceK(TreeNode *root, TreeNode *target, int k)
+// {
+//     sonParentMapping(root);
+//     dfs(target,k);
+//     return ans;
+// }
+
+// other way:
+
+// class Solution {
+// private:
+//     unordered_map<int, int> map;
+//     int find(TreeNode* root, TreeNode* target) {
+//         if (root == nullptr) return -1;
+//         if (root == target) {
+//             map[root->val] = 0;
+//             return 0;
+//         }
+//         int left = find(root->left, target);
+//         if (left >= 0) {
+//             map[root->val] = left + 1;
+//             return left + 1;
+//         }
+//         int right = find(root->right, target);
+//         if (right >= 0) {
+//             map[root->val] = right + 1;
+//             return right + 1;
+//         }
+//         return -1;
+//     }
+//     void dfs(TreeNode* root, TreeNode* target, int K, int length, vector<int>& res) {
+//         if (root == nullptr) return;
+//         if (map.find(root->val) != map.end()) length = map[root->val];
+//         if (length == K) res.push_back(root->val);
+//         dfs(root->left, target, K, length + 1, res);
+//         dfs(root->right, target, K, length + 1, res);
+//     }
+// public:
+//     vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+//         vector<int> res;
+//         find(root, target);
+//         dfs(root, target, K, map[target->val], res);
+//         return res;
+//     }
+// };
+
+// bfs :
+
+// vector<int> distanceK(TreeNode *root, TreeNode *target, int k)
+// {
+//     unordered_map<TreeNode *, TreeNode *> mp;
+//     // (son,parent)
+//     queue<TreeNode *> q;
+//     q.push(root);
+//     while (!q.empty())
+//     {
+//         int sz = q.size();
+//         for (int i = 0; i < sz; i++)
+//         {
+//             auto it = q.front();
+//             q.pop();
+//             if (it->left)
+//             {
+//                 q.push(it->left);
+//                 mp[it->left] = it;
+//             }
+//             if (it->right)
+//             {
+//                 q.push(it->right);
+//                 mp[it->right] = it;
+//             }
+//         }
+//     }
+//     // go in up and down till k and at that time whatever left in q is elements of k level and they are required ans go in up through mp
+//     int lvlsz = 0;
+//     unordered_map<TreeNode *, bool> vis;
+//     q.push(target);
+//     vis[target] = true;
+//     while (!q.empty())
+//     {
+//         if (lvlsz == k)
+//         {
+//             break;
+//         }
+//         int sz = q.size();
+//         for (int i = 0; i < sz; i++)
+//         {
+//             auto it = q.front();
+//             q.pop();
+//             if (it->left && !vis[it->left])
+//             {
+//                 q.push(it->left);
+//                 vis[it->left] = true;
+//             }
+//             if (it->right && !vis[it->right])
+//             {
+//                 q.push(it->right);
+//                 vis[it->right] = true;
+//             }
+//             // going up:
+//             if (mp[it] && !vis[mp[it]])
+//             {
+//                 q.push(mp[it]);
+//                 vis[mp[it]] = true;
+//             }
+//         }
+//         lvlsz++;
+//     }
+//     vector<int> res;
+//     while (!q.empty())
+//     {
+//         res.push_back(q.front()->val);
+//         q.pop();
+//     }
+//     return res;
+// }
+
+// 2385. Amount of Time for Binary Tree to Be Infected
+// You are given the root of a binary tree with unique values, and an integer start. At minute 0, an infection starts from the node with value start.
+// Each minute, a node becomes infected if:
+// The node is currently uninfected.
+// The node is adjacent to an infected node.
+// Return the number of minutes needed for the entire tree to be infected.
+
+// int amountOfTime(TreeNode *root, int start)
+// {
+//     // (son,parent)
+//     unordered_map<TreeNode *, TreeNode *> mp;
+//     mp[root] = NULL;
+//     // (node,val)
+//     queue<pair<TreeNode *, int>> q;
+//     TreeNode *target;
+//     q.push({root, root->val});
+//     while (!q.empty())
+//     {
+//         int sz = q.size();
+//         for (int i = 0; i < sz; i++)
+//         {
+//             auto it = q.front();
+//             q.pop();
+//             if (it.first->val == start)
+//             {
+//                 target = it.first;
+//             }
+//             if (it.first->left)
+//             {
+//                 mp[it.first->left] = it.first;
+//                 q.push({it.first->left, it.first->left->val});
+//             }
+//             if (it.first->right)
+//             {
+//                 mp[it.first->right] = it.first;
+//                 q.push({it.first->right, it.first->right->val});
+//             }
+//         }
+//     }
+//     // now q indicates (node,time)
+//     q.push({target, 0});
+//     int ans = 0;
+//     unordered_map<TreeNode *, bool> visi;
+//     visi[target] = true;
+//     while (!q.empty())
+//     {
+//         int sz = q.size();
+//         for (int i = 0; i < sz; i++)
+//         {
+//             auto it = q.front();
+//             q.pop();
+//             ans = max(ans, it.second);
+//             TreeNode *nn = it.first;
+//             if (nn->left && !visi[nn->left])
+//             {
+//                 q.push({nn->left, it.second + 1});
+//                 visi[nn->left] = true;
+//             }
+//             if (nn->right && !visi[nn->right])
+//             {
+//                 q.push({nn->right, it.second + 1});
+//                 visi[nn->right] = true;
+//             }
+//             if (mp[nn] && !visi[mp[nn]])
+//             {
+//                 q.push({mp[nn], it.second + 1});
+//                 visi[mp[nn]] = true;
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// 222. Count Complete Tree Nodes:Given the root of a complete binary tree, return the number of the nodes in the tree.According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+// tc sqr(lgn)
+// sc lgn
+
+// int helpL(TreeNode *root)
+// {
+//     int h = 0;
+//     while (root)
+//     {
+//         h++;
+//         root = root->left;
+//     }
+//     return h;
+// }
+// int helpR(TreeNode *root)
+// {
+//     int h = 0;
+//     while (root)
+//     {
+//         h++;
+//         root = root->right;
+//     }
+//     return h;
+// }
+// int countNodes(TreeNode *root)
+// {
+//     int lh = helpL(root);
+//     int rH = helpR(root);
+//     if (lh == rH)
+//     {
+//         return (1 << lh) - 1;
+//     }
+//     int lNodes = countNodes(root->left);
+//     int rNodes = countNodes(root->right);
+//     return 1 + lNodes + rNodes;
+// }
+
+// 105. Construct Binary Tree from Preorder and Inorder Traversal:Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.
+
+// recursive version:
+
+// TreeNode *help(vector<int> &preorder, vector<int> &inorder, int &rootidx, int left, int right)
+// {
+//     if (left > right)
+//     {
+//         return NULL;
+//     }
+//     int pivot = left;
+//     while (preorder[rootidx] != inorder[pivot])
+//     {
+//         pivot++;
+//     }
+//     TreeNode *root = new TreeNode(preorder[rootidx]);
+//     rootidx++;
+//     root->left = help(preorder, inorder, rootidx, left, pivot - 1);
+//     root->right = help(preorder, inorder, rootidx, pivot + 1, right);
+//     return root;
+// }
+
+// TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder)
+// {
+//     int rid=0;
+//     return help(preorder,inorder,rid,0,inorder.size()-1);
+// }
+
+// using map to search pivot in constant :
+
+// TreeNode *helper(vector<int> &preorder, vector<int> &inorder, int preS, int preE, int inS, int inE, unordered_map<int, int> &mp)
+// {
+//     if ((preS > preE) || (inS > inE))
+//     {
+//         return NULL;
+//     }
+//     TreeNode *root = new TreeNode(preorder[preS]);
+//     root->val = preorder[preS];
+//     int eleInL = mp[root->val] - inS;
+//     // leftsub tree:
+//     root->left = helper(preorder, inorder, preS + 1, preS + eleInL, inS, mp[root->val] - 1, mp);
+//     root->right = helper(preorder, inorder, preS + 1 + eleInL, preE, mp[root->val] + 1, inE, mp);
+//     return root;
+// }
+
+// TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder)
+// {
+//     // (node->val,index)
+//     unordered_map<int, int> mp;
+//     int i = 0;
+//     for (auto it : inorder)
+//     {
+//         mp[it] = i;
+//         i++;
+//     }
+//     return helper(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1, mp);
+// }
+
+// Construct Binary Tree from Inorder and Postorder Traversal:
+
+// TreeNode *helper(vector<int> &postorder, vector<int> &inorder, int postS, int postE, int inS, int inE, unordered_map<int, int> &mp)
+// {
+//     if ((postS > postE) || (inS > inE))
+//     {
+//         return NULL;
+//     }
+//     TreeNode *root = new TreeNode(postorder[postE]);
+//     int elem = mp[root->val];
+//     int eleInL = elem - inS;
+//     root->left = helper(postorder, inorder, postS, postS + eleInL - 1, inS, elem - 1, mp);
+//     root->right = helper(postorder, inorder, postS + eleInL, postE-1, elem + 1, inE, mp);
+//     return root;
+// }
+
+// TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder)
+// {
+//     int postS = 0, postE = postorder.size() - 1;
+//     int inS = 0, inE = inorder.size() - 1;
+//     unordered_map<int, int> mp;
+//     int i = 0;
+//     for (auto it : inorder)
+//     {
+//         mp[it] = i;
+//         i++;
+//     }
+//     return helper(postorder, inorder, postS, postE, inS, inE, mp);
+// }
+
+// other way:
+
+// TreeNode *help(vector<int> &inorder, vector<int> &postorder, int s, int e, int &postIdx)
+// {
+//     if (s > e)
+//     {
+//         return nullptr;
+//     }
+//     TreeNode *root = new TreeNode(postorder[postIdx--]);
+//     int inidx = find(begin(inorder), end(inorder), root->val) - begin(inorder);
+//     root->right = help(inorder, postorder, inidx + 1, e, postIdx);
+//     root->left = help(inorder, postorder, s, inidx - 1, postIdx);
+//     return root;
+// }
+
+// TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder)
+// {
+//     int posidx = postorder.size() - 1;
+//     return help(inorder, postorder, 0, inorder.size() - 1, posidx);
+// }
+
+// 297. Serialize and Deserialize Binary Tree:Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+// Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+// Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+
+// class Codec
+// {
+// public:
+//     // Encodes a tree to a single string.
+//     string serialize(TreeNode *root)
+//     {
+//         string enc = "";
+//         queue<TreeNode *> q;
+//         q.push(root);
+//         while (!q.empty())
+//         {
+//             int sz = q.size();
+//             for (int i = 0; i < sz; i++)
+//             {
+//                 auto it = q.front();
+//                 q.pop();
+//                 if (it)
+//                     enc += (to_string(it->val) + ",");
+//                 else
+//                     enc += "1001,";
+//                 if (it)
+//                 {
+//                     q.push(it->left);
+//                     q.push(it->right);
+//                 }
+//             }
+//         }
+//         return enc;
+//     }
+//     // Decodes your encoded data to tree.
+//     TreeNode *deserialize(string data)
+//     {
+//         if (data.size() == 0)
+//             return nullptr;
+//         int i = 0;
+//         vector<int> roots;
+//         for (int i = 0; i < data.size(); i++)
+//         {
+//             string num = "";
+//             while (data[i] != ',')
+//             {
+//                 num += data[i];
+//                 i++;
+//             }
+//             stringstream ss;
+//             int numm;
+//             ss << num;
+//             ss >> numm;
+//             roots.push_back(numm);
+//         }
+//         if (roots[0] == 1001)
+//             return nullptr;
+//         queue<TreeNode *> q;
+//         TreeNode *root = new TreeNode(roots[0]);
+//         q.push(root);
+//         int kk = 1;
+//         while (!q.empty() && kk < roots.size())
+//         {
+//             int sz = q.size();
+//             for (int i = 0; i < sz; i++)
+//             {
+//                 auto it = q.front();
+//                 q.pop();
+//                 if (roots[kk] != 1001)
+//                 {
+//                     it->left = new TreeNode(roots[kk]);
+//                     q.push(it->left);
+//                     kk++;
+//                 }
+//                 else
+//                 {
+//                     it->left = NULL;
+//                     kk++;
+//                 }
+//                 if (roots[kk] != 1001)
+//                 {
+//                     it->right = new TreeNode(roots[kk]);
+//                     q.push(it->right);
+//                     kk++;
+//                 }
+//                 else
+//                 {
+//                     it->right = NULL;
+//                     kk++;
+//                 }
+//             }
+//         }
+//         return root;
+//     }
+// };
+
+
+
+
+
+
 
 int main()
 {
