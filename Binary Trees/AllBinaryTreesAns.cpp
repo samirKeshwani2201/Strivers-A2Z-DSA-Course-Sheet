@@ -1986,6 +1986,8 @@ struct node
 //     // Encodes a tree to a single string.
 //     string serialize(TreeNode *root)
 //     {
+//         if(!root)
+//         return;
 //         string enc = "";
 //         queue<TreeNode *> q;
 //         q.push(root);
@@ -2015,55 +2017,38 @@ struct node
 //         if (data.size() == 0)
 //             return nullptr;
 //         int i = 0;
-//         vector<int> roots;
-//         for (int i = 0; i < data.size(); i++)
-//         {
-//             string num = "";
-//             while (data[i] != ',')
-//             {
-//                 num += data[i];
-//                 i++;
-//             }
-//             stringstream ss;
-//             int numm;
-//             ss << num;
-//             ss >> numm;
-//             roots.push_back(numm);
-//         }
-//         if (roots[0] == 1001)
-//             return nullptr;
+//         stringstream ss(data);
+//         string str;
+//         getline(ss, str, ',');
 //         queue<TreeNode *> q;
-//         TreeNode *root = new TreeNode(roots[0]);
+//         TreeNode *root = new TreeNode(stoi(str));
 //         q.push(root);
-//         int kk = 1;
-//         while (!q.empty() && kk < roots.size())
+//         while (!q.empty())
 //         {
 //             int sz = q.size();
 //             for (int i = 0; i < sz; i++)
 //             {
 //                 auto it = q.front();
 //                 q.pop();
-//                 if (roots[kk] != 1001)
+//                 getline(ss, str, ',');
+//                 if (str != "1001")
 //                 {
-//                     it->left = new TreeNode(roots[kk]);
+//                     it->left = new TreeNode(stoi(str));
 //                     q.push(it->left);
-//                     kk++;
 //                 }
 //                 else
 //                 {
 //                     it->left = NULL;
-//                     kk++;
 //                 }
-//                 if (roots[kk] != 1001)
+//                 getline(ss, str, ',');
+//                 if (str != "1001")
 //                 {
-//                     it->right = new TreeNode(roots[kk]);
+//                     it->right = new TreeNode(stoi(str));
 //                     q.push(it->right);
-//                     kk++;
 //                 }
 //                 else
 //                 {
 //                     it->right = NULL;
-//                     kk++;
 //                 }
 //             }
 //         }
@@ -2071,11 +2056,205 @@ struct node
 //     }
 // };
 
+// class Codec
+// {
+// public:
+//     // Encodes a tree to a single string.
+//     string serialize(TreeNode *root)
+//     {
+//         if (!root)
+//             return "#";
+//         return to_string(root->val) + "," + serialize(root->left) + "," + serialize(root->right);
+//     }
+//     TreeNode *myde(stringstream &s)
+//     {
+//         string str;
+//         getline(s, str, ',');
+//         if (str == "#")
+//             return nullptr;
+//         TreeNode *root = new TreeNode(stoi(str));
+//         root->left = myde(s);
+//         root->right = myde(s);
+//         return root;
+//     }
 
+//     // Decodes your encoded data to tree.
+//     TreeNode *deserialize(string data)
+//     {
+//         if (data[0] == '#')
+//             return nullptr;
+//         stringstream s(data);
+//         return myde(s);
+//     }
+// };
 
+// morrison inorder:
 
+// lc answer:
+// vector<int> inorderTraversal(TreeNode *root)
+// {
+//     vector<int> inor;
+//     TreeNode *cur = root;
+//     TreeNode *pre;
+//     while (cur != NULL)
+//     {
+//         if (cur->left == NULL)
+//         {
+//             inor.push_back(cur->val);
+//             cur = cur->right;
+//         }
+//         else
+//         {
+//             pre = cur->left;
+//             while (pre->right != NULL)
+//             {
+//                 pre = pre->right;
+//             }
+//             pre->right = cur;
+//             TreeNode *temp = cur;
+//             cur = cur->left;
+//             temp->left = NULL;
+//         }
+//     }
+//     return inor;
+// }
 
+// strivers way:
+// vector<int> inorderTraversal(TreeNode *root)
+// {
+//     TreeNode *cur = root;
+//     vector<int> ans;
+//     while ( cur!=NULL)
+//     {
+//         if (!cur->left)
+//         {
+//             ans.push_back(cur->val);
+//             cur = cur->right;
+//         }
+//         else
+//         {
+//             TreeNode *pre = cur->left;
+//             while (pre->right != NULL && pre->right != cur)
+//             {
+//                 pre = pre->right;
+//             }
+//             if (pre->right == NULL)
+//             {
+//                 pre->right = cur;
+//                 cur = cur->left;
+//             }
+//             else
+//             {
+//                 pre->right = NULL;
+//                 ans.push_back(cur->val);
+// pribt root and go to right
+//                 cur = cur->right;
+//             }
+//         }
+//     }
+//     return ans;
+// }
 
+// morrison preorder:
+
+// vector<int> preorderTraversal(TreeNode *root)
+// {
+//     TreeNode *cur = root;
+//     vector<int> ans;
+//     while (cur != NULL)
+//     {
+//         if (cur->left == NULL)
+//         {
+//             ans.push_back(cur->val);
+//             cur = cur->right;
+//         }
+//         else
+//         {
+//             TreeNode *pre = cur->left;
+//             while (pre->right != NULL && pre->right != cur)
+//             {
+//                 pre = pre->right;
+//             }
+//             if (pre->right == NULL)
+//             {
+//                 pre->right = cur;
+//                 ans.push_back(cur->val);
+//                 cur = cur->left;
+//             }
+//             else
+//             {
+//                 pre->right = NULL;
+//                 cur = cur->right;
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// 114. Flatten Binary Tree to Linked List:Given the root of a binary tree, flatten the tree into a "linked list":The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+
+// TreeNode *pre;
+// void flatten(TreeNode *root)
+// {
+//     if (!root)
+//     {
+//         return;
+//     }
+//     flatten(root->right);
+//     flatten(root->left);
+//     root->right = pre;
+//     root->left = nullptr;
+//     pre = root;
+// }
+
+// void flatten(TreeNode *root)
+// {
+//     if (!root)
+//         return;
+//     TreeNode *cur = root;
+//     while (cur != nullptr)
+//     {
+//         if (cur->left)
+//         {
+//             TreeNode *pred = cur->left;
+//             while (pred->right != NULL)
+//             {
+//                 pred = pred->right;
+//             }
+//             pred->right = cur->right;
+//             cur->right = cur->left;
+//             cur->left = NULL;
+//         }
+//         else
+//         {
+//             cur = cur->right;
+//         }
+//     }
+//     return;
+// }
+
+// void flatten(TreeNode *root)
+// {
+//     stack<TreeNode *> s;
+//     s.push(root);
+//     while (!s.empty())
+//     {
+//         TreeNode *temp = s.top();
+//         s.pop();
+//         if (temp->right)
+//         {
+//             s.push(temp->right);
+//         }
+//         if (temp->left)
+//         {
+//             s.push(temp->left);
+//         }
+//         if (s.size())
+//             temp->right = s.top();
+//         temp->left = nullptr;
+//     }
+//     return ;
+// }
 
 int main()
 {
