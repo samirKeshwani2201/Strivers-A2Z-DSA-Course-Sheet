@@ -6,7 +6,7 @@ using namespace std;
 // class Node
 // {
 // public:
-//     int data;
+//     int val;
 //     Node *left, *right;
 //     Node()
 //     {
@@ -2256,8 +2256,1292 @@ struct node
 //     return ;
 // }
 
+// ------------------------------------------BST------------------------------------------
+
+// int findCeil(Node *root, int input)
+// {
+//     if (root == NULL)
+//         return -1;
+//     int ans = -1;
+//     while (root != NULL)
+//     {
+//         if (root->data == input)
+//         {
+//             return input;
+//         }
+//         else if (root->data > input)
+//         {
+//             ans = root->data;
+//             root = root->left;
+//         }
+//         else
+//         {
+//             root = root->right;
+//         }
+//     }
+//     return ans;
+// }
+
+// recursive:i found exhausting to grasp
+
+// int findCeil(Node *root, int input)
+// {
+//     if (!root)
+//         return -1;
+//     if (root->data == input)
+//     {
+//         return input;
+//     }
+//     if (root->data < input)
+//         return findCeil(root->right, input);
+//     else
+//     {
+//      (   root->data >input)
+//         int lceil = findCeil(root->left, input);
+//         if (input <= lceil)
+//             return lceil;
+//         else
+//             return root->data;
+//     }
+// }
+
+// Floor in BST:
+
+// int floor(Node *root, int x)
+// {
+//     int ans = -1;
+//     while (root)
+//     {
+//         if (root->data == x)
+//         {
+//             return x;
+//         }
+//         else if (root->data > x)
+//         {
+//             root = root->left;
+//         }
+//         else
+//         {
+//             // root->data<x so psble ans so move more closer move more right
+//             ans = root->data;
+//             root = root->right;
+//         }
+//     }
+//     return ans;
+// }
+
+// recursive:
+
+// int floor(Node *root, int x)
+// {
+//     if (!root)
+//         return -1;
+//     if (root->data == x)
+//         return x;
+//     if (root->data > x)
+//     {
+//         return floor(root->left, x);
+//     }
+//     else
+//     {
+//         // (root->data  <x) psble ans
+//         int rfloor = floor(root->right, x);
+//         if (rfloor >= root->data)
+//         {
+//             return rfloor;
+//         }
+//         else
+//         {
+//             return root->data;
+//         }
+//     }
+// }
+
+// 701. Insert into a Binary Search Tree:You are given the root node of a binary search tree (BST) and a value to insert into the tree. Return the root node of the BST after the insertion. It is guaranteed that the new value does not exist in the original BST.
+
+// TreeNode *insertIntoBST(TreeNode *root, int val)
+// {
+//     if (!root)
+//     {
+//         return new TreeNode(val);
+//     }
+//     TreeNode *pre;
+//     TreeNode *cur = root;
+//     pre = cur;
+//     while (cur)
+//     {
+//         pre = cur;
+//         if (cur->val < val)
+//         {
+//             cur = cur->right;
+//         }
+//         else
+//         {
+//             cur = cur->left;
+//         }
+//     }
+//     TreeNode *newNode = new TreeNode(val);
+//     if (pre->val > val)
+//     {
+//         //    left insert
+//         pre->left = newNode;
+//         return root;
+//     }
+//     pre->right = newNode;
+//     return root;
+// }
+
+// recursive :
+
+// TreeNode *insertIntoBST(TreeNode *root, int val)
+// {
+//     if (!root)
+//     {
+//         return new TreeNode(val);
+//     }
+//     if (root->val < val)
+//     {
+//         root->right = insertIntoBST(root->right, val);
+//     }
+//     else
+//     {
+//         root->left = insertIntoBST(root->left, val);
+//     }
+//     return root;
+// }
+
+// 450. Delete Node in a BST:https://leetcode.com/problems/delete-node-in-a-bst/discuss/1591176/C%2B%2B-Simple-Solution-w-Images-and-Detailed-Explanation-or-Iterative-and-Recursive-Approach
+
+// merged cases :
+
+// TreeNode *deleteNode(TreeNode *root, int key)
+// {
+//     TreeNode *iter = root, *par = NULL;
+//     while (iter && iter->val != key)
+//     {
+//         par = iter;
+//         if (iter->val > key)
+//         {
+//             iter = iter->left;
+//         }
+//         else
+//         {
+//             iter = iter->right;
+//         }
+//     }
+//     if (!iter)
+//         return root;
+//     if (!iter->left or !iter->right)
+//     {
+//         auto child = (iter->left) ? iter->left : iter->right;
+//         if (!par)
+//             root = child;
+//         else if (par->left == iter)
+//             par->left = child;
+//         else
+//             par->right = child;
+//     }
+//     else
+//     {
+//         auto cur = iter;
+//         par = iter;
+//         iter = iter->right;
+//         while (iter->left)
+//         {
+//             par = iter;
+//             iter = iter->left;
+//         }
+//         cur->val = iter->val;
+//         if (par->left == iter)
+//         {
+//             par->left = iter->right;
+//         }
+//         else
+//         {
+//             par->right = iter->right;
+//         }
+//     }
+//     delete iter;
+//     return root;
+// }
+
+// // individual cases:
+
+// TreeNode *deleteNode(TreeNode *root, int key)
+// {
+//     TreeNode *iter = root, *par = NULL;
+//     while (iter && iter->val != key)
+//     {
+//         par = iter;
+//         if (iter->val > key)
+//         {
+//             iter = iter->left;
+//         }
+//         else
+//         {
+//             iter = iter->right;
+//         }
+//     }
+//     if (!iter)
+//         return root;
+//     // leaf node:
+//     if (!iter->left && !iter->right)
+//     {
+//         if (!par)
+//         {
+//             root = NULL;
+//         }
+//         else if (par->left == iter)
+//         {
+//             par->left = NULL;
+//         }
+//         else
+//         {
+//             par->right = NULL;
+//         }
+//     }
+//     else if (!iter->left && iter->right)
+//     {
+//         // left child not present :
+//         if (!par)
+//         {
+//             root = iter->right;
+//         }
+//         // (par->left == iter) for understanding this i have kept photo to understand
+//         else if (par->left == iter)
+//             par->left = iter->right;
+//         else
+//             par->right = iter->right;
+//     }
+//     else if (iter->left && !iter->right)
+//     {
+//         if (!par)
+//         {
+//             root = iter->left;
+//         }
+//         else if (par->left == iter)
+//             par->left = iter->left;
+//         else
+//             par->right = iter->left;
+//     }
+//     else
+//     {
+//         // both child present :
+//         auto cur = iter;
+//         par = iter;
+//         iter = iter->right;
+//         while (iter->left)
+//         {
+//             par = iter;
+//             iter = iter->left;
+//         }
+//         // so that at last we could delete the iter pointer
+//         cur->val = iter->val;
+//         if (par->left == iter)
+//         {
+//             par->left = iter->right;
+//         }
+//         else
+//         {
+//             par->right = iter->right;
+//         }
+//     }
+//     delete iter;
+//     return root;
+// }
+
+// TreeNode *deleteNode(TreeNode *root, int key)
+// {
+//     if (!root)
+//         return nullptr;
+//     if (root->val > key)
+//     {
+//         root->left = deleteNode(root->left, key);
+//     }
+//     else if (root->val < key)
+//     {
+//         root->right = deleteNode(root->right, key);
+//     }
+//     else
+//     {
+//         if (!root->left || !root->right)
+//         {
+//             root = root->left ? root->left : root->right;
+//         }
+//         else
+//         {
+//             auto cur = root, par = root;
+//             root = root->right;
+//             while (root->left)
+//             {
+//                 par = root;
+//                 root = root->left;
+//             }
+//             cur->val = root->val;
+//             if (par->left == root)
+//             {
+//                 par->left = root->right;
+//             }
+//             else
+//             {
+//                 par->right = root->right;
+//             }
+//             root = cur;
+//         }
+//     }
+//     return root;
+// }
+
+// TreeNode *deleteNode(TreeNode *root, int key)
+// {
+//     if (!root)
+//         return NULL;
+//     if (root->val > key)
+//     {
+//         root->left = deleteNode(root->left, key);
+//     }
+//     else if (root->val < key)
+//     {
+//         root->right = deleteNode(root->right, key);
+//     }
+//     else
+//     {
+//         if (!root->left && !root->right)
+//             return NULL;
+//         if (!root->left || !root->right)
+//         {
+//             return root->left ? root->left : root->right;
+//         }
+//         TreeNode *temp = root->right;
+//         while (temp->left)
+//         {
+//             temp = temp->left;
+//         }
+//         root->val = temp->val;
+//         root->right = deleteNode(root->right, temp->val);
+//     }
+//     return root;
+// }
+
+// 230. Kth Smallest Element in a BST:Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+
+// int kthSmallest(TreeNode *root, int k)
+// {
+//     stack<TreeNode *> s;
+//     int cnt = 0;
+//     while (root || !s.empty())
+//     {
+//         if (root)
+//         {
+//             s.push(root);
+//             root = root->left;
+//         }
+//         else
+//         {
+//             auto temp = s.top();
+//             s.pop();
+//             cnt++;
+//             if (cnt == k)
+//             {
+//                 return temp->val;
+//             }
+//             root = temp->right;
+//         }
+//     }
+//     return -1;
+// }
+
+// void inorde(TreeNode *root, int &ans, int &cnt, int k)
+// {
+//     if (!root)
+//         return;
+//     inorde(root->left, ans, cnt, k);
+//     if (++cnt == k)
+//     {
+//         ans = root->val;
+//         return;
+//     }
+//     inorde(root->right, ans, cnt, k);
+//     return;
+// }
+
+// int kthSmallest(TreeNode *root, int k)
+// {
+//     int ans;
+//     int cnt = 0;
+//     inorde(root, ans, cnt, k);
+//     return ans;
+// }
+
+// 98. Validate Binary Search Tree:Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+
+// tc:n sc:n
+
+// void inor(TreeNode *root, vector<int> &ans)
+// {
+//     if (!root)
+//         return;
+//     inor(root->left, ans);
+//     ans.push_back(root->val);
+//     inor(root->right, ans);
+// }
+
+// bool isValidBST(TreeNode *root)
+// {
+//     if (!root)
+//         return true;
+//     vector<int> t;
+//     inor(root, t);
+//     for (int i = 0; i < t.size() - 1; i++)
+//     {
+//         if (t[i] >= t[i + 1])
+//         {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
+
+// this pattern used in kth smallest and chek bst:
+
+// vector<int> inorder(TreeNode *root)
+// {
+//     if (!root)
+//         return {};
+//     stack<TreeNode *> s;
+//     vector<int> ans;
+//     while (root || !s.empty())
+//     {
+//         while (root)
+//         {
+//             s.push(root);
+//             root = root->left;
+//         }
+//         TreeNode *temp = s.top();
+//         s.pop();
+//         ans.push_back(temp->val);
+//         root = temp->right;
+//     }
+//     return ans;
+// }
+
+// bool helper(TreeNode *root, double l, double r)
+// {
+//     if (!root)
+//     {
+//         return true;
+//     }
+//     if (root->val < r and root->val > l)
+//     {
+//         return helper(root->left, l, root->val) and helper(root->right, root->val, r);
+//     }
+//     return false;
+// }
+// bool isValidBST(TreeNode *root)
+// {
+//     return helper(root, -10e9, 10e9);
+// }
+
+// bool isValidBST(TreeNode *root)
+// {
+//     stack<TreeNode *> s;
+//     TreeNode *pre = nullptr;
+//     while (root || !s.empty())
+//     {
+//         while (root)
+//         {
+//             s.push(root);
+//             root = root->left;
+//         }
+//         root = s.top();
+//         s.pop();
+//         if (pre && pre->val >= root->val)
+//         {
+//             return false;
+//         }
+//         pre = root;
+//         root = root->right;
+//     }
+//     return true;
+// }
+
+// 235. Lowest Common Ancestor of a Binary Search Tree:Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.
+
+// TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+// {
+//     if (!root || p == root || q == root)
+//     {
+//         return root;
+//     }
+//     TreeNode *left;
+//     TreeNode *right;
+//     if (root->val > p->val && root->val > q->val)
+//     {
+//         return lowestCommonAncestor(root->left, p, q);
+//     }
+//     else if (root->val < p->val && root->val < q->val)
+//     {
+//         return lowestCommonAncestor(root->right, p, q);
+//     }
+//     else
+//     {
+//         left = lowestCommonAncestor(root->left, p, q);
+//         right = lowestCommonAncestor(root->right, p, q);
+//     }
+//     if (left == NULL)
+//     {
+//         return right;
+//     }
+//     else if (right == NULL)
+//     {
+//         return left;
+//     }
+//     else
+//     {
+//         return root;
+//     }
+// }
+
+// TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+// {
+//     while ((root->val - (long)p->val) * (root->val - (long)q->val) > 0)
+//     {
+//         root = root->val > p->val ? root->left : root->right;
+//     }
+//     return root;
+// }
+
+// TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+// {
+//     if (root->val > p->val && root->val > q->val)
+//     {
+//         return lowestCommonAncestor(root->left, p, q);
+//     }
+//     else if (root->val < p->val && root->val < q->val)
+//     {
+//         return lowestCommonAncestor(root->right, p, q);
+//     }
+//     return root;
+// }
+
+// TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+// {
+//     while (true)
+//     {
+//         if (root->val > p->val && root->val > q->val)
+//         {
+//             root = root->left;
+//         }
+//         else if (root->val < p->val && root->val < q->val)
+//         {
+//             root = root->right;
+//         }
+//         else
+//         {
+//             return root;
+//         }
+//     }
+// }
+
+// 1008. Construct Binary Search Tree from Preorder Traversal:
+
+// sc: n+n
+// tc:nlgn+n
+
+// TreeNode *helper(vector<int> &preorder, vector<int> &inorder, int &rootidx, int l, int r)
+// {
+//     if (l > r)
+//         return nullptr;
+//     int pivot = l;
+//     while (preorder[rootidx] != inorder[pivot])
+//     {
+//         pivot++;
+//     }
+//     TreeNode *newNode = new TreeNode(preorder[rootidx]);
+//     rootidx++;
+//     newNode->left = helper(preorder, inorder, rootidx, l, pivot - 1);
+//     newNode->right = helper(preorder, inorder, rootidx, pivot + 1, r);
+//     return newNode;
+// }
+
+// TreeNode *bstFromPreorder(vector<int> &preorder)
+// {
+//     int rid = 0;
+//     vector<int> inorder(preorder);
+//     sort(inorder.begin(), inorder.end());
+//     return helper(preorder, inorder, rid, 0, inorder.size() - 1);
+// }
+
+// adv stl:
+
+// TreeNode *bstFromPreorder(vector<int> &preorder, int f = 0, int l = 0)
+// {
+//     if (l == 0)
+//         l = preorder.size();
+//     if (f == l)
+//     {
+//         return nullptr;
+//     }
+//     auto sp = find_if(begin(preorder) + f, begin(preorder) + l, [&](int val)
+//                       { return val > preorder[f]; });
+//     auto root = new TreeNode(preorder[f]);
+//     root->left = bstFromPreorder(preorder, f + 1, sp - begin(preorder));
+//     root->right = bstFromPreorder(preorder, sp - begin(preorder), l);
+//     return root;
+// }
+
+// int idx = 0;
+
+// TreeNode *bstFromPreorder(vector<int> &preorder, int p = INT_MAX)
+// {
+//     if (idx >= preorder.size() || preorder[idx] > p)
+//     {
+//         return nullptr;
+//     }
+//     auto n = new TreeNode(preorder[idx++]);
+//     n->left = bstFromPreorder(preorder, n->val);
+//     n->right = bstFromPreorder(preorder, p);
+//     return n;
+// }
+
+// iterative:
+
+// TreeNode *bstFromPreorder(vector<int> &preorder)
+// {
+//     stack<TreeNode *> s;
+//     TreeNode *root = new TreeNode(preorder[0]);
+//     s.push(root);
+//     for (int i = 1; i < preorder.size(); i++)
+//     {
+//         TreeNode *temp = new TreeNode(preorder[i]);
+//         if (preorder[i] > s.top()->val)
+//         {
+//             TreeNode *p;
+//             while (!s.empty() && s.top()->val < preorder[i])
+//             {
+//                 p = s.top();
+//                 s.pop();
+//             }
+//             p->right = temp;
+//         }
+//         else
+//         {
+//             s.top()->left = temp;
+//         }
+//         s.push(temp);
+//     }
+//     return root;
+// }
+
+// 173. Binary Search Tree Iterator:https://www.geeksforgeeks.org/problems/predecessor-and-successor/1  Note:- In an inorder traversal the number just smaller than the target is the predecessor and the number just greater than the target is the successor.
+
+struct Node
+{
+    int key;
+    struct Node *left;
+    struct Node *right;
+
+    Node(int x)
+    {
+        key = x;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+// void findPreSuc(Node *root, Node *&pre, Node *&suc, int key)
+// {
+//     Node *cur = root;
+//     while (cur != NULL)
+//     {
+//         if (cur->key < key)
+//         {
+//             pre = cur;
+//             cur = cur->right;
+//         }
+//         else
+//         {
+//             cur = cur->left;
+//         }
+//     }
+//     cur = root;
+//     while (cur != NULL)
+//     {
+//         if (cur->key > key)
+//         {
+//             suc = cur;
+//             cur = cur->left;
+//         }
+//         else
+//         {
+//             cur = cur->right;
+//         }
+//     }
+//     return;
+// }
+
+// Merge Two BSTs:coding ninjas
+
+class TreeNode
+{
+public:
+    int val;
+    TreeNode *left, *right;
+    TreeNode() : val(0), left(NULL), right(NULL) {}
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+// brute force:insetead of using sort directly merge due to alas i have used sort
+
+// vector<int> inorderTraversal(TreeNode *root)
+// {
+//     vector<int> ans;
+//     stack<TreeNode *> s;
+//     TreeNode *temp = root;
+//     while (temp || !s.empty())
+//     {
+//         while (temp != NULL)
+//         {
+//             s.push(temp);
+//             temp = temp->left;
+//         }
+//         temp = s.top();
+//         s.pop();
+//         ans.push_back(temp->data);
+//         temp = temp->right;
+//     }
+//     return ans;
+// }
+
+// vector<int> mergeBST(TreeNode *root1, TreeNode *root2)
+// {
+//     vector<int> a(inorderTraversal(root1)), b(inorderTraversal(root2));
+//     a.insert(a.end(), b.begin(), b.end());
+//     sort(a.begin(), a.end());
+//     return a;
+// }
+
+struct Node
+{
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val)
+    {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+// void ltree(Node *root, stack<Node *> &s)
+// {
+//     while (root)
+//     {
+//         s.push(root);
+//         root = root->left;
+//     }
+//     return;
+// }
+
+// vector<int> merge(Node *root1, Node *root2)
+// {
+//     vector<int> ans;
+//     stack<Node *> s1, s2;
+//     ltree(root1, s1);
+//     ltree(root2, s2);
+//     while (!s1.empty() && !s2.empty())
+//     {
+//         if (s1.top()->data < s2.top()->data)
+//         {
+//             ans.push_back(s1.top()->data);
+//             auto t = s1.top();
+//             s1.pop();
+//             ltree(t->right, s1);
+//         }
+//         else if (s1.top()->data > s2.top()->data)
+//         {
+//             ans.push_back(s2.top()->data);
+//             auto t = s2.top();
+//             s2.pop();
+//             ltree(t->right, s2);
+//         }
+//         else
+//         {
+//             auto t1 = s1.top();
+//             auto t2 = s2.top();
+//             ans.push_back(s2.top()->data);
+//             ans.push_back(s2.top()->data);
+//             s1.pop();
+//             s2.pop();
+//             ltree(t1->right, s1);
+//             ltree(t2->right, s2);
+//         }
+//     }
+//     while (!s1.empty())
+//     {
+//         ans.push_back(s1.top()->data);
+//         auto t = s1.top()->right;
+//         s1.pop();
+//         ltree(t, s1);
+//     }
+//     while (!s2.empty())
+//     {
+//         auto t = s2.top()->right;
+//         ans.push_back(s2.top()->data);
+//         s2.pop();
+//         ltree(t, s2);
+//     }
+//     return ans;
+// }
+
+// if we need to return the root node of the merged list then :
+
+// for that first solving few more questions :
+
+//  Normal BST To Balanced BST:
+//  go to other file :)
+
+// continue:
+
+// Node *convertToDll(Node *root, Node *&head)
+// {
+//     if (!root)
+//         return nullptr;
+//     convertToDll(root->right, head);
+//     root->right = head;
+//     if (head!=NULL)
+//         head->left = root;
+//     head = root;
+//     convertToDll(root->left, head);
+// }
+
+// Node *mergeDLL(Node *root1, Node *root2)
+// {
+//     Node *head = NULL;
+//     Node *tail = NULL;
+//     while (root1 && root2)
+//     {
+//         if (root1->data < root2->data)
+//         {
+//             if (root1 == NULL)
+//             {
+//                 head = root1;
+//                 tail = root1;
+//                 root1 = root1->right;
+//             }
+//             else
+//             {
+//                 tail->right = root1;
+//                 root1->left = tail;
+//                 tail = root1;
+//                 root1 = root1->right;
+//             }
+//         }
+//         if (root1->data > root2->data)
+//         {
+//             if (root2 == NULL)
+//             {
+//                 head = root2;
+//                 tail = root2;
+//                 root2 = root2->right;
+//             }
+//             else
+//             {
+//                 tail->right = root2;
+//                 root2->left = tail;
+//                 tail = root2;
+//                 root2 = root2->right;
+//             }
+//         }
+//     }
+//     while (root1)
+//     {
+//         tail->right = root1;
+//         root1->left = tail;
+//         tail = root1;
+//         root1 = root1->right;
+//     }
+//     while (root2)
+//     {
+//         tail->right = root2;
+//         root2->left = tail;
+//         tail = root2;
+//         root2 = root2->right;
+//     }
+//     return head;
+// }
+
+// // dll to bst:
+
+// int countNodes(Node *root)
+// {
+//     int cnt = 0;
+//     while (root)
+//     {
+//         root = root->right;
+//         cnt++;
+//     }
+//     return cnt;
+// }
+
+// Node *dllToBST(Node *&head, int n)
+// {
+//     if (head == NULL || n <= 0)
+//         return nullptr;
+//     Node *left = dllToBST(head, n / 2);
+//     Node *root = head;
+//     root->left = left;
+//     head = head->right;
+//     root->right = dllToBST(head, n - (n / 2) - 1);
+//     return root;
+// }
+/*
+      from main we have to call it like this :
+    {
+      Node *head1, head2;
+      convertToDll(root1, head1);
+      convertToDll(root2, head2);
+      head1->left=NULL;
+      head2->left=NULL;
+      Node *head=   mergeDLL(head1,head2);
+      int n=countNodes(head);
+      return  dllToBST(head,n);
+    }
+  */
+
+// Implement the BSTIterator class that represents an iterator over the in-order traversal of a binary search tree (BST):BSTIterator(TreeNode root) Initializes an object of the BSTIterator class. The root of the BST is given as part of the constructor. The pointer should be initialized to a non-existent number smaller than any element in the BST.boolean hasNext() Returns true if there exists a number in the traversal to the right of the pointer, otherwise returns false.int next() Moves the pointer to the right, then returns the number at the pointer.
+
+// class BSTIterator
+// {
+// public:
+//     stack<TreeNode *> s;
+//     void pushall(TreeNode *root)
+//     {
+//         while (root)
+//         {
+//             s.push(root);
+//             root = root->left;
+//         }
+//     }
+//     BSTIterator(TreeNode *root)
+//     {
+//         pushall(root);
+//     }
+//     int next()
+//     {
+//         auto top = s.top();
+//         s.pop();
+//         pushall(top->right);
+//         return top->data;
+//     }
+//     bool hasNext()
+//     {
+//         return !s.empty();
+//     }
+// };
+
+// 653. Two Sum IV - Input is a BST:Given the root of a binary search tree and an integer k, return true if there exist two elements in the BST such that their sum is equal to k, or false otherwise
+
+// void inorder(TreeNode *root, vector<int> &ans)
+// {
+//     if (!root)
+//         return;
+//     inorder(root->left, ans);
+//     ans.push_back(root->data);
+//     inorder(root->right, ans);
+// }
+
+// bool findTarget(TreeNode *root, int k)
+// {
+//     vector<int> in;
+//     int l = 0;
+//     inorder(root, in);
+//     int r = in.size() - 1;
+//     while (l < r)
+//     {
+//         if (in[l] + in[r] == k)
+//         {
+//             return true;
+//         }
+//         else if (in[l] + in[r] < k)
+//         {
+//             l++;
+//         }
+//         else
+//         {
+//             r--;
+//         }
+//     }
+//     return false;
+// }
+
+// other way:
+
+// class BSTIterator
+// {
+// public:
+//     stack<TreeNode *> s;
+//     bool reverse;
+//     BSTIterator(TreeNode *root, bool rev)
+//     {
+//         reverse = rev;
+//         pushAll(root);
+//     }
+//     void pushAll(TreeNode *root)
+//     {
+//         while (root)
+//         {
+//             s.push(root);
+//             root = (!reverse) ? root->left : root->right;
+//         }
+//     }
+//     int next()
+//     {
+//         auto top = s.top();
+//         s.pop();
+//         pushAll((!reverse) ? top->right : top->left);
+//         return top->data;
+//     }
+// };
+// class Solution
+// {
+// public:
+//     bool findTarget(TreeNode *root, int k)
+//     {
+//         BSTIterator left(root, false), right(root, true);
+//         int i = left.next(), j = right.next();
+//         while (i < j)
+//         {
+//             if (i + j == k)
+//             {
+//                 return true;
+//             }
+//             else if (i + j > k)
+//             {
+//                 j = right.next();
+//             }
+//             else
+//             {
+//                 i = left.next();
+//             }
+//         }
+//         return false;
+//     }
+// };
+
+// O(n) time O(lg n) space
+
+// class BSTIterator
+// {
+//     stack<TreeNode *> s;
+//     TreeNode *node;
+//     bool forward;
+// public:
+//     BSTIterator(TreeNode *root, bool f)
+//     {
+//         node = root;
+//         forward = f;
+//     }
+//     int next()
+//     {
+//         while (node || !s.empty())
+//         {
+//             if (node)
+//             {
+//                 s.push(node);
+//                 node = (forward) ? node->left : node->right;
+//             }
+//             else
+//             {
+//                 node = s.top();
+//                 s.pop();
+//                 int val = node->data;
+//                 node = (forward) ? node->right : node->left;
+//                 return val;
+//             }
+//         }
+//         return -1;
+//     }
+// };
+
+// class Solution
+// {
+// public:
+//     bool findTarget(TreeNode *root, int k)
+//     {
+//         BSTIterator left(root, true), right(root, false);
+//         int i = left.next(), j = right.next();
+//         while (i < j)
+//         {
+//             if (i + j == k)
+//             {
+//                 return true;
+//             }
+//             else if (i + j > k)
+//             {
+//                 j = right.next();
+//             }
+//             else
+//             {
+//                 i = left.next();
+//             }
+//         }
+//         return false;
+//     }
+// };
+
+// using hash_set:
+// unordered_set<int> s;
+// bool findTarget(TreeNode *root, int k)
+// {
+//     if (!root)
+//         return false;
+//     if (s.find(k - root->data) != s.end())
+//     {
+//         return true;
+//     }
+//     s.insert(root->data);
+//     return findTarget(root->left, k) || findTarget(root->right, k);
+// }
+
+// 99. Recover Binary Search Tree:You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.
+
+// void helper(TreeNode *root, TreeNode *&prev, TreeNode *&first, TreeNode *&mid, TreeNode *&last)
+// {
+//     if (!root)
+//         return;
+//     helper(root->left, prev, first, mid, last);
+//     if (prev && (prev->val > root->val))
+//     {
+//         if (!first)
+//         {
+//             first = prev;
+//             mid = root;
+//         }
+//         else
+//         {
+//             last = root;
+//         }
+//     }
+//     prev = root;
+//     helper(root->right, prev, first, mid, last);
+// }
+
+// void recoverTree(TreeNode *root)
+// {
+//     TreeNode *prev=NULL, *first=NULL, *mid=NULL, *last=NULL;
+//     helper(root, prev, first, mid, last);
+//     if (first && last)
+//     {
+//         swap(first->val, last->val);
+//     }
+//     else
+//     {
+//         swap(first->val, mid->val);
+//     }
+//     return;
+// }
+
+// void helper(TreeNode *root, TreeNode *&first, TreeNode *&last, TreeNode *&prev)
+// {
+//     if (!root)
+//         return;
+//     helper(root->left, first, last, prev);
+//     if (first == NULL && prev->val > root->val)
+//     {
+//         first = prev;
+//     }
+//     if (first && prev->val > root->val)
+//     {
+//         last = root;
+//     }
+//     prev = root;
+//     helper(root->right, first, last, prev);
+// }
+
+// void recoverTree(TreeNode *root)
+// {
+//     TreeNode *prev = new TreeNode(INT_MIN);
+//     TreeNode *first = NULL, *last = NULL;
+//     helper(root, first, last, prev);
+//     swap(first->val, last->val);
+//     return;
+// }
+
+// morrison travrsal :https://leetcode.com/problems/recover-binary-search-tree/discuss/32559/Detail-Explain-about-How-Morris-Traversal-Finds-two-Incorrect-Pointer
+
+// void recoverTree(TreeNode *root)
+// {
+//     if (!root)
+//         return;
+//     TreeNode *pre = NULL, *first = NULL, *second = NULL, *temp = NULL;
+//     while (root != NULL)
+//     {
+//         if (root->left != NULL)
+//         {
+//             temp = root->left;
+//             while (temp->right && temp->right != root)
+//             {
+//                 temp = temp->right;
+//             }
+//             if (temp->right != nullptr)
+//             {
+//                 // print
+//                 if (pre != NULL && pre->val > root->val)
+//                 {
+//                     if (first == NULL)
+//                     {
+//                         first = pre;
+//                         second = root;
+//                     }
+//                     else
+//                     {
+//                         second = root;
+//                     }
+//                 }
+//                 pre = root;
+//                 temp->right = nullptr;
+//                 root = root->right;
+//             }
+//             else
+//             {
+//                 temp->right = root;
+//                 root = root->left;
+//             }
+//         }
+//         else
+//         {
+//             // print
+//             if (pre != NULL && pre->val > root->val)
+//             {
+//                 if (first == NULL)
+//                 {
+//                     first = pre;
+//                     second = root;
+//                 }
+//                 else
+//                 {
+//                     second = root;
+//                 }
+//             }
+//             pre = root;
+//             root = root->right;
+//         }
+//     }
+//     if (first && second)
+//     {
+//         swap(first->val, second->val);
+//     }
+//     return;
+// }
+
+
+
+
+
 int main()
 {
-
     return 0;
 }
