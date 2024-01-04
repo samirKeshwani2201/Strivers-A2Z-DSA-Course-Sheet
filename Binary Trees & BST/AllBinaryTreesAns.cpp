@@ -3537,9 +3537,41 @@ struct Node
 //     return;
 // }
 
+// Largest BST:Given a binary tree. Find the size of its largest subtree that is a Binary Search Tree.
+// Note : Here Size is equal to the number of nodes in the subtree.
 
+class NodeValue
+{
+public:
+    int mini, maxi, maxSize;
+    NodeValue(int mini, int maxi, int maxSize)
+    {
+        this->mini = mini;
+        this->maxi = maxi;
+        this->maxSize = maxSize;
+    }
+};
+   
+NodeValue helper(Node *root)
+{
+    if (!root)
+    {
+        return NodeValue(INT_MAX, INT_MIN, 0);
+    }
+    auto left = helper(root->left);
+    auto right = helper(root->right);
 
+    if (root->data > left.maxi && root->data < right.mini)
+    {
+        return NodeValue(min(left.mini, root->data), max(root->data, right.maxi), 1 + left.maxSize + right.maxSize);
+    }
+    return NodeValue(INT_MIN, INT_MAX, max(left.maxSize, right.maxSize));
+}
 
+int largestBst(Node *root)
+{
+    return helper(root).maxSize;
+}
 
 int main()
 {
