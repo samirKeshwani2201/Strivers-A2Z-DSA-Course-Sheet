@@ -933,7 +933,915 @@ using namespace std;
 //     return ans;
 // }
 
+// 127. Word Ladder:A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:Every adjacent pair of words differs by a single letter.Every si for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.sk == endWord.Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
 
+// int ladderLength(string beginWord, string endWord, vector<string> &wordList)
+// {
+//     queue<string> q;
+//     set<string> st, words;
+//     for (string s : wordList)
+//     {
+//         words.insert(s);
+//     }
+//     st.insert(beginWord);
+//     q.push(beginWord);
+//     int res = 0;
+//     while (q.size())
+//     {
+//         int n = q.size();
+//         res++;
+//         while (n--)
+//         {
+//             string s = q.front();
+//             q.pop();
+//             if (s == endWord)
+//                 return res;
+//             string t;
+//             for (int i = 0; i < s.size(); i++)
+//             {
+//                 t = s;
+//                 for (int j = 'a'; j <= 'z'; j++)
+//                 {
+//                     t[i] = j;
+//                     if (words.count(t) and !st.count(t))
+//                     {
+//                         st.insert(t);
+//                         q.push(t);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     return 0;
+// }
+
+// int ladderLength(string beginWord, string endWord, vector<string> &wordList)
+// {
+//     queue<pair<string, int>> q;
+//     q.push({beginWord, 1});
+//     unordered_set<string> st(wordList.begin(), wordList.end());
+//     st.erase(beginWord);
+//     while (!q.empty())
+//     {
+//         string word = q.front().first;
+//         int steps = q.front().second;
+//         q.pop();
+//         if (word == endWord)
+//             return steps;
+//         for (int i = 0; i < word.size(); i++)
+//         {
+//             char ogWord = word[i];
+//             for (char j = 'a'; j <= 'z'; j++)
+//             {
+//                 word[i] = j;
+//                 if (st.count(word))
+//                 {
+//                     q.push({word, steps + 1});
+//                     st.erase(word);
+//                 }
+//             }
+//             word[i] = ogWord;
+//         }
+//     }
+//     return 0;
+// }
+
+// 126. Word Ladder II:
+
+// for interview ok but lc gives tle:
+
+// vector<vector<string>> findLadders(string beginWord, string endWord, vector<string> &wordList)
+// {
+//     queue<vector<string>> q;
+//     vector<vector<string>> ans;
+//     unordered_set<string> st(wordList.begin(), wordList.end());
+//     vector<string> usedOnLvl;
+//     usedOnLvl.push_back(beginWord);
+//     q.push({beginWord});
+//     int lvl = 0;
+//     while (!q.empty())
+//     {
+//         vector<string> vec = q.front();
+//         q.pop();
+//         if (vec.size() > lvl)
+//         {
+//             lvl++;
+//             for (auto it : usedOnLvl)
+//             {
+//                 st.erase(it);
+//             }
+//             usedOnLvl.clear();
+//         }
+//         string word = vec.back();
+//         if (word == endWord)
+//         {
+//             if (ans.size() == 0)
+//             {
+//                 ans.push_back(vec);
+//             }
+//             else if (ans[0].size() == vec.size())
+//             {
+//                 ans.push_back(vec);
+//             }
+//         }
+//         for (int i = 0; i < word.size(); i++)
+//         {
+//             char og = word[i];
+//             for (char c = 'a'; c <= 'z'; c++)
+//             {
+//                 word[i] = c;
+//                 if (st.count(word))
+//                 {
+//                     vec.push_back(word);
+//                     q.push(vec);
+//                     usedOnLvl.push_back(word);
+//                     vec.pop_back();
+//                 }
+//             }
+//             word[i] = og;
+//         }
+//     }
+//     return ans;
+// }
+
+// cp approach:
+
+// unordered_map<string, int> mpp;
+// vector<vector<string>> ans;
+// string b;
+// void dfs(string word, vector<string> &seq)
+// {
+//     if (word == b)
+//     {
+//         reverse(seq.begin(), seq.end());
+//         ans.push_back(seq);
+//         reverse(seq.begin(), seq.end());
+//         return;
+//     }
+//     int steps = mpp[word];
+//     for (int i = 0; i < b.size(); i++)
+//     {
+//         char og = word[i];
+//         for (char c = 'a'; c <= 'z'; c++)
+//         {
+//             word[i] = c;
+//             if (mpp.find(word) != mpp.end() and mpp[word] + 1 == steps)
+//             {
+//                 seq.push_back(word);
+//                 dfs(word, seq);
+//                 seq.pop_back();
+//             }
+//         }
+//         word[i] = og;
+//     }
+// }
+// vector<vector<string>> findLadders(string beginWord, string endWord, vector<string> &wordList)
+// {
+//     unordered_set<string> st(wordList.begin(), wordList.end());
+//     queue<string> q;
+//     b = beginWord;
+//     q.push({beginWord});
+//     mpp[beginWord] = 1;
+//     int sz = beginWord.size();
+//     st.erase(beginWord);
+//     while (!q.empty())
+//     {
+//         string word = q.front();
+//         int steps = mpp[word];
+//         q.pop();
+//         if (word == endWord)
+//             break;
+//         for (int i = 0; i < sz; i++)
+//         {
+//             char og = word[i];
+//             for (char c = 'a'; c <= 'z'; c++)
+//             {
+//                 word[i] = c;
+//                 if (st.count(word))
+//                 {
+//                     q.push(word);
+//                     st.erase(word);
+//                     mpp[word] = steps + 1;
+//                 }
+//             }
+//             word[i] = og;
+//         }
+//     }
+//     if (mpp.find(endWord) != mpp.end())
+//     {
+//         vector<string> seq;
+//         seq.push_back(endWord);
+//         dfs(endWord, seq);
+//     }
+//     return ans;
+// }
+
+// Given a non-empty 2D array grid of 0's and 1's, an island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical). You may assume all four edges of the grid are surrounded by water. Count the number of distinct islands. An island is considered to be the same as another if and only if one island has the same shape as another island (and not rotated or reflected).
+
+// string bfsPath(vector<vector<int>> &grid, int i, int j, string path)
+// {
+//     // O invalid/water
+//     // X current position
+//     // R,L,U,D
+//     if (i < 0 or j < 0 or i >= grid.size() or j >= grid[0].size() or grid[i][j] == 0)
+//     {
+//         return path + "O";
+//     }
+//     grid[i][j] = 0;
+//     string l = bfsPath(grid, i, j - 1, "L");
+//     string u = bfsPath(grid, i - 1, j, "U");
+//     string r = bfsPath(grid, i, j + 1, "R");
+//     string d = bfsPath(grid, i + 1, j, "D");
+//     return path + l + r + u + d;
+// }
+
+// int numberofDistinctIslands(vector<vector<int>> &grid)
+// {
+//     if (grid.size() == 0)
+//         return 0;
+//     unordered_set<string> s;
+//     for (int i = 0; i < grid.size(); i++)
+//     {
+//         for (int j = 0; j < grid[i].size(); j++)
+//         {
+//             if (grid[i][j] == 1)
+//             {
+//                 s.insert(bfsPath(grid, i, j, "X"));
+//             }
+//         }
+//     }
+//     return s.size();
+// }
+
+// Given a non-empty 2D array grid of 0's and 1's, an island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water. Count the number of distinct islands. An island is considered to be the same as another if they have the same shape, or have the same shape after rotation (90, 180, or 270 degrees only) or reflection (left/right direction or up/down direction).
+
+// void bfs(vector<vector<char>> &grid, int row, int col)
+// {
+//     queue<pair<int, int>> q;
+//     q.push({row, col});
+//     int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
+//     int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
+//     grid[row][col] = '#';
+//     while (!q.empty())
+//     {
+//         int r = q.front().first;
+//         int c = q.front().second;
+//         q.pop();
+//         for (int k = 0; k < 8; k++)
+//         {
+//             int newr = r + dx[k];
+//             int newc = c + dy[k];
+//             if (newr >= 0 and newc >= 0 and newr < grid.size() and newc < grid[0].size() and grid[newr][newc] == '1')
+//             {
+//                 grid[row][col] = '#';
+//                 q.push({newr, newc});
+//             }
+//         }
+//     }
+// }
+
+// int numIslands(vector<vector<char>> &grid)
+// {
+//     int island = 0;
+//     for (int i = 0; i < grid.size(); i++)
+//     {
+//         for (int j = 0; j < grid[i].size(); j++)
+//         {
+//             if (grid[i][j] == '1')
+//             {
+//                 bfs(grid, i, j);
+//                 island++;
+//             }
+//         }
+//     }
+//     return island;
+// }
+
+// original answer:
+
+// https://algo.monster/liteproblems/711 try to understand
+
+// void dfs(vector<vector<int>> &grid, int i, int j, vector<pair<int, int>> &shape)
+// {
+//     shape.push_back({i, j});
+//     grid[i][j] = 0;
+//     vector<int> dir = {0, 1, 0, -1, 0};
+//     for (int k = 0; k < 4; k++)
+//     {
+//         int newi = dir[k] + i;
+//         int newj = dir[k + 1] + j;
+//         if (newi >= 0 and newj >= 0 and newi < grid.size() and newj < grid[0].size() and grid[newi][newj] == 1)
+//         {
+//             dfs(grid, newi, newj, shape);
+//         }
+//     }
+// }
+
+// vector<pair<int, int>> normalised(vector<pair<int, int>> &island)
+// {
+//     vector<vector<pair<int, int>>> shapes(8);
+//     for (auto p : island)
+//     {
+//         int x = p.first;
+//         int y = p.second;
+//         shapes[0].push_back({x, y});
+//         shapes[1].push_back({-x, y});
+//         shapes[2].push_back({x, -y});
+//         shapes[3].push_back({-x, -y});
+//         shapes[4].push_back({y, x});
+//         shapes[5].push_back({-y, x});
+//         shapes[6].push_back({y, -x});
+//         shapes[7].push_back({-y, -x});
+//     }
+//     for (auto &e : shapes)
+//     {
+//         sort(e.begin(), e.end());
+//         int basex = e[0].first;
+//         int basey = e[0].second;
+//         for (auto &t : e)
+//         {
+//             t.first -= basex;
+//             t.second -= basey;
+//         }
+//     }
+//     sort(shapes.begin(), shapes.end());
+//     return shapes[0];
+// }
+
+// int numDistinctIslands2(vector<vector<int>> &grid)
+// {
+//     set<vector<pair<int, int>>> set;
+//     for (int i = 0; i < grid.size(); i++)
+//     {
+//         for (int j = 0; j < grid[0].size(); j++)
+//         {
+//             if (grid[i][j])
+//             {
+//                 vector<pair<int, int>> shape;
+//                 dfs(grid, i, j, shape);
+//                 set.insert(normalised(shape));
+//             }
+//         }
+//     }
+//     return set.size();
+// }
+
+// 785. Is Graph Bipartite?
+
+// There is an undirected graph with n nodes, where each node is numbered between 0 and n - 1. You are given a 2D array graph, where graph[u] is an array of nodes that node u is adjacent to. More formally, for each v in graph[u], there is an undirected edge between node u and node v. The graph has the following properties:There are no self-edges (graph[u] does not contain u).
+// There are no parallel edges (graph[u] does not contain duplicate values).
+// If v is in graph[u], then u is in graph[v] (the graph is undirected).
+// The graph may not be connected, meaning there may be two nodes u and v such that there is no path between them.
+// A graph is bipartite if the nodes can be partitioned into two independent sets A and B such that every edge in the graph connects a node in set A and a node in set B.Return true if and only if it is bipartite.
+
+// bool dfs(vector<vector<int>> &graph, int col, int node, vector<int> &color)
+// {
+//     color[node] = col;
+//     for (auto it : graph[node])
+//     {
+//         if (color[it] == -1)
+//         {
+//             if (dfs(graph, !col, it, color) == false)
+//             {
+//                 return false;
+//             }
+//         }
+//         else if (color[it] == col)
+//             return false;
+//     }
+//     return true;
+// }
+
+// bool isBipartite(vector<vector<int>> &graph)
+// {
+//     vector<int> color(graph.size(), -1);
+//     for (int i = 0; i < graph.size(); i++)
+//     {
+//         if (color[i] == -1)
+//         {
+//             if (dfs(graph, 1, i, color) == false)
+//                 return false;
+//         }
+//     }
+//     return true;
+// }
+
+// bfs way:
+
+// bool isBipartite(vector<vector<int>> &graph)
+// {
+//     vector<int> colors(graph.size(), 0);
+//     for (int i = 0; i < graph.size(); i++)
+//     {
+//         if (colors[i] != 0)
+//             continue;
+//         queue<int> q;
+//         q.push(i);
+//         colors[i] = 1;
+//         while (!q.empty())
+//         {
+//             int cur = q.front();
+//             q.pop();
+//             for (auto it : graph[cur])
+//             {
+//                 if (colors[it] == 0)
+//                 {
+//                     colors[it] = -colors[cur];
+//                     q.push(it);
+//                 }
+//                 else if (colors[it] == colors[cur])
+//                 {
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+//     return true;
+// }
+
+// Detect cycle in a directed graph (using DFS):
+
+// bool dfs(int node, vector<int> adj[], vector<int> &visi, vector<int> &pathVisi)
+// {
+//     visi[node] = 1;
+//     pathVisi[node] = 1;
+//     for (auto it : adj[node])
+//     {
+//         if (!visi[it])
+//         {
+//             if (dfs(it, adj, visi, pathVisi) == true)
+//             {
+//                 return true;
+//             }
+//         }
+//         else if (pathVisi[it])
+//         {
+//             // visi che
+//             return true;
+//         }
+//     }
+//     pathVisi[node] = 0;
+//     return false;
+// }
+
+// bool isCyclic(int V, vector<int> adj[])
+// {
+//     vector<int> visi(V, 0), pathVisi(V, 0);
+//     for (int i = 0; i < V; i++)
+//     {
+//         if (!visi[i])
+//         {
+//             if (dfs(i, adj, visi, pathVisi))
+//             {
+//                 return true;
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+// void dfs(int node, vector<int> adj[], stack<int> &st, vector<int> &vis)
+// {
+//     vis[node] = 1;
+//     for (auto it : adj[node])
+//     {
+//         if (!vis[it])
+//         {
+//             dfs(it, adj, st, vis);
+//         }
+//     }
+//     st.push(node);
+// }
+
+// vector<int> topoSort(int V, vector<int> adj[])
+// {
+//     vector<int> vis(V, 0);
+//     stack<int> st;
+//     for (int i = 0; i < V; i++)
+//     {
+//         if (!vis[i])
+//         {
+//             dfs(i, adj, st, vis);
+//         }
+//     }
+//     vis.clear();
+//     while (!st.empty())
+//     {
+//         vis.push_back(st.top());
+//         st.pop();
+//     }
+//     return vis;
+// }
+
+//  A DAG G has at least one vertex with in-degree 0 and one vertex with out-degree 0.bfs:
+
+// vector<int> topoSort(int V, vector<int> adj[])
+// {
+//     vector<int> inDeg(V, 0);
+//     for (int u = 0; u < V; u++)
+//     {
+//         for (auto it : adj[u])
+//         {
+//             inDeg[it]++;
+//         }
+//     }
+//     queue<int> q;
+//     for (int i = 0; i < V; i++)
+//     {
+//         if (inDeg[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     vector<int> ans;
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         ans.push_back(front);
+//         q.pop();
+//         for (auto it : adj[front])
+//         {
+//             inDeg[it]--;
+//             if (inDeg[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// 207. Course Schedule:There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.Return true if you can finish all courses. Otherwise, return false.
+
+// bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+// {
+//     vector<vector<int>> adj(numCourses);
+//     vector<int> inDeg(numCourses, 0);
+//     for (auto it : prerequisites)
+//     {
+//         adj[it[1]].push_back(it[0]);
+//     }
+//     for (int u = 0; u < numCourses; u++)
+//     {
+//         for (auto it : adj[u])
+//         {
+//             inDeg[it]++;
+//         }
+//     }
+//     queue<int> q;
+//     for (int i = 0; i < numCourses; i++)
+//     {
+//         if (inDeg[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         q.pop();
+//         numCourses--;
+//         for (auto it : adj[front])
+//         {
+//             inDeg[it]--;
+//             if (inDeg[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     return numCourses == 0;
+// }
+
+// vector<int> findOrder(int numCourses, int m, vector<vector<int>> prerequisites)
+// {
+//     vector<vector<int>> adj(numCourses);
+//     vector<int> inDeg(numCourses, 0);
+//     for (auto it : prerequisites)
+//     {
+//         adj[it[1]].push_back(it[0]);
+//     }
+//     for (int u = 0; u < numCourses; u++)
+//     {
+//         for (auto it : adj[u])
+//         {
+//             inDeg[it]++;
+//         }
+//     }
+//     queue<int> q;
+//     for (int i = 0; i < numCourses; i++)
+//     {
+//         if (inDeg[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     vector<int> ans;
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         ans.push_back(front);
+//         q.pop();
+//         for (auto it : adj[front])
+//         {
+//             inDeg[it]--;
+//             if (inDeg[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// // optimised:
+
+// bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+// {
+//     vector<vector<int>> adj(numCourses);
+//     for (auto it : prerequisites)
+//     {
+//         adj[it[1]].push_back(it[0]);
+//     }
+//     vector<int> inDeg(numCourses, 0);
+//     for (int u = 0; u < numCourses; u++)
+//     {
+//         for (auto it : adj[u])
+//         {
+//             inDeg[it]++;
+//         }
+//     }
+//     for (int i = 0; i < numCourses; i++)
+//     {
+//         int j = 0;
+//         for (; j < numCourses; j++)
+//         {
+//             if (!inDeg[j])
+//             {
+//                 break;
+//             }
+//         }
+//         if (j == numCourses)
+//         {
+//             return false;
+//         }
+//         inDeg[j]--;
+//         for (int v : adj[j])
+//         {
+//             inDeg[v]--;
+//         }
+//     }
+//     return true;
+// }
+
+// 802. Find Eventual Safe States:There is a directed graph of n nodes with each node labeled from 0 to n - 1. The graph is represented by a 0-indexed 2D integer array graph where graph[i] is an integer array of nodes adjacent to node i, meaning there is an edge from node i to each node in graph[i]. A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node (or another safe node).Return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.
+
+// vector<int> eventualSafeNodes(vector<vector<int>> &graph)
+// {
+//     vector<vector<int>> graph2(graph.size());
+//     vector<int> indeg(graph.size());
+//     for (int i = 0; i < graph.size(); i++)
+//     {
+//         for (auto it : graph[i])
+//         {
+//             graph2[it].push_back(i);
+//             indeg[i]++;
+//         }
+//     }
+//     queue<int> q;
+//     for (int i = 0; i < indeg.size(); i++)
+//     {
+//         if (indeg[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     vector<int> ans;
+//     while (!q.empty())
+//     {
+//         int f = q.front();
+//         ans.push_back(f);
+//         q.pop();
+//         for (auto it : graph2[f])
+//         {
+//             indeg[it]--;
+//             if (indeg[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     sort(ans.begin(), ans.end());
+//     return ans;
+// }
+
+// vector<int> eventualSafeNodes(vector<vector<int>> &graph)
+// {
+//     queue<int> q;
+//     vector<vector<int>> R(graph.size());
+//     vector<int> outdeg(graph.size(), 0);
+//     for (int i = 0; i < graph.size(); i++)
+//     {
+//         for (auto it : graph[i])
+//         {
+//             R[it].push_back(i);
+//         }
+//         outdeg[i] += graph[i].size();
+//         if (outdeg[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     vector<int> ans;
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         q.pop();
+//         ans.push_back(front);
+//         for (int v : R[front])
+//         {
+//             outdeg[v]--;
+//             if (outdeg[v] == 0)
+//                 q.push(v);
+//         }
+//     }
+//     sort(ans.begin(), ans.end());
+//     return ans;
+// }
+
+// There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+
+// lintcode:
+
+// string alienOrder(vector<string> &words)
+// {
+//     unordered_map<char, unordered_set<char>> adj;
+//     unordered_map<char, int> indg;
+//     for (auto it : words)
+//     {
+//         for (char c : it)
+//         {
+//             indg[c];
+//             adj[c];
+//         }
+//     }
+//     for (int i = 0; i < words.size() - 1; i++)
+//     {
+//         string w1 = words[i], w2 = words[i + 1];
+//         if (w1.size() > w2.size() and w1.substr(0, w2.size()) == w2)
+//         {
+//             return "";
+//         }
+//         for (int j = 0; j < min(w1.size(), w2.size()); j++)
+//         {
+//             if (w1[j] != w2[j])
+//             {
+//                 if (adj[w1[j]].find(w2[j]) == adj[w1[j]].end())
+//                 {
+//                     adj[w1[j]].insert(w2[j]);
+//                     indg[w2[j]]++;
+//                 }
+//                 break;
+//             }
+//         }
+//     }
+//     priority_queue<char, vector<char>, greater<char>> q;
+//     for (auto it : indg)
+//     {
+//         if (it.second == 0)
+//         {
+//             q.push(it.first);
+//         }
+//     }
+//     string ans = "";
+//     while (!q.empty())
+//     {
+//         char f = q.top();
+//         q.pop();
+//         ans += f;
+//         for (auto it : adj[f])
+//         {
+//             indg[it]--;
+//             if (indg[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     if (ans.size() < indg.size())
+//     {
+//         return "";
+//     }
+//     return ans;
+// }
+
+// gfg:
+
+// string bfs(int K, vector<int> adj[])
+// {
+//     queue<int> q;
+//     vector<int> ind(K, 0);
+//     for (int i = 0; i < K; i++)
+//     {
+//         for (auto it : adj[i])
+//         {
+//             ind[it]++;
+//         }
+//     }
+//     for (int i = 0; i < K; i++)
+//     {
+//         if (ind[i] == 0)
+//         {
+//             q.push(i);
+//         }
+//     }
+//     string ans = "";
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         q.pop();
+//         ans = ans + char(front + 'a');
+//         for (auto it : adj[front])
+//         {
+//             ind[it]--;
+//             if (ind[it] == 0)
+//             {
+//                 q.push(it);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// string findOrder(string words[], int N, int K)
+// {
+//     vector<int> adj[K];
+//     for (int i = 0; i < N - 1; i++)
+//     {
+//         string w1 = words[i];
+//         string w2 = words[i + 1];
+//         int len = min(w1.size(), w2.size());
+//         int ptr = 0;
+//         while (ptr < len)
+//         {
+//             if (w1[ptr] == w2[ptr])
+//             {
+//                 ptr++;
+//                 continue;
+//             }
+//             else
+//             {
+//                 adj[w1[ptr] - 'a'].push_back(w2[ptr] - 'a');
+//                 break;
+//             }
+//         }
+//     }
+//     return bfs(K, adj);
+// }
+
+// Shortest path in Undirected Graph having unit distance: You are given an Undirected Graph having unit weight, Find the shortest path from src to all the vertex and if it is unreachable to reach any vertex, then return -1 for that vertex.
+
+// vector<int> shortestPath(vector<vector<int>> &edges, int N, int M, int src)
+// {
+//     vector<int> adj[N];
+//     vector<int> dist(N, 1e9);
+//     for (auto it : edges)
+//     {
+//         adj[it[0]].push_back(it[1]);
+//         adj[it[1]].push_back(it[0]);
+//     }
+//     dist[src] = 0;
+//     queue<int> q;
+//     q.push(src);
+//     while (!q.empty())
+//     {
+//         int front = q.front();
+//         q.pop();
+//         for (auto it : adj[front])
+//         {
+//             if (dist[it] > dist[front] + 1)
+//             {
+//                 q.push(it);
+//                 dist[it] = dist[front] + 1;
+//             }
+//         }
+//     }
+//     for (int i = 0; i < dist.size(); i++)
+//     {
+//         if (dist[i]==1e9)
+//         {
+//             dist[i]=-1;
+//         }
+//     }
+//     return dist;
+// }
+
+// Shortest Path in Directed Acyclic Graph Topological Sort:Given a DAG, find the shortest path from the source to all other nodes in this DAG. In this problem statement, we have assumed the source vertex to be ‘0’. You will be given the weighted edges of the graph.
+
+vector<int> shortestPath(int N, int M, vector<vector<int>> &edges)
+{
+    
+}
 
 int main()
 {
