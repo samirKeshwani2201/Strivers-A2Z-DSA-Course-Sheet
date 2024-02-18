@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.js": "javascript",
+        "*.jsx": "typescriptreact",
+        "array": "cpp",
+        "regex": "cpp",
+        "vector": "cpp",
+        "random": "cpp"
+    }
+}
