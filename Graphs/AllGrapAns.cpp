@@ -2152,46 +2152,46 @@ using namespace std;
 
 // 1631. Path With Minimum EffortYou are a hiker preparing for an upcoming hike. You are given heights, a 2D array of size rows x columns, where heights[row][col] represents the height of cell (row, col). You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed). You can move up, down, left, or right, and you wish to find a route that requires the minimum effort.A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.Return the minimum effort required to travel from the top-left cell to the bottom-right cell.
 
-// int minimumEffortPath(vector<vector<int>> &heights)
-// {
-//     vector<vector<int>> dis(heights.size(), vector<int>(heights[0].size(), 1e9));
-//     dis[0][0] = 0;
-//     // diff, cell corditnates
-//     int n = heights.size();
-//     int m = heights[0].size();
-//     priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;
-//     q.push({0, {0, 0}});
-//     int dir[] = {0, 1, 0, -1, 0};
-//     while (!q.empty())
-//     {
-//         int sz = q.size();
-//         for (int i = 0; i < sz; i++)
-//         {
-//             auto it = q.top();
-//             q.pop();
-//             int diffe = it.first;
-//             int x = it.second.first;
-//             int y = it.second.second;
-//             if (x == n - 1 and y == m - 1)
-//                 return dis[x][y];
-//             for (int i = 0; i < 4; i++)
-//             {
-//                 int newx = x + dir[i];
-//                 int newy = y + dir[i + 1];
-//                 if (newx >= 0 and newx < n and newy >= 0 and newy < m)
-//                 {
-//                     int effr = max(abs(heights[newx][newy] - heights[x][y]), diffe);
-//                     if (dis[newx][newy] > effr)
-//                     {
-//                         dis[newx][newy] = effr;
-//                         q.push({dis[newx][newy], {newx, newy}});
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return dis[n - 1][m - 1];
-// }
+int minimumEffortPath(vector<vector<int>> &heights)
+{
+    vector<vector<int>> dis(heights.size(), vector<int>(heights[0].size(), 1e9));
+    dis[0][0] = 0;
+    // diff, cell corditnates
+    int n = heights.size();
+    int m = heights[0].size();
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;
+    q.push({0, {0, 0}});
+    int dir[] = {0, 1, 0, -1, 0};
+    while (!q.empty())
+    {
+        int sz = q.size();
+        for (int i = 0; i < sz; i++)
+        {
+            auto it = q.top();
+            q.pop();
+            int diffe = it.first;
+            int x = it.second.first;
+            int y = it.second.second;
+            if (x == n - 1 and y == m - 1)
+                return dis[x][y];
+            for (int i = 0; i < 4; i++)
+            {
+                int newx = x + dir[i];
+                int newy = y + dir[i + 1];
+                if (newx >= 0 and newx < n and newy >= 0 and newy < m)
+                {
+                    int effr = max(abs(heights[newx][newy] - heights[x][y]), diffe);
+                    if (dis[newx][newy] > effr)
+                    {
+                        dis[newx][newy] = effr;
+                        q.push({dis[newx][newy], {newx, newy}});
+                    }
+                }
+            }
+        }
+    }
+    return dis[n - 1][m - 1];
+}
 
 // bool help(int i, int j, int effort, vector<vector<int>> &heights, vector<int> &dir, vector<vector<int>> &vis, int val)
 // {
@@ -2734,133 +2734,15 @@ using namespace std;
 //     }
 // }
 
-// {// 827. Making A Large Island:
-// // int check(vector<vector<int>> &grid, int x, int y)
-// // {
-// //     int dir[] = {0, -1, 0, 1, 0};
-// //     unordered_set<int> seen;
-// //     int n = grid.size();
-// //     stack<int> st;
-// //     st.push(x * n + y);
-// //     seen.insert(x * n + y);
-// //     while (!st.empty())
-// //     {
-// //         int top = st.top();
-// //         st.pop();
-// //         int r = top / n;
-// //         int c = top % n;
-// //         for (int k = 0; k < 4; k++)
-// //         {
-// //             int newr = r + dir[k];
-// //             int newc = c + dir[k + 1];
-// //             if (newr >= 0 and newc >= 0 and newr < n and newc < n and grid[newr][newc] == 1 and !seen.count(newr * n + newc))
-// //             {
-// //                 st.push(newr * n + newc);
-// //                 seen.insert(newr * n + newc);
-// //             }
-// //         }
-// //     }
-// //     return seen.size();
-// // }
-// // int largestIsland(vector<vector<int>> &grid)
-// // {
-// //     int n = grid.size();
-// //     int maxi = -1e8;
-// //     bool haszero = false;
-// //     for (int i = 0; i < n; i++)
-// //     {
-// //         for (int j = 0; j < n; j++)
-// //         {
-// //             if (grid[i][j] == 0)
-// //             {
-// //                 haszero = true;
-// //                 grid[i][j] = 1;
-// //                 maxi = max(maxi, check(grid, i, j));
-// //             }
-// //         }
-// //     }
-// //     if (!haszero)
-// //     {
-// //         return n * n;
-// //     }
-// //     return maxi;
-// // }
-// // int dfs(int r, int c, int index, vector<vector<int>> &grid)
-// // {
-// //     int dir[] = {0, -1, 0, 1, 0};
-// //     int ans = 1;
-// //     int n = grid.size();
-// //     grid[r][c] = index;
-// //     for (int k = 0; k < 4; k++)
-// //     {
-// //         int newr = r + dir[k];
-// //         int newc = c + dir[k + 1];
-// //         if (newr >= 0 and newr < n and newc >= 0 and newc < n and grid[newr][newc] == 1)
-// //         {
-// //             grid[newr][newc] = index;
-// //             ans += dfs(newr, newc, index, grid);
-// //         }
-// //     }
-// //     return ans;
-// // }
-// // int largestIsland(vector<vector<int>> &grid)
-// // {
-// // int dir[] = {0, -1, 0, 1, 0};
-// //     int index = 2;
-// //     int n = grid.size();
-// //     vector<int> area(n * n + 2, 0);
-// //     for (int i = 0; i < n; i++)
-// //     {
-// //         for (int j = 0; j < n; j++)
-// //         {
-// //             if (grid[i][j] == 1)
-// //             {
-// //                 area[index] = dfs(i, j, index, grid);
-// //                 index++;
-// //             }
-// //         }
-// //     }
-// //     int ans = 0;
-// //     for (int i = 0; i < n * n + 2; i++)
-// //     {
-// //         ans = max(ans, area[i]);
-// //     }
-// //     for (int r = 0; r < n; r++)
-// //     {
-// //         for (int c = 0; c < n; c++)
-// //         {
-// //             if (grid[r][c] == 0)
-// //             {
-// //                 set<int> s;
-// //                 for (int k = 0; k < 4; k++)
-// //                 {
-// //                     int newr = r + dir[k];
-// //                     int newc = c + dir[k + 1];
-// //                     if (newr >= 0 and newc >= 0 and newr < n and newc < n and grid[newr][newc] > 1)
-// //                     {
-// //                         s.insert(grid[newr][newc]);
-// //                     }
-// //                 }
-// //                 int temp = 1;
-// //                 for (auto it : s)
-// //                 {
-// //                     temp += area[it];
-// //                 }
-// //                 ans = max(ans, temp);
-// //             }
-// //         }
-// //     }
-// //     return ans;
-// // }
-// }
-
 // Disjoint Set :Union by Rank : we will connect the ultimate parent with a smaller rank to the other ultimate parent with a larger rank. But if the ranks are equal, we can connect any parent to the other parent and we will increase the rank by one for the parent node to whom we have connected the other one.
 
 class DisjointSet
 {
-    vector<int> rank, parent, size;
+    // vector<int> rank, parent, size;
 
 public:
+    // for one question kept  public:
+    vector<int> rank, parent, size;
     DisjointSet(int n)
     {
         size.resize(n + 1, 1);
@@ -3165,9 +3047,409 @@ public:
 
 // 827. Making A Large Island:You are given an n x n binary matrix grid. You are allowed to change at most one 0 to be 1.Return the size of the largest island in grid after applying this operation.An island is a 4-directionally connected group of 1s.
 
-int largestIsland(vector<vector<int>> &grid)
-{
-}
+// int check(vector<vector<int>> &grid, int x, int y)
+// {
+//     int dir[] = {0, -1, 0, 1, 0};
+//     unordered_set<int> seen;
+//     int n = grid.size();
+//     stack<int> st;
+//     st.push(x * n + y);
+//     seen.insert(x * n + y);
+//     while (!st.empty())
+//     {
+//         int top = st.top();
+//         st.pop();
+//         int r = top / n;
+//         int c = top % n;
+//         for (int k = 0; k < 4; k++)
+//         {
+//             int newr = r + dir[k];
+//             int newc = c + dir[k + 1];
+//             if (newr >= 0 and newc >= 0 and newr < n and newc < n and grid[newr][newc] == 1 and !seen.count(newr * n + newc))
+//             {
+//                 st.push(newr * n + newc);
+//                 seen.insert(newr * n + newc);
+//             }
+//         }
+//     }
+//     return seen.size();
+// }
+// int largestIsland(vector<vector<int>> &grid)
+// {
+//     int n = grid.size();
+//     int maxi = 0;
+//     bool haszero = false;
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             if (grid[i][j] == 0)
+//             {
+//                 haszero = true;
+//                 grid[i][j] = 1;
+//                 maxi = max(maxi, check(grid, i, j));
+//                 grid[i][j] = 0;
+//             }
+//         }
+//     }
+//     if (!haszero)
+//     {
+//         return n * n;
+//     }
+//     return maxi;
+// }
+
+// int dfs(int r, int c, int index, vector<vector<int>> &grid)
+// {
+//     int dir[] = {0, -1, 0, 1, 0};
+//     int ans = 1;
+//     int n = grid.size();
+//     grid[r][c] = index;
+//     for (int k = 0; k < 4; k++)
+//     {
+//         int newr = r + dir[k];
+//         int newc = c + dir[k + 1];
+//         if (newr >= 0 and newr < n and newc >= 0 and newc < n and grid[newr][newc] == 1)
+//         {
+//             grid[newr][newc] = index;
+//             ans += dfs(newr, newc, index, grid);
+//         }
+//     }
+//     return ans;
+// }
+// int largestIsland(vector<vector<int>> &grid)
+// {
+//     int dir[] = {0, -1, 0, 1, 0};
+//     int index = 2;
+//     int n = grid.size();
+//     vector<int> area(n * n + 2, 0);
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             if (grid[i][j] == 1)
+//             {
+//                 area[index] = dfs(i, j, index, grid);
+//                 index++;
+//             }
+//         }
+//     }
+//     int ans = 0;
+//     for (int i = 0; i < n * n + 2; i++)
+//     {
+//         ans = max(ans, area[i]);
+//     }
+//     for (int r = 0; r < n; r++)
+//     {
+//         for (int c = 0; c < n; c++)
+//         {
+//             if (grid[r][c] == 0)
+//             {
+//                 set<int> s;
+//                 for (int k = 0; k < 4; k++)
+//                 {
+//                     int newr = r + dir[k];
+//                     int newc = c + dir[k + 1];
+//                     if (newr >= 0 and newc >= 0 and newr < n and newc < n and grid[newr][newc] > 1)
+//                     {
+//                         s.insert(grid[newr][newc]);
+//                     }
+//                 }
+//                 int temp = 1;
+//                 for (auto it : s)
+//                 {
+//                     temp += area[it];
+//                 }
+//                 ans = max(ans, temp);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// int largestIsland(vector<vector<int>> &grid)
+// {
+//     bool hasOneZero=false;
+//     int n = grid.size();
+//     for(int i=0;i<n;i++)
+//     {
+//         for(int j=0;j<n;j++)
+//         {
+//             if(grid[i][j]==0)
+//             {
+//                 hasOneZero=true;break;
+//             }
+//         }
+//     }
+//     if(!hasOneZero)
+//     return n*n;
+//     DisjointSet ds(n * n + 1);
+//     vector<int> dir = {0, 1, 0, -1, 0};
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             if (grid[i][j] == 1)
+//             {
+//                 for (int k = 0; k < 4; k++)
+//                 {
+//                     int newi = i + dir[k];
+//                     int newj = j + dir[k + 1];
+//                     if (newi >= 0 and newj >= 0 and newi < n and newj < n and grid[newi][newj] == 1)
+//                     {
+//                         ds.unionBySize(j + i * n, newj + newi * n);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     int ans = 0;
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             if (grid[i][j] == 0)
+//             {
+//                 int tans = 1;
+//                 set<int> st;
+//                 for (int k = 0; k < 4; k++)
+//                 {
+//                     int newi = i + dir[k];
+//                     int newj = j + dir[k + 1];
+//                     if (newi >= 0 and newj >= 0 and newi < n and newj < n and grid[newi][newj] == 1)
+//                     {
+//                         st.insert(ds.findUPar(newj + newi * n));
+//                     }
+//                 }
+//                 for (auto it : st)
+//                 {
+//                     tans += ds.size[it];
+//                 }
+//                 ans = max(ans, tans);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// 778. Swim in Rising Water:You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).The rain starts to fall. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.Return the least time until you can reach the bottom right square (n - 1, n - 1) if you start at the top left square (0, 0).
+
+// int swimInWater(vector<vector<int>> &grid)
+// {
+//     // lvl,cordinates:
+//     priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> q;
+//     int n = grid.size();
+//     int m = grid[0].size();
+//     vector<vector<bool>> vis(n, vector<bool>(m, false));
+//     int dir[] = {0, 1, 0, -1, 0};
+//     q.push({grid[0][0], {0, 0}});
+//     int ans = grid[0][0];
+//     vis[0][0] = true;
+//     while (!q.empty())
+//     {
+//         int sz = q.size();
+//         for (int i = 0; i < sz; i++)
+//         {
+//             auto it = q.top();
+//             q.pop();
+//             int tempt = it.first;
+//             ans = max(ans, tempt);
+//             int x = it.second.first;
+//             int y = it.second.second;
+//             if (x == n - 1 and y == m - 1)
+//                 return ans;
+//             for (int i = 0; i < 4; i++)
+//             {
+//                 int newx = x + dir[i];
+//                 int newy = y + dir[i + 1];
+//                 if (newx >= 0 and newx < n and newy >= 0 and newy < m and vis[newx][newy] == false)
+//                 {
+//                     q.push({grid[newx][newy], {newx, newy}});
+//                     vis[newx][newy] = true;
+//                 }
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+// Using union find:
+
+// int swimInWater(vector<vector<int>> &grid)
+// {
+//     int n = grid.size();
+//     pair<int, int> locationsReachable[n * n];
+//     vector<vector<int>> vis(n, vector<int>(n, 0));
+//     DisjointSet ds(n * n);
+//     int dir[] = {0, 1, 0, -1, 0};
+//     for (int i = 0; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             locationsReachable[grid[i][j]] = {i, j};
+//         }
+//     }
+//     for (int time = 0; time < n * n; time++)
+//     {
+//         int x = locationsReachable[time].first;
+//         int y = locationsReachable[time].second;
+//         vis[x][y] = 1;
+//         for (int k = 0; k < 4; k++)
+//         {
+//             int newx = x + dir[k];
+//             int newy = dir[k + 1] + y;
+//             if (newx >= 0 and newx < n and newy >= 0 and newy < n and vis[newx][newy])
+//             {
+//                 ds.unionByRank(x * n + y, newx * n + newy);
+//             }
+//         }
+//         if (ds.findUPar(0) == ds.findUPar(n * n - 1))
+//             return time;
+//     }
+//     return n * n - 1;
+// }
+
+// 1192. Critical Connections in a Network:There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections forming a network where connections[i] = [ai, bi] represents a connection between servers ai and bi. Any server can reach other servers directly or indirectly through the network.A critical connection is a connection that, if removed, will make some servers unable to reach some other server.Return all critical connections in the network in any order.
+
+// void dfs(int node, int parent, int &time, vector<int> adj[], vector<int> &vis, int tin[], int low[], vector<vector<int>> &bridges)
+// {
+//     vis[node] = 1;
+//     tin[node] = low[node] = time;
+//     time++;
+//     for (auto it : adj[node])
+//     {
+//         if (it == parent)
+//             continue;
+//         if (vis[it] == 0)
+//         {
+//             dfs(it, node, time, adj, vis, tin, low, bridges);
+//             if (low[it] > tin[node])
+//             {
+//                 bridges.push_back({it, node});
+//             }
+//         }
+//         else
+//             low[node] = min(low[node], low[it]);
+//     }
+// }
+
+// vector<vector<int>> criticalConnections(int n, vector<vector<int>> &connections)
+// {
+// vector<int> adj[n];
+// for (auto it : connections)
+// {
+//     int u = it[0];
+//     int v = it[1];
+//     adj[u].push_back(v);
+//     adj[v].push_back(u);
+// }
+//     vector<int> vis(n, 0);
+//     int tin[n];
+//     int low[n];
+//     int time = 0;
+//     vector<vector<int>> bridges;
+//     dfs(0, -1, time, adj, vis, tin, low, bridges);
+//     return bridges;
+// }
+
+// void dfs(int node, int parent, vector<int> &tin, vector<int> adj[], int &time, vector<int> &vis, vector<vector<int>> &res)
+// {
+//     time++;
+//     tin[node] = time;
+//     vis[node] = 1;
+//     int currentTime = time;
+//     for (auto it : adj[node])
+//     {
+//         if (it == parent)
+//             continue;
+//         if (!vis[it])
+//             dfs(it, node, tin, adj, time, vis, res);
+//         tin[node] = min(tin[node], tin[it]);
+//         if (currentTime < tin[it])
+//         {
+//             res.push_back({node, it});
+//         }
+//     }
+// }
+
+// vector<vector<int>> criticalConnections(int n, vector<vector<int>> &connections)
+// {
+//     vector<int> adj[n];
+//     for (auto it : connections)
+//     {
+//         int u = it[0];
+//         int v = it[1];
+//         adj[u].push_back(v);
+//         adj[v].push_back(u);
+//     }
+//     int time = 0;
+//     vector<int> vis(n, 0);
+//     vector<vector<int>> res;
+//     vector<int> tin(n);
+//     dfs(0, -1, tin, adj, time, vis, res);
+//     return res;
+// }
+
+// void dfs(int node, int parent, vector<int> &tin, vector<int> &low, vector<int> adj[], int &time, vector<int> &vis, vector<int> &res)
+// {
+//     time++;
+//     int child = 0;
+//     vis[node] = 1;
+//     tin[node] = low[node] = time;
+//     for (auto it : adj[node])
+//     {
+//         if (it == parent)
+//             continue;
+//         if (!vis[it])
+//         {
+//             dfs(it, node, tin, low, adj, time, vis, res);
+//             low[node] = min(low[node], low[it]);
+//             if (low[it] >= tin[node] and parent != -1)
+//             {
+//                 res[node] = 1;
+//             }
+//             child++;
+//         }
+//         else
+//         {
+//             low[node] = min(low[node], tin[it]);
+//         }
+//     }
+//     if (child > 1 and parent == -1)
+//         res[node] = 1;
+// }
+
+// vector<int> articulationPoints(int n, vector<int> adj[])
+// {
+//     vector<int> mark(n, 0);
+//     vector<int> ans;
+//     vector<int> vis(n, 0);
+//     vector<int> tin(n);
+//     vector<int> low(n);
+//     int timer = -1;
+//     int parent = -1;
+//     for (int i = 0; i < n; i++)
+//     {
+//         if (!vis[i])
+//         {
+//             dfs(i, -1, tin, low, adj, timer, vis, mark);
+//         }
+//     }
+//     for (int i = 0; i < mark.size(); i++)
+//     {
+//         if (mark[i] == 1)
+//         {
+//             ans.push_back(i);
+//         }
+//     }
+//     if (ans.size() == 0)
+//         return {-1};
+//     return ans;
+// }
+
+
+
+
 
 int main()
 {
