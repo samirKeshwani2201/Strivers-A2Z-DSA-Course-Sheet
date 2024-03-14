@@ -3447,9 +3447,69 @@ public:
 //     return ans;
 // }
 
+// Strongly Connected Components – Kosaraju’s Algorithm: G-54:Problem Statement: Given a Directed Graph with V vertices (Numbered from 0 to V-1) and E edges, Find the number of strongly connected components in the graph.
+// A component is called a Strongly Connected Component(SCC) only if for every possible pair of vertices (u, v) inside that component, u is reachable from v and v is reachable from u.
 
+void dfsForTime(int node, vector<int> &vis, vector<vector<int>> &adj, stack<int> &time)
+{
+    vis[node] = 1;
+    for (auto it : adj[node])
+    {
+        if (!vis[it])
+        {
+            dfsForTime(it, vis, adj, time);
+        }
+    }
+    time.push(node);
+    // so @ last the top node will be of scc1 surely
+}
 
+void dfs(int node, vector<int> &vis, vector<vector<int>> &adj)
+{
+    vis[node] = 1;
+    for (auto it : adj[node])
+    {
+        if (!vis[it])
+            dfs(it, vis, adj);
+    }
+}
 
+int kosaraju(int V, vector<vector<int>> &adj)
+{
+    int ans = 0;
+    stack<int> time;
+
+    vector<int> vis(V, 0);
+    for (int i = 0; i < V; i++)
+    {
+        if (!vis[i])
+        {
+            dfsForTime(i, vis, adj, time);
+        }
+    }
+    // reverse the connection
+    vector<vector<int>> revEd(V);
+    for (int i = 0; i < V; i++)
+    {
+        vis[i] = 0;
+        for (auto it : adj[i])
+        {
+            revEd[it].push_back(i);
+        }
+    }
+
+    while (!time.empty())
+    {
+        int node = time.top();
+        time.pop();
+        if (!vis[node])
+        {
+            dfs(node, vis, revEd);
+            ans++;
+        }
+    }
+    return ans;
+} 
 
 int main()
 {
