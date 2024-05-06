@@ -1,10 +1,10 @@
 from pytube import Playlist
 import os
 
-playlist_url = 'https://youtube.com/playlist?'
+playlist_url = 'https://youtube.com/playlist?list=PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY&si=uX1xS03n6tLi70V1'
 playlist = Playlist(playlist_url)
 
-destination_dir = 'E:\\'  # Replace with your desired directory
+destination_dir = 'E:\DP Striver'  # Replace with your desired directory
 
 os.makedirs(destination_dir, exist_ok=True)
 
