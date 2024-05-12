@@ -209,27 +209,27 @@ using namespace std;
 
 // top down
 
-int help(int index, int n, vector<int> &heigths, vector<int> &dp)
-{
-    if (index == 0)
-    {
-        return 0;
-    }
-    if (dp[index] != -1)
-    {
-        return dp[index];
-    }
-    // one jump before
-    int one = index - 1 >= 0 ? help(index - 1, n, heigths, dp) + abs(heigths[index] - heigths[index - 1]) : INT_MAX;
-    int two = index - 2 >= 0 ? help(index - 2, n, heigths, dp) + abs(heigths[index] - heigths[index - 2]) : INT_MAX;
-    return dp[index] = min(one, two);
-}
+// int help(int index, int n, vector<int> &heigths, vector<int> &dp)
+// {
+//     if (index == 0)
+//     {
+//         return 0;
+//     }
+//     if (dp[index] != -1)
+//     {
+//         return dp[index];
+//     }
+//     // one jump before
+//     int one = index - 1 >= 0 ? help(index - 1, n, heigths, dp) + abs(heigths[index] - heigths[index - 1]) : INT_MAX;
+//     int two = index - 2 >= 0 ? help(index - 2, n, heigths, dp) + abs(heigths[index] - heigths[index - 2]) : INT_MAX;
+//     return dp[index] = min(one, two);
+// }
 
-int frogJump(int n, vector<int> &heights)
-{
-    vector<int> dp(n + 1, -1);
-    return help(n - 1, n, heights, dp);
-}
+// int frogJump(int n, vector<int> &heights)
+// {
+//     vector<int> dp(n + 1, -1);
+//     return help(n - 1, n, heights, dp);
+// }
 
 // tabulation approach :
 
@@ -720,6 +720,687 @@ int frogJump(int n, vector<int> &heights)
 //     }
 //     return prev[n - 1];
 // }
+
+// combinatorial way:
+
+// For the eg., given in question, 3x7 matrix, robot needs to take 2+6 = 8 steps with 2 down and 6 right in any order. That is nothing but a permutation problem. Denote down as 'D' and right as 'R', following is one of the path :-
+// D R R R D R R R
+// We have to tell the total number of permutations of the above given word. So, decrease both m & n by 1 and apply following formula:-
+// Total permutations = (m+n)! / (m! * n!)
+// If the matrix is 3x7, we have 10 grids to reach the finish because 3 + 7 = 10
+// The maximum right direction moves we can have is 3 since it's a 3x7 matrix.
+// The maximum down moves we can have is 7 since it's a 3x7 matrix.
+// No. of ways in which we can choose the right turn? It's C(10,3) = 10! / (7! * 3!) => (m+n)! / (m!*n!)
+
+// int uniquePaths(int m, int n)
+// {
+//     if (m == 1 and n == 1)
+//     {
+//         return 1;
+//     }
+//     m--, n--;
+//     int j = 1;
+//     long res = 1;
+//     for (int i = m + 1; i <= m + n; i++, j++)
+//     {
+//         res *= i;
+//         res /= j;
+//     }
+//     return (int)res;
+// }
+
+// 63. Unique Paths II:
+// You are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.  An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square that is an obstacle. Return the number of possible unique paths that the robot can take to reach the bottom-right corner. The testcases are generated so that the answer will be less than or equal to 2 * 109.
+
+// recursion:
+
+// int help(int row, int col, vector<vector<int>> &obstacleGrid)
+// {
+//     if (row == 0 and col == 0)
+//     {
+//         return 1;
+//     }
+//     if (row < 0 or col < 0 or obstacleGrid[row][col] == 1)
+//     {
+//         return 0;
+//     }
+
+//     // up or left :
+//     int up = help(row - 1, col, obstacleGrid);
+//     int left = help(row, col - 1, obstacleGrid);
+//     return left + up;
+// }
+
+// int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid)
+// {
+//     int m = obstacleGrid.size();
+//     int n = obstacleGrid[0].size();
+//     return help(m - 1, n - 1, obstacleGrid);
+// }
+
+// memorization:
+
+// int help(int row, int col, vector<vector<int>> &obstacleGrid, vector<vector<int>> &dp)
+// {
+//     if (row == 0 and col == 0)
+//     {
+//         return dp[row][col] = 1;
+//     }
+//     if (row < 0 or col < 0 or obstacleGrid[row][col] == 1)
+//     {
+//         return 0;
+//     }
+//     if (dp[row][col] != -1)
+//         return dp[row][col];
+//     // up or left :
+//     int up = help(row - 1, col, obstacleGrid, dp);
+//     int left = help(row, col - 1, obstacleGrid, dp);
+//     return dp[row][col] = left + up;
+// }
+
+// int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid)
+// {
+//     if(obstacleGrid[0][0]==1)return 0;
+//     int m = obstacleGrid.size();
+//     int n = obstacleGrid[0].size();
+//     vector<vector<int>> dp(m, vector<int>(n, -1));
+//     return help(m - 1, n - 1, obstacleGrid, dp);
+// }
+
+// tabulation :
+
+// int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid)
+// {
+//     if (obstacleGrid[0][0] == 1)
+//         return 0;
+//     int m = obstacleGrid.size();
+//     int n = obstacleGrid[0].size();
+//     vector<vector<int>> dp(m, vector<int>(n, -1));
+//     dp[0][0] = 1;
+//     for (int row = 0; row < m; row++)
+//     {
+//         for (int col = 0; col < n; col++)
+//         {
+//             if (obstacleGrid[row][col] == 1)
+//             {
+//                 dp[row][col] = 0;
+//                 continue;
+//             }
+//             int up = 0, left = 0;
+//             if (row - 1 >= 0)
+//                 up = dp[row - 1][col];
+//             if (col - 1 >= 0)
+//                 left = dp[row][col - 1];
+//             dp[row][col] = max(up + left, dp[row][col]);
+//         }
+//     }
+//     return dp[m - 1][n - 1];
+// }
+
+// Space optimization :
+
+// int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid)
+// {
+//     if (obstacleGrid[0][0] == 1)
+//         return 0;
+//     int m = obstacleGrid.size();
+//     int n = obstacleGrid[0].size();
+//     vector<int> prev(n, 0);
+//     prev[0] = 1;
+//     for (int row = 0; row < m; row++)
+//     {
+//         vector<int> cur(n, 0);
+//         for (int col = 0; col < n; col++)
+//         {
+//             if (obstacleGrid[row][col] == 1)
+//             {
+//                 cur[col] = 0;
+//                 continue;
+//             }
+//             int up = 0, left = 0;
+//             up = prev[col];
+//             if (col - 1 >= 0)
+//                 left = cur[col - 1];
+//             cur[col] = max(up + left, cur[col]);
+//         }
+//         prev = cur;
+//     }
+//     return prev[n - 1];
+// }
+
+// Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path. Note: You can only move either down or right at any point in time.
+
+// Recursion:
+
+// int help(int row, int col, vector<vector<int>> &grid)
+// {
+//     if (row == 0 and col == 0)
+//     {
+//         return grid[row][col];
+//     }
+//     if (row < 0 or col < 0)
+//     {
+//         return INT_MAX;
+//     }
+//     long long  up = 0, left = 0;
+//     up = help(row - 1, col, grid) + (long long)grid[row][col];
+//     left = help(row, col - 1, grid) + (long long)grid[row][col];
+//     return (int)min(up, left);
+// }
+// int minPathSum(vector<vector<int>> &grid)
+// {
+//     int m = grid.size();
+//     int n = grid[0].size();
+//     return help(m - 1, n - 1, grid);
+// }
+
+// Memoization:
+
+// int help(int row, int col, vector<vector<int>> &grid, vector<vector<int>> &dp)
+// {
+//     if (row == 0 and col == 0)
+//     {
+//         return grid[row][col];
+//     }
+//     if (row < 0 or col < 0)
+//     {
+//         return INT_MAX;
+//     }
+//     if (dp[row][col] != -1)
+//     {
+//         return dp[row][col];
+//     }
+//     long long up = 0, left = 0;
+//     up = help(row - 1, col, grid, dp) + (long long)grid[row][col];
+//     left = help(row, col - 1, grid, dp) + (long long)grid[row][col];
+//     return dp[row][col] = (int)min(up, left);
+// }
+
+// int minPathSum(vector<vector<int>> &grid)
+// {
+//     int m = grid.size();
+//     int n = grid[0].size();
+//     vector<vector<int>> dp(m, vector<int>(n, -1));
+//     return help(m - 1, n - 1, grid, dp);
+// }
+
+// Tabulation :
+
+// int minPathSum(vector<vector<int>> &grid)
+// {
+//     int m = grid.size();
+//     int n = grid[0].size();
+//     vector<vector<int>> dp(m, vector<int>(n, -1));
+//     dp[0][0] = grid[0][0];
+//     for (int row = 0; row < m; row++)
+//     {
+//         for (int col = 0; col < n; col++)
+//         {
+//             if (row == 0 and col == 0)
+//                 continue;
+//             long long up = INT_MAX, left = INT_MAX;
+//             if (row - 1 >= 0)
+//                 up = dp[row - 1][col] + (long long)grid[row][col];
+//             if (col - 1 >= 0)
+//                 left = dp[row][col - 1] + (long long)grid[row][col];
+//             dp[row][col] = (int)min(up, left);
+//         }
+//     }
+//     return dp[m - 1][n - 1];
+// }
+
+// Space Optimization:
+
+// int minPathSum(vector<vector<int>> &grid)
+// {
+//     int m = grid.size();
+//     int n = grid[0].size();
+//     vector<int> prev(n, 0);
+//     for (int row = 0; row < m; row++)
+//     {
+//         vector<int> cur(n, 0);
+//         for (int col = 0; col < n; col++)
+//         {
+//             if (row == 0 and col == 0)
+//             {
+//                 cur[0] = grid[0][0];
+//                 continue;
+//             }
+//             long long up = INT_MAX, left = INT_MAX;
+//             if (row - 1 >= 0)
+//                 up = prev[col] + (long long)grid[row][col];
+//             if (col - 1 >= 0)
+//                 left = cur[col - 1] + (long long)grid[row][col];
+//             cur[col] = (int)min(up, left);
+//         }
+//         prev = cur;
+//     }
+//     return prev[n - 1];
+// }
+
+// 120. Triangle:Given a triangle array, return the minimum path sum from top to bottom.For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+
+// Recursion:
+
+// int help(int row, int col, vector<vector<int>> &triangle)
+// {
+//     if (row >= triangle.size() or col >= triangle[row].size())
+//     {
+//         return INT_MAX;
+//     }
+//     if (row == triangle.size() - 1)
+//     {
+//         return triangle[row][col];
+//     }
+//     int down = INT_MAX, diagonal = INT_MAX;
+//     down = triangle[row][col] + help(row + 1, col, triangle);
+//     diagonal = triangle[row][col] + help(row + 1, col + 1, triangle);
+//     return min(down, diagonal);
+// }
+
+// int minimumTotal(vector<vector<int>> &triangle)
+// {
+//     return help(0, 0, triangle);
+// }
+
+// Memoization:top down
+
+// int help(int row, int col, vector<vector<int>> &triangle, vector<vector<int>> &dp)
+// {
+//     if (row >= triangle.size() or col >= triangle[row].size())
+//     {
+//         return INT_MAX;
+//     }
+//     if (row == triangle.size() - 1)
+//     {
+//         return dp[row][col] = triangle[row][col];
+//     }
+//     if (dp[row][col] != -1)
+//         return dp[row][col];
+//     int down = INT_MAX, diagonal = INT_MAX;
+//     down = triangle[row][col] + help(row + 1, col, triangle, dp);
+//     diagonal = triangle[row][col] + help(row + 1, col + 1, triangle, dp);
+//     return dp[row][col] = min(down, diagonal);
+// }
+
+// int minimumTotal(vector<vector<int>> &triangle)
+// {
+//     vector<vector<int>> dp(triangle.size(), vector<int>(triangle.size(), -1));
+//     return help(0, 0, triangle, dp);
+// }
+
+// Tabulation :bottom up
+
+// int minimumTotal(vector<vector<int>> &triangle)
+// {
+//     int n = triangle.size();
+//     vector<vector<int>> dp(n, vector<int>(n, -1));
+//     for (int col = 0; col < triangle[n - 1].size(); col++)
+//     {
+//         dp[n - 1][col] = triangle[n - 1][col];
+//     }
+//     for (int row = n - 2; row >= 0; row--)
+//     {
+//         for (int col = row; col >= 0; col--)
+//         {
+//             int down = INT_MAX, diagonal = INT_MAX;
+//             if (row + 1 < n)
+//                 down = triangle[row][col] + dp[row + 1][col];
+//             if (row + 1 < n and col + 1 < n)
+//                 diagonal = triangle[row][col] + dp[row + 1][col + 1];
+//             dp[row][col] = min(down, diagonal);
+//         }
+//     }
+//     return dp[0][0];
+// }
+
+// Space Optimization:
+
+// int minimumTotal(vector<vector<int>> &triangle)
+// {
+//     int n = triangle.size();
+//     vector<int> next(n, -1);
+//     for (int col = 0; col < triangle[n - 1].size(); col++)
+//     {
+//         next[col] = triangle[n - 1][col];
+//     }
+//     for (int row = n - 2; row >= 0; row--)
+//     {
+//         vector<int> cur(n, -1);
+//         for (int col = row; col >= 0; col--)
+//         {
+//             int down = INT_MAX, diagonal = INT_MAX;
+//             if (row + 1 < n)
+//                 down = triangle[row][col] + next[col];
+//             if (row + 1 < n and col + 1 < n)
+//                 diagonal = triangle[row][col] + next[col + 1];
+//             cur[col] = min(down, diagonal);
+//         }
+//         next = cur;
+//     }
+//     return next[0];
+// }
+
+// 931. Minimum Falling Path Sum Given an n x n array of integers matrix, return the minimum sum of any falling path through matrix.A falling path starts at any element in the first row and chooses the element in the next row that is either directly below or diagonally left/right. Specifically, the next element from position (row, col) will be (row + 1, col - 1), (row + 1, col), or (row + 1, col + 1).
+
+// Memoization  :
+
+// int help(int row, int col, int n, vector<vector<int>> &matrix, vector<vector<int>> &dp)
+// {
+//     if (col >= n or col < 0)
+//         return 1e9;
+//     if (row == 0)
+//         return matrix[row][col];
+//     if (dp[row][col] != -1e5)
+//         return dp[row][col];
+//     int up = matrix[row][col] + help(row - 1, col, n, matrix, dp);
+//     int d1 = matrix[row][col] + help(row - 1, col - 1, n, matrix, dp);
+//     int d2 = matrix[row][col] + help(row - 1, col + 1, n, matrix, dp);
+//     return dp[row][col] = min(up, min(d1, d2));
+// }
+
+// int minFallingPathSum(vector<vector<int>> &matrix)
+// {
+//     int n = matrix.size();
+//     int ans = INT_MAX;
+//     vector<vector<int>> dp(n, vector<int>(n, -1e5));
+//     for (int i = 0; i < n; i++)
+//     {
+//         ans = min(ans, help(n - 1, i, n, matrix, dp));
+//     }
+//     return (int)ans;
+// }
+
+// Tabulation :
+
+// int minFallingPathSum(vector<vector<int>> &matrix)
+// {
+//     int n = matrix.size();
+//     int ans = INT_MAX;
+//     vector<vector<int>> dp(n, vector<int>(n, -1));
+//     for (int col = 0; col < n; col++)
+//     {
+//         dp[0][col] = matrix[0][col];
+//     }
+//     for (int row = 1; row < n; row++)
+//     {
+//         for (int col = 0; col < n; col++)
+//         {
+//             int up = 1e9;
+//             int d1 = 1e9;
+//             int d2 = 1e9;
+//             if (row - 1 >= 0)
+//                 up = matrix[row][col] + dp[row - 1][col];
+//             if (row - 1 >= 0 and col - 1 >= 0)
+//                 d1 = matrix[row][col] + dp[row - 1][col - 1];
+//             if (row - 1 >= 0 and col + 1 < n)
+//                 d2 = matrix[row][col] + dp[row - 1][col + 1];
+//             dp[row][col] = min(up, min(d1, d2));
+//         }
+//     }
+//     for (int i = 0; i < n; i++)
+//     {
+//         ans = min(ans, dp[n - 1][i]);
+//     }
+//     return ans;
+// }
+
+// Space Optimization:
+
+// int minFallingPathSum(vector<vector<int>> &matrix)
+// {
+//     int n = matrix.size();
+//     int ans = INT_MAX;
+//     vector<int> prev(n, 0);
+//     for (int col = 0; col < n; col++)
+//     {
+//         prev[col] = matrix[0][col];
+//     }
+//     for (int row = 1; row < n; row++)
+//     {
+//         vector<int> cur(n, 0);
+//         for (int col = 0; col < n; col++)
+//         {
+//             int up = 1e9;
+//             int d1 = 1e9;
+//             int d2 = 1e9;
+//             if (row - 1 >= 0)
+//                 up = matrix[row][col] + prev[col];
+//             if (row - 1 >= 0 and col - 1 >= 0)
+//                 d1 = matrix[row][col] + prev[col - 1];
+//             if (row - 1 >= 0 and col + 1 < n)
+//                 d2 = matrix[row][col] + prev[col + 1];
+//             cur[col] = min(up, min(d1, d2));
+//         }
+//         prev = cur;
+//     }
+//     for (int i = 0; i < n; i++)
+//     {
+//         ans = min(ans, prev[i]);
+//     }
+//     return ans;
+// }
+
+// Extra :
+
+// int minFallingPathSum(vector<vector<int>> &matrix)
+// {
+//     int n = matrix.size();
+//     for (int i = 1; i < n; i++)
+//     {
+//         for (int j = 0; j < n; j++)
+//         {
+//             matrix[i][j] += min({matrix[i - 1][j], matrix[i - 1][max(0, j - 1)], matrix[i - 1][min(j + 1, n - 1)]});
+//         }
+//     }
+//     return *min_element(matrix[n - 1].begin(), matrix[n - 1].end());
+// }
+
+// Chocolates Pickup:You are given an r rows and c cols matrix grid representing a field of chocolates where grid[i][j] represents the number of chocolates that you can collect from the (i, j) cell.You have two robots that can collect chocolates for you:Robot #1 is located at the top-left corner (0, 0), and Robot #2 is located at the top-right corner (0, cols - 1).Return the maximum number of chocolates collection using both robots by following the rules below:From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1). When any robot passes through a cell, It picks up all chocolates, and the cell becomes an empty cell. When both robots stay in the same cell, only one takes the chocolates. Both robots cannot move outside of the grid at any moment. Both robots should reach the bottom row in grid.
+// IMPORTANT:     !!!!!!!!!!!!!!!!!!!!!!!!(Revise)!!!!!!!!!!!!!!!!!!!!!!!!
+// Recursion:
+
+// int help(int i, int j1, int j2, int n, int m, vector<vector<int>> &grid)
+// {
+//     if (j1 >= m or j1 < 0 or j2 >= m or j2 < 0)
+//     {
+//         return -1e9;
+//     }
+//     if (i == n - 1)
+//     {
+//         if (j1 == j2)
+//             return grid[i][j1];
+//         return grid[i][j1] + grid[i][j2];
+//     }
+//     int ans = INT_MIN;
+//     int MAXI = INT_MIN;
+//     for (int dj1 = -1; dj1 <= 1; dj1++)
+//     {
+//         for (int dj2 = -1; dj2 <= 1; dj2++)
+//         {
+//             if (j1 == j2)
+//             {
+//                 ans = grid[i][j1] + help(i+1, j1 + dj1, j2 + dj2, n, m, grid);
+//             }
+//             else
+//             {
+//                 ans = grid[i][j1] + grid[i][j2] + help(i+1, j1 + dj1, j2 + dj2, n, m, grid);
+//             }
+//             MAXI = max(ans, MAXI);
+//         }
+//     }
+//     return MAXI;
+// }
+
+// int solve(int n, int m, vector<vector<int>> &grid)
+// {
+//     return help(0, 0, m - 1, n, m, grid);
+// }
+
+// Memoization:3d dp
+
+// int help(int i, int j1, int j2, int n, int m, vector<vector<int>> &grid, vector<vector<vector<int>>> &dp)
+// {
+//     if (j1 >= m or j1 < 0 or j2 >= m or j2 < 0)
+//     {
+//         return -1e9;
+//     }
+//     if (dp[i][j1][j2] != -1)
+//         return dp[i][j1][j2];
+//     if (i == n - 1)
+//     {
+//         if (j1 == j2)
+//             return dp[i][j1][j2] = grid[i][j1];
+//         return dp[i][j1][j2] = grid[i][j1] + grid[i][j2];
+//     }
+//     int ans = INT_MIN;
+//     int MAXI = INT_MIN;
+//     for (int dj1 = -1; dj1 <= 1; dj1++)
+//     {
+//         for (int dj2 = -1; dj2 <= 1; dj2++)
+//         {
+//             if (j1 == j2)
+//             {
+//                 ans = grid[i][j1] + help(i + 1, j1 + dj1, j2 + dj2, n, m, grid, dp);
+//             }
+//             else
+//             {
+//                 ans = grid[i][j1] + grid[i][j2] + help(i + 1, j1 + dj1, j2 + dj2, n, m, grid, dp);
+//             }
+//             MAXI = max(ans, MAXI);
+//         }
+//     }
+//     return dp[i][j1][j2] = MAXI;
+// }
+
+// int solve(int n, int m, vector<vector<int>> &grid)
+// {
+//     vector<vector<vector<int>>> dp(n, vector<vector<int>>(m, vector<int>(m, -1)));
+//     return help(0, 0, m - 1, n, m, grid, dp);
+// }
+
+// Tabulation :bottom up so here reverse do go from last row to first row
+
+// int solve(int n, int m, vector<vector<int>> &grid)
+// {
+//     vector<vector<vector<int>>> dp(n, vector<vector<int>>(m, vector<int>(m, -1)));
+//     for (int j1 = 0; j1 < m; j1++)
+//     {
+//         for (int j2 = 0; j2 < m; j2++)
+//         {
+//             if (j1 == j2)
+//             {
+//                 dp[n - 1][j1][j1] = grid[n - 1][j1];
+//             }
+//             else
+//             {
+//                 dp[n - 1][j1][j2] = grid[n - 1][j1] + grid[n - 1][j2];
+//             }
+//         }
+//     }
+//     for (int i = n - 2; i >= 0; i--)
+//     {
+//         for (int j1 = m - 1; j1 >= 0; j1--)
+//         {
+//             for (int j2 = m - 1; j2 >= 0; j2--)
+//             {
+//                 int MAXI = INT_MIN;
+//                 for (int dj1 = -1; dj1 <= 1; dj1++)
+//                 {
+//                     for (int dj2 = -1; dj2 <= 1; dj2++)
+//                     {
+//                         int ans = INT_MIN;
+//                         if (j1 == j2)
+//                         {
+//                             if (j1 + dj1 < m and j2 + dj2 < m and j1 + dj1 >= 0 and j2 + dj2 >= 0)
+//                                 ans = grid[i][j1] + dp[i + 1][j1 + dj1][j2 + dj2];
+//                         }
+//                         else
+//                         {
+//                             if (j1 + dj1 < m and j2 + dj2 < m and j1 + dj1 >= 0 and j2 + dj2 >= 0)
+//                                 ans = grid[i][j1] + grid[i][j2] + dp[i + 1][j1 + dj1][j2 + dj2];
+//                         }
+//                         MAXI = max(ans, MAXI);
+//                     }
+//                 }
+//                 dp[i][j1][j2] = MAXI;
+//             }
+//         }
+//     }
+//     return dp[0][0][m - 1];
+// }
+
+// Space Optimised : 3d to 2d array :
+
+// int solve(int n, int m, vector<vector<int>> &grid)
+// {
+//     vector<vector<int>> next(m, vector<int>(m, -1));
+//     for (int j1 = 0; j1 < m; j1++)
+//     {
+//         for (int j2 = 0; j2 < m; j2++)
+//         {
+//             if (j1 == j2)
+//             {
+//                 next[j1][j1] = grid[n - 1][j1];
+//             }
+//             else
+//             {
+//                 next[j1][j2] = grid[n - 1][j1] + grid[n - 1][j2];
+//             }
+//         }
+//     }
+//     for (int i = n - 2; i >= 0; i--)
+//     {
+//         vector<vector<int>> cur(m, vector<int>(m, -1));
+//         for (int j1 = m - 1; j1 >= 0; j1--)
+//         {
+//             for (int j2 = m - 1; j2 >= 0; j2--)
+//             {
+//                 int MAXI = INT_MIN;
+//                 for (int dj1 = -1; dj1 <= 1; dj1++)
+//                 {
+//                     for (int dj2 = -1; dj2 <= 1; dj2++)
+//                     {
+//                         int ans = INT_MIN;
+//                         if (j1 == j2)
+//                         {
+//                             if (j1 + dj1 < m and j2 + dj2 < m and j1 + dj1 >= 0 and j2 + dj2 >= 0)
+//                                 ans = grid[i][j1] + next[j1 + dj1][j2 + dj2];
+//                         }
+//                         else
+//                         {
+//                             if (j1 + dj1 < m and j2 + dj2 < m and j1 + dj1 >= 0 and j2 + dj2 >= 0)
+//                                 ans = grid[i][j1] + grid[i][j2] + next[j1 + dj1][j2 + dj2];
+//                         }
+//                         MAXI = max(ans, MAXI);
+//                     }
+//                 }
+//                 cur[j1][j2] = MAXI;
+//             }
+//         }
+//         next = cur;
+//     }
+//     return next[0][m - 1];
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
