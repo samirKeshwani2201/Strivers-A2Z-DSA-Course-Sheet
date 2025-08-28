@@ -1226,7 +1226,7 @@ using namespace std;
 //             {
 //                 ans = grid[i][j1] + grid[i][j2] + help(i+1, j1 + dj1, j2 + dj2, n, m, grid);
 //             }
-//             MAXI = max(ans, MAXI);
+//              MAXI = max(ans, MAXI);
 //         }
 //     }
 //     return MAXI;
@@ -1383,30 +1383,1332 @@ using namespace std;
 //     return next[0][m - 1];
 // }
 
+// Subset Sum Problem:Given an array of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum.
 
+// Memonization :
 
+// bool help(int ind, int target, vector<int> &arr, vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         return dp[ind][target] = arr[ind] == target;
+//     }
+//     if (target == 0)
+//         return dp[ind][target] = true;
+//     if (dp[ind][target] != -1)
+//         return dp[ind][target];
+//     bool pick = false;
+//     if (arr[ind] <= target)
+//         pick = help(ind - 1, target - arr[ind], arr, dp);
+//     if (pick)
+//         return dp[ind][target] = pick;
+//     bool notPick = help(ind - 1, target, arr, dp);
+//     return dp[ind][target] = notPick;
+// }
 
+// bool isSubsetSum(vector<int> arr, int sum)
+// {
+//     vector<vector<int>> dp(arr.size(), vector<int>(sum + 1, -1));
+//     return help(arr.size() - 1, sum, arr, dp);
+// }
 
+// Tabulation : bottom up apporach
 
+// bool isSubsetSum(vector<int> arr, int sum)
+// {
+//     vector<vector<bool>> dp(arr.size(), vector<bool>(sum + 1, false));
+//     if (arr[0] <= sum)
+//         dp[0][arr[0]] = true;
+//     for (int i = 0; i < arr.size(); i++)
+//     {
+//         dp[i][0] = true;
+//     }
+//     for (int ind = 1; ind < arr.size(); ind++)
+//     {
+//         for (int target = 1; target <= sum; target++)
+//         {
+//             bool pick = false;
+//             bool notPick = dp[ind - 1][target];
+//             if (arr[ind] <= target)
+//             {
+//                 pick = dp[ind - 1][target - arr[ind]];
+//             }
+//             dp[ind][target] = notPick | pick;
+//         }
+//     }
+//     return dp[arr.size() - 1][sum];
+// }
 
+// // Space Optimization :
 
+// bool isSubsetSum(vector<int> arr, int sum)
+// {
+//     vector<bool> prev(sum + 1, false);
+//     if (arr[0] <= sum)
+//         prev[arr[0]] = true;
+//     prev[0] = true;
+//     for (int ind = 1; ind < arr.size(); ind++)
+//     {
+//         vector<bool> cur(sum + 1, false);
+//         cur[0] = true;
+//         for (int target = 1; target <= sum; target++)
+//         {
+//             bool pick = false;
+//             bool notPick = prev[target];
+//             if (arr[ind] <= target)
+//             {
+//                 pick = prev[target - arr[ind]];
+//             }
+//             cur[target] = notPick | pick;
+//         }
+//         prev = cur;
+//     }
+//     return prev[sum];
+// }
 
+// 416. Partition Equal Subset Sum:Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
 
+// bool help(int ind, int sum, vector<vector<int>> &dp, vector<int> &nums)
+// {
+//     if (sum == 0)
+//         return true;
+//     if (ind == 0)
+//     {
+//         return (sum == nums[ind]);
+//     }
+//     if (dp[ind][sum] != -1)
+//         return dp[ind][sum];
+//     bool pick = false;
+//     if (sum >= nums[ind])
+//         pick = help(ind - 1, sum - nums[ind], dp, nums);
+//     bool notPick = help(ind - 1, sum, dp, nums);
+//     return dp[ind][sum] = notPick || pick;
+// }
 
+// bool canPartition(vector<int> &nums)
+// {
+//     int target = 0;
+//     int n = nums.size();
+//     for (auto it : nums)
+//     {
+//         target += it;
+//     }
+//     if (target % 2 == 1)
+//         return false;
+//     target /= 2;
+//     vector<vector<int>> dp(n, vector<int>(target + 1, -1));
+//     return help(n - 1, target, dp, nums);
+// }
 
+// Tabulation : bottom up approach :
 
+// bool canPartition(vector<int> &nums)
+// {
+//     int target = 0;
+//     int n = nums.size();
+//     for (auto it : nums)
+//     {
+//         target += it;
+//     }
+//     if (target % 2 == 1)
+//         return false;
+//     target /= 2;
+//     vector<vector<bool>> dp(n, vector<bool>(target + 1, false));
+//     if (nums[0] <= target)
+//         dp[0][nums[0]] = true;
+//     for (int ind = 0; ind < n; ind++)
+//     {
+//         dp[ind][0] = true;
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int sum = 1; sum <= target; sum++)
+//         {
+//             bool pick = false;
+//             if (sum >= nums[ind])
+//                 pick = dp[ind - 1][sum - nums[ind]];
+//             bool notPick = dp[ind - 1][sum];
+//             dp[ind][sum] = notPick || pick;
+//         }
+//     }
+//     return dp[n - 1][target];
+// }
 
+// Space Optimization :
 
+// bool canPartition(vector<int> &nums)
+// {
+//     int target = 0;
+//     int n = nums.size();
+//     for (auto it : nums)
+//     {
+//         target += it;
+//     }
+//     if (target % 2 == 1)
+//         return false;
+//     target /= 2;
+//     vector<bool> prev(target + 1, false);
+//     if (nums[0] <= target)
+//         prev[nums[0]] = true;
+//     prev[0] = true;
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         vector<bool> cur(target + 1, false);
+//         cur[0] = true;
+//         for (int sum = 1; sum <= target; sum++)
+//         {
+//             bool pick = false;
+//             if (sum >= nums[ind])
+//                 pick = prev[sum - nums[ind]];
+//             bool notPick = prev[sum];
+//             cur[sum] = notPick || pick;
+//         }
+//         prev = cur;
+//     }
+//     return prev[target];
+// }
 
+// Meet in the middle algorithm :
+// 1755. Closest Subsequence Sum :You are given an integer array nums and an integer goal.You want to choose a subsequence of nums such that the sum of its elements is the closest possible to goal. That is, if the sum of the subsequence's elements is sum, then you want to minimize the absolute difference abs(sum - goal).Return the minimum possible value of abs(sum - goal).Note that a subsequence of an array is an array formed by removing some elements (possibly all or none) of the original array.
 
+// void find(vector<int> &v, int i, int e, int sum, vector<int> &sumv)
+// {
+//     if (i == e)
+//     {
+//         sumv.push_back(sum);
+//         return;
+//     }
+//     find(v, i + 1, e, sum + v[i], sumv);
+//     find(v, i + 1, e, sum, sumv);
+// }
 
+//   int minAbsDifference(vector<int> &nums, int goal)
+// {
+//     int n = nums.size();
+//     vector<int> A, B;
+//     for (int i = 0; i < n / 2; i++)
+//     {
+//         A.push_back(nums[i]);
+//     }
+//     for (int i = n / 2; i < n; i++)
+//     {
+//         B.push_back(nums[i]);
+//     }
+//     vector<int> sumA, sumB;
+//     find(A, 0, A.size(), 0, sumA);
+//     find(B, 0, B.size(), 0, sumB);
+//     sort(sumA.begin(), sumA.end());
+//     sort(sumB.begin(), sumB.end());
+//     int ans = INT_MAX;
+//     for (int i = 0; i < sumA.size(); i++)
+//     {
+//         int s = sumA[i];
+//         int l = 0;
+//         int r = sumB.size() - 1;
+//         while (l <= r)
+//         {
+//             int mid = l + (r - l) / 2;
+//             int sum = s + sumB[mid];
+//             if (sum == goal)
+//             {
+//                 return 0;
+//             }
+//             ans = min(ans, abs(sum - goal));
+//             if (sum > goal)
+//             {
+//                 r = mid - 1;
+//             }
+//             else
+//             {
+//                 l = mid + 1;
+//             }
+//         }
+//     }
+//     return ans;
+// }
 
+// 2035. Partition Array Into Two Arrays to Minimize Sum Difference You are given an integer array nums of 2 * n integers. You need to partition nums into two arrays of length n to minimize the absolute difference of the sums of the arrays. To partition nums, put each element of nums into one of the two arrays. Return the minimum possible absolute difference
 
+// Works only for positive numbers and not for negative numbers :
 
+// bool help(int ind, int sum, vector<vector<int>> &dp, vector<int> &nums)
+// {
+//     if (ind == 0)
+//     {
+//         return dp[ind][sum] = nums[ind] == sum;
+//     }
+//     if (sum == 0)
+//         return dp[ind][sum] = true;
+//     if (dp[ind][sum] != -1)
+//     {
+//         return dp[ind][sum];
+//     }
+//     bool pick = false, notPick = false;
+//     if (sum >= nums[ind])
+//     {
+//         pick = help(ind - 1, sum - nums[ind], dp, nums);
+//     }
+//     notPick = help(ind - 1, sum, dp, nums);
+//     return dp[ind][sum] = pick || notPick;
+// }
 
+// int minimumDifference(vector<int> &nums)
+// {
+//     int totSum = 0;
+//     for (auto it : nums)
+//         totSum += it;
+//     vector<vector<int>>dp(nums.size(),vector<int>(totSum + 1, -1));
+//     for (int i = 0; i <= totSum; i++)
+//     {
+//         help(nums.size()-1, i, dp, nums);
+//     }
+//     int ans = 1e9;
+//     for (int i = 0; i <= totSum/2; i++)
+//     {
+//         if (dp[nums.size() - 1][i]==true)
+//         {
+//             ans = min(ans, (abs(i - (totSum - i))));
+//         }
+//     }
+//     return ans;
+// }
+
+// int minimumDifference(vector<int> &nums)
+// {
+//     int n = nums.size();
+//     int res = 0;
+//     int sum = 0;
+//     sum = accumulate(nums.begin(), nums.end(), 0);
+//     int N = (n / 2);
+//     vector<vector<int>> left(N + 1), right(N + 1);
+//     for (int mask = 0; mask<(1 << N); ++mask)
+//     {
+//         int sz = 0, l = 0, r = 0;
+//         for (int i = 0; i < N; i++)
+//         {
+//             if (mask & (1 << i))
+//             {
+//                 sz++;
+//                 l += nums[i];
+//                 r += nums[N + i];
+//             }
+//         }
+//         left[sz].push_back(l);
+//         right[sz].push_back(r);
+//     }
+//     for (int sz = 0; sz <= N; sz++)
+//     {
+//         sort(right[sz].begin(), right[sz].end());
+//     }
+//     res = min(abs(sum - 2 * left[N][0]), abs(sum - 2 * right[N][0]));
+//     for (int sz = 1; sz < N; ++sz)
+//     {
+//         for (auto &a : left[sz])
+//         {
+//             int b = (sum / 2) - a;
+//             int rsz = N - sz;
+//             auto &v = right[rsz];
+//             auto itr = lower_bound(v.begin(), v.end(), b);
+//             if (itr != v.end())
+//             {
+//                 res = min(res, abs(sum - 2 * (a + (*itr))));
+//             }
+//             if (itr != v.begin())
+//             {
+//                 auto it = itr;
+//                 --it;
+//                 res = min(res, abs(sum - 2 * (a + (*it))));
+//             }
+//         }
+//     }
+//     return res;
+// }
+
+// Count Subsets with Sum K (DP - 17) :Perfect Sum Problem: Given an array arr of size n of non-negative integers and an integer sum, the task is to count all subsets of the given array with a sum equal to a given sum.Note: Answer can be very large, so, output answer modulo 109+7.
+
+// int help(int arr[], int n, int ind, int curSum)
+// {
+//     if (curSum == 0)
+//     {
+//         return 1;
+//     }
+//     if (ind == 0)
+//     {
+//         return (curSum == arr[ind]) ? 1 : 0;
+//     }
+//     int notPick = help(arr, n, ind - 1, curSum);
+//     int pick = 0;
+//     if (arr[ind] <= curSum)
+//         pick = help(arr, n, ind - 1, curSum - arr[ind]);
+//     return pick + notPick;
+// }
+
+// int perfectSum(int arr[], int n, int sum)
+// {
+//     int MOD = 1e9 + 7;
+//     int ind = n - 1;
+//     int curSum = sum;
+//     return help(arr, n, ind, curSum) % MOD;
+// }
+
+// Memoization 10 31 9 7 0 3 9 8 6 5 7 6
+
+// int help(int arr[],   int ind, int curSum, vector<vector<int>> &dp)
+// {
+//     if (curSum == 0)
+//     {
+//         return dp[ind][curSum] = 1;
+//     }
+//     if (ind == 0)
+//     {
+//         return dp[ind][curSum] = (curSum == arr[ind]) ? 1 : 0;
+//     }
+//     if (dp[ind][curSum] != -1)
+//         return dp[ind][curSum];
+//     int notPick = help(arr,  ind - 1, curSum, dp);
+//     int pick = 0;
+//     if (arr[ind] <= curSum)
+//         pick = help(arr,  ind - 1, curSum - arr[ind], dp);
+//     return dp[ind][curSum] = pick + notPick;
+// }
+
+// int perfectSum(int arr[], int n, int sum)
+// {
+//     int MOD = 1e9 + 7;
+//     vector<vector<int>> dp(n, vector<int>(sum+1, -1));
+//     return help(arr,  n - 1, sum, dp) % MOD;
+// }
+
+// Tabulation :
+
+// int perfectSum(int arr[], int n, int sum)
+// {
+//     int MOD = 1000000007;
+//     vector<vector<int>> dp(n + 1, vector<int>(sum + 1, -1));
+//     for (int i = 0; i <= n; i++)
+//     {
+//         dp[i][0] = 1;
+//     }
+//     if (arr[0] <= sum)
+//         dp[0][arr[0]] = 1;
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int s = 0; s <= sum; s++)
+//         {
+//             int notPick = (dp[ind - 1][s]) % MOD;
+//             int pick = 0;
+//             if (arr[ind] <= s)
+//                 pick = (dp[ind - 1][s - arr[ind]]) % MOD;
+//             dp[ind][s] = (pick + notPick) % MOD;
+//         }
+//     }
+//     return dp[n][sum];
+// }
+
+// int perfectSum(int arr[], int n, int sum)
+// {
+//     // Your code goes here
+//     long dp[n + 1][sum + 1] = {}, i, j, mod = 1000000007;
+//     for (i = 0; i <= n; i++)
+//     {
+//         dp[i][0] = 1;
+//     }
+//     for (i = 1; i <= n; i++)
+//     {
+//         for (j = 0; j <= sum; j++)
+//         {
+//             if (arr[i - 1] <= j)
+//             {
+//                 dp[i][j] = (dp[i - 1][j] + dp[i - 1][j - arr[i - 1]]) % mod;
+//             }
+//             else
+//             {
+//                 dp[i][j] = dp[i - 1][j];
+//             }
+//         }
+//     }
+//     return dp[n][sum];
+// }
+
+// Space optimization :
+
+// int perfectSum(int arr[], int n, int sum)
+// {
+//     int MOD = 1000000007;
+//     vector<int> prev(sum + 1, 0), cur(sum + 1, 0);
+//     prev[0] = cur[0] = 1;
+//     if (arr[0] <= sum)
+//         prev[arr[0]] = 1;
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         vector<int> cur(sum + 1, -1);
+//         cur[0] = 1;
+//         for (int s = 0; s <= sum; s++)
+//         {
+//             int notPick = prev[s];
+//             int pick = 0;
+//             if (arr[ind] <= s)
+//                 pick = prev[s - arr[ind]];
+//             cur[s] = pick + notPick;
+//         }
+//         prev = cur;
+//     }
+//     return prev[sum] % MOD;
+// }
+
+// Partitions with Given Difference Given an array arr, partition it into two subsets(possibly empty) such that each element must belong to only one subset. Let the sum of the elements of these two subsets be S1 and S2. Given a difference d, count the number of partitions in which S1 is greater than or equal to S2 and the difference between S1 and S2 is equal to d. Since the answer may be large return it modulo 109 + 7.
+
+// int mod = (int)1e9 + 7;
+
+// int help(vector<int> arr, int ind, int curSum, vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         if (curSum == 0 && arr[0] == 0)
+//             return 2;
+//         if (curSum == 0 || arr[0] == curSum)
+//             return 1;
+//         return 0;
+//     }
+//     if (dp[ind][curSum] != -1)
+//         return dp[ind][curSum];
+//     int notPick = help(arr, ind - 1, curSum, dp);
+//     int pick = 0;
+//     if (arr[ind] <= curSum)
+//         pick = help(arr, ind - 1, curSum - arr[ind], dp);
+//     return dp[ind][curSum] = (pick + notPick) % mod;
+// }
+
+// int perfectSum(vector<int> arr, int n, int sum)
+// {
+//     int MOD = 1e9 + 7;
+//     vector<vector<int>> dp(n, vector<int>(sum + 1, -1));
+//     return help(arr, n - 1, sum, dp) % MOD;
+// }
+
+// int countPartitions(int n, int d, vector<int> &arr)
+// {
+//     int totalsum = accumulate(arr.begin(), arr.end(), 0);
+//     int requiredTarget = (totalsum - d) / 2;
+//     if (totalsum - d < 0)
+//         return 0;
+//     if ((totalsum - d) % 2 == 1)
+//         return 0;
+//     return perfectSum(arr, n, requiredTarget);
+// }
+
+// 0/1 Knapsack (DP - 19) A thief wants to rob a store. He is carrying a bag of capacity W. The store has ‘n’ items. Its weight is given by the ‘wt’ array and its value by the ‘val’ array. He can either include an item in its knapsack or exclude it but can’t partially have it as a fraction. We need to find the maximum value of items that the thief can steal.
+
+// int help(int ind, int W, vector<int> &wt, vector<int> &val, vector<vector<int>> &dp)
+// {
+//     if (W == 0)
+//     {
+//         return dp[ind][W] = 0;
+//     }
+//     if (ind == 0)
+//     {
+//         if (W >= wt[0])
+//         {
+//             return dp[ind][W] = val[0];
+//         }
+//         return dp[ind][W] = 0;
+//     }
+//     if (dp[ind][W] != -1)
+//         return dp[ind][W];
+//     int taken = 0;
+//     int notTaken = help(ind - 1, W, wt, val, dp);
+//     if (wt[ind] <= W)
+//     {
+//         taken = val[ind] + help(ind - 1, W - wt[ind], wt, val, dp);
+//     }
+//     else
+//     {
+//         taken = -1e9;
+//     }
+//     return dp[ind][W] = max(notTaken, taken);
+// }
+
+// int knapsack(vector<int> &wt, vector<int> val, int n, int W)
+// {
+//     vector<vector<int>> dp(101, vector<int>(1001, -1));
+//     return help(n - 1, W, wt, val, dp);
+// }
+
+// Tabulation :
+
+// int knapsack(vector<int> &wt, vector<int> val, int n, int W)
+// {
+//     vector<vector<int>> dp(101, vector<int>(1001, -1));
+//     for (int i = wt[0]; i <= W; i++)
+//     {
+//         dp[0][i] = val[0];
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int w = 0; w <= W; w++)
+//         {
+//             int taken = 0;
+//             int notTaken = dp[ind - 1][w];
+//             if (wt[ind] <= w)
+//             {
+//                 taken = val[ind] + dp[ind - 1][w - wt[ind]];
+//             }
+//             else
+//             {
+//                 taken = -1e9;
+//             }
+//               dp[ind][w] = max(notTaken, taken);
+//         }
+//     }
+//     return dp[n - 1][W];
+// }
+
+// Space Optimization : Single Row yup!!
+
+// int knapsack(vector<int> &wt, vector<int> val, int n, int W)
+// {
+//     vector<int> prev(W + 1, 0);
+//     for (int i = wt[0]; i <= W; i++)
+//     {
+//         prev[i] = val[0];
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int w = W; w >= 0; w--)
+//         {
+//             int taken = -1e9;
+//             int notTaken = prev[w];
+//             if (wt[ind] <= w)
+//             {
+//                 taken = val[ind] + prev[w - wt[ind]];
+//             }
+//             else
+//             {
+//                 taken = -1e9;
+//             }
+//             prev[w] = max(notTaken, taken);
+//         }
+//     }
+//     return prev[W];
+// }
+
+// 322. Coin Change You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money. Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.You may assume that you have an infinite number of each kind of coin.
+
+// memoization :
+
+// int help(int ind, int amount, vector<int> &coins, vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         if (amount % coins[0] == 0)
+//             return dp[ind][amount] = amount / coins[0];
+//         return dp[ind][amount] = 1e9;
+//     }
+//     if (dp[ind][amount] != -1)
+//     {
+//         return dp[ind][amount];
+//     }
+//     int notTake = help(ind - 1, amount, coins, dp);
+//     int take = 1e9;
+//     if (amount >= coins[ind])
+//     {
+//         take = 1 + help(ind, amount - coins[ind], coins, dp);
+//     }
+//     return dp[ind][amount] = min(take, notTake);
+// }
+
+// int coinChange(vector<int> &coins, int amount)
+// {
+//     int n = coins.size();
+//     vector<vector<int>> dp(n, vector<int>(amount + 1, -1));
+//     int ans = help(coins.size() - 1, amount, coins, dp);
+//     return ans >= 1e9 ? -1 : ans;
+// }
+
+// Tabultaion:
+
+// int coinChange(vector<int> &coins, int amount)
+// {
+//     int n = coins.size();
+//     vector<vector<int>> dp(n, vector<int>(amount + 1, -1));
+//     for (int a = 0; a <= amount; a++)
+//     {
+//         if (a % coins[0] == 0)
+//         {
+//             dp[0][a] = a / coins[0];
+//         }
+//         else
+//         {
+//             dp[0][a] = 1e9;
+//         }
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int a = 0; a <= amount; a++)
+//         {
+//             int notTake = dp[ind - 1][a];
+//             int take = 1e9;
+//             if (a >= coins[ind])
+//             {
+//                 take = 1 + dp[ind][a - coins[ind]];
+//             }
+//             dp[ind][a] = min(take, notTake);
+//         }
+//     }
+//     int ans = dp[n - 1][amount];
+//     return ans >= 1e9 ? -1 : ans;
+// }
+
+// Space Optimization :
+
+// int coinChange(vector<int> &coins, int amount)
+// {
+//     int n = coins.size();
+//     vector<int> prev(amount + 1, -1);
+//     vector<int> cur(amount + 1, -1);
+//     for (int a = 0; a <= amount; a++)
+//     {
+//         if (a % coins[0] == 0)
+//         {
+//             prev[a] = a / coins[0];
+//         }
+//         else
+//         {
+//             prev[a] = 1e9;
+//         }
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int a = 0; a <= amount; a++)
+//         {
+//             int notTake = prev[a];
+//             int take = 1e9;
+//             if (a >= coins[ind])
+//             {
+//                 take = 1 + cur[a - coins[ind]];
+//             }
+//             cur[a] = min(take, notTake);
+//         }
+//         prev = cur;
+//     }
+//     int ans = prev[amount];
+//     return ans >= 1e9 ? -1 : ans;
+// }
+
+// 494. Target Sum:You are given an integer array nums and an integer target.You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".Return the number of different expressions that you can build, which evaluates to target.
+
+// memoization :
+
+// int help(int ind, int target, vector<int> &nums, vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         if (target == 0 and nums[0] == 0)
+//             return 2;
+//         if (target == nums[0] or target == 0)
+//         {
+//             return 1;
+//         }
+//         return 0;
+//     }
+
+//     if (dp[ind][target] != -1)
+//     {
+//         return dp[ind][target];
+//     }
+
+//     int nottake = help(ind - 1, target, nums, dp);
+//     int take = 0;
+//     if (nums[ind] <= target)
+//     {
+//         take = help(ind - 1, target - nums[ind], nums, dp);
+//     }
+//     return dp[ind][target] = take + nottake;
+// }
+
+// int findTargetSumWays(vector<int> &nums, int target)
+// {
+
+//     int total = accumulate(nums.begin(), nums.end(), 0);
+//     if (target > total)
+//         return 0;
+//     if ((total - target) % 2 == 1)
+//     {
+//         return 0;
+//     }
+//     int s2 = (total - target) / 2;
+
+//     vector<vector<int>> dp(nums.size(), vector<int>(s2 + 1, -1));
+//     return help(nums.size() - 1, s2, nums, dp);
+// }
+
+// Tabulation approach :
+
+// int findTargetSumWays(vector<int> &nums, int target)
+// {
+//     int total = 0;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         total += nums[i];
+//     }
+//     if (target > total)
+//         return 0;
+//     if ((total - target) % 2 == 1)
+//     {
+//         return 0;
+//     }
+//     int s2 = (total - target) / 2;
+//     vector<vector<int>> dp(nums.size(), vector<int>(s2 + 1, 0));
+//     // return help(nums.size() - 1, s2, nums, dp);
+//     if (nums[0] == 0)
+//     {
+//         dp[0][0] = 2;
+//     }
+//     else
+//     {
+//         dp[0][0] = 1;
+//     }
+//     if (nums[0] != 0 and nums[0] <= s2)
+//     {
+//         dp[0][nums[0]] = 1;
+//     }
+//     for (int ind = 1; ind < nums.size(); ind++)
+//     {
+//         for (int s = 0; s <= s2; s++)
+//         {
+//             int nottake = dp[ind - 1][s];
+//             int take = 0;
+//             if (nums[ind] <= s)
+//             {
+//                 take = dp[ind - 1][s - nums[ind]];
+//             }
+//             dp[ind][s] = nottake + take;
+//         }
+//     }
+//     return dp[nums.size() - 1][s2];
+// }
+
+// Space Optimization:
+
+// int findTargetSumWays(vector<int> &nums, int target)
+// {
+//     int total = 0;
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         total += nums[i];
+//     }
+//     if (target > total)
+//         return 0;
+//     if ((total - target) % 2 == 1)
+//     {
+//         return 0;
+//     }
+//     int s2 = (total - target) / 2;
+//     // vector<vector<int>> dp(nums.size(), vector<int>(s2 + 1, 0));
+//     vector<int> prev(s2 + 1, 0);
+//     // return help(nums.size() - 1, s2, nums, dp);
+//     if (nums[0] == 0)
+//     {
+//         prev[0] = 2;
+//     }
+//     else
+//     {
+//         prev[0] = 1;
+//     }
+//     if (nums[0] != 0 and nums[0] <= s2)
+//     {
+//         prev[nums[0]] = 1;
+//     }
+//     for (int ind = 1; ind < nums.size(); ind++)
+//     {
+//         vector<int> cur(s2 + 1, 0);
+//         cur[0] = 1;
+//         for (int s = 0; s <= s2; s++)
+//         {
+//             int nottake = prev[s];
+//             int take = 0;
+//             if (nums[ind] <= s)
+//             {
+//                 take = prev[s - nums[ind]];
+//             }
+//             cur[s] = nottake + take;
+//         }
+//         prev = cur;
+//     }
+//     return prev[s2];
+// }
+
+// 518. Coin Change II :You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.You may assume that you have an infinite number of each kind of coin.The answer is guaranteed to fit into a signed 32-bit integer.
+
+// Memoization :
+
+// int help(int ind, int total, vector<int> &coins, vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         if (total == 0)
+//         {
+//             return dp[ind][total] = 1;
+//         }
+//         if (total % coins[ind] == 0)
+//         {
+//             return dp[ind][total] = 1;
+//         }
+//         return dp[ind][total] = 0;
+//     }
+//     if (dp[ind][total] != -1)
+//         return dp[ind][total];
+//     int notTake = help(ind - 1, total, coins, dp);
+//     int take = 0;
+//     if (coins[ind] <= total)
+//     {
+//         take = help(ind  , total - coins[ind], coins, dp);
+//     }
+//     return dp[ind][total] = take + notTake;
+// }
+
+// int change(int amount, vector<int> &coins)
+// {
+//     int n = coins.size();
+//     vector<vector<int>> dp(n, vector<int>(amount + 1, -1));
+//     return help(n - 1, amount, coins, dp);
+// }
+// Tabulation :
+
+// Tabulation:
+
+// int change(int amount, vector<int> &coins)
+// {
+//     int n = coins.size();
+//     vector<vector<int>> dp(n, vector<int>(amount + 1, 0));
+//     dp[0][0] = 1;
+//     for (int t = 1; t <= amount; t++)
+//     {
+//         if (t % coins[0] == 0)
+//             dp[0][t] = 1;
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int t = 0; t <= amount; t++)
+//         {
+//             int notTake = dp[ind - 1][t];
+//             int take = 0;
+//             if (coins[ind] <= t)
+//             {
+//                 take = dp[ind][t - coins[ind]];
+//             }
+//             dp[ind][t] = take + notTake;
+//         }
+//     }
+//     return dp[n - 1][amount];
+// }
+
+// Space Optimization :
+
+// int change(int amount, vector<int> &coins)
+// {
+//     int n = coins.size();
+//     vector<int> prev(amount + 1, 0), cur(amount + 1, 0);
+//     prev[0] = 1;
+//     for (int t = 1; t <= amount; t++)
+//     {
+//         if (t % coins[0] == 0)
+//             prev[t] = 1;
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int t = 0; t <= amount; t++)
+//         {
+//             int notTake = prev[t];
+//             int take = 0;
+//             if (coins[ind] <= t)
+//             {
+//                 take = cur[t - coins[ind]];
+//             }
+//             cur[t] = take + notTake;
+//         }
+//         prev = cur;
+//     }
+//     return prev[amount];
+// }
+
+// Knapsack with Duplicate Items : Given a set of N items, each with a weight and a value, represented by the array w and val respectively. Also, a knapsack with weight limit W.The task is to fill the knapsack in such a way that we can get the maximum profit. Return the maximum profit.Note: Each item can be taken any number of times.
+
+// int help(int ind, int total, int val[], int wt[], vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         return dp[ind][total] = (total / wt[ind]) * val[ind];
+//     }
+//     if (dp[ind][total] != -1)
+//         return dp[ind][total];
+//     int notTake = help(ind - 1, total, val, wt, dp);
+//     int take = 0;
+//     if (wt[ind] <= total)
+//     {
+//         take = val[ind] + help(ind, total - wt[ind], val, wt, dp);
+//     }
+//     return dp[ind][total] = max(take, notTake);
+// }
+
+// int knapSack(int N, int W, int val[], int wt[])
+// {
+//     vector<vector<int>> dp(N, vector<int>(W + 1, -1));
+//     return help(N - 1, W, val, wt, dp);
+// }
+
+// Tabultation :
+
+// int knapSack(int N, int W, int val[], int wt[])
+// {
+//     vector<vector<int>> dp(N, vector<int>(W + 1, 0));
+//     for (int w = wt[0]; w <= W; w++)
+//     {
+//         dp[0][w] = (w / wt[0]) * val[0];
+//     }
+//     for (int ind = 1; ind < N; ind++)
+//     {
+//         for (int w = 0; w <= W; w++)
+//         {
+//             int notTake = dp[ind - 1][w];
+//             int take = INT_MIN;
+//             if (wt[ind] <= w)
+//             {
+//                 take = val[ind] + dp[ind][w - wt[ind]];
+//             }
+//             dp[ind][w] = max(take, notTake);
+//         }
+//     }
+//     return dp[N - 1][W];
+// }
+
+// Space Optimization :
+
+// int knapSack(int N, int W, int val[], int wt[])
+// {
+//     vector<int> cur(W + 1, 0);
+//     for (int w = wt[0]; w <= W; w++)
+//     {
+//         cur[w] = (w / wt[0]) * val[0];
+//     }
+//     for (int ind = 1; ind < N; ind++)
+//     {
+//         for (int w = 0; w <= W; w++)
+//         {
+//             int notTake = cur[w];
+//             int take = INT_MIN;
+//             if (wt[ind] <= w)
+//             {
+//                 take = val[ind] + cur[w - wt[ind]];
+//             }
+//             cur[w] = max(take, notTake);
+//         }
+//     }
+//     return cur[W];
+// }
+
+// Rod Cutting:Given a rod of length N inches and an array of prices, price[]. price[i] denotes the value of a piece of length i. Determine the maximum value obtainable by cutting up the rod and selling the pieces.
+
+// int help(int ind, int length, int price[], vector<vector<int>> &dp)
+// {
+//     if (ind == 0)
+//     {
+//         return dp[ind][length] = length * price[ind];
+//     }
+//     if (dp[ind][length] != -1)
+//     {
+//         return dp[ind][length];
+//     }
+//     int notTake = help(ind - 1, length, price, dp);
+//     int take = 0;
+//     if (length >= (ind + 1))
+//     {
+//         take = price[ind] + help(ind, length - (ind + 1), price, dp);
+//     }
+//     return dp[ind][length] = max(take, notTake);
+// }
+
+// int cutRod(int price[], int n)
+// {
+//     vector<vector<int>> dp(n, vector<int>(n + 1, -1));
+//     return help(n - 1, n, price, dp);
+// }
+
+// Tabulation :
+
+// int cutRod(int price[], int n)
+// {
+//     vector<vector<int>> dp(n, vector<int>(n + 1, -1));
+//     for (int length = 0; length <= n; length++)
+//     {
+//         dp[0][length] = length * price[0];
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int length = 0; length <= n; length++)
+//         {
+//             int notTake = dp[ind - 1][length];
+//             int take = 0;
+//             if (length >= (ind + 1))
+//             {
+//                 take = price[ind] + dp[ind][length - (ind + 1)];
+//             }
+//             dp[ind][length] = max(take, notTake);
+//         }
+//     }
+//     return dp[n - 1][n];
+// }
+
+// Space Optimization:
+
+// int cutRod(int price[], int n)
+// {
+//     vector<int> prev(n + 1, -1);
+//     for (int length = 0; length <= n; length++)
+//     {
+//         prev[length] = length * price[0];
+//     }
+//     for (int ind = 1; ind < n; ind++)
+//     {
+//         for (int length = 0; length <= n; length++)
+//         {
+//             int notTake = prev[length];
+//             int take = 0;
+//             if (length >= (ind + 1))
+//             {
+//                 take = price[ind] + prev[length - (ind + 1)];
+//             }
+//             prev[length] = max(take, notTake);
+//         }
+//     }
+//     return prev[n];
+// }
+
+// 1143. Longest Common Subsequence: Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0. A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters. For example, "ace" is a subsequence of "abcde". A common subsequence of two strings is a subsequence that is common to both strings.
+
+// memoization
+
+// int helper(vector<vector<int>> &dp, string &a, string &b, int ind1, int ind2)
+// {
+//     if (ind1 < 0 || ind2 < 0)
+//         return 0;
+//         if(dp[ind1][ind2]!=-1)
+//         return dp[ind1][ind2];
+// if (a[ind1] == b[ind2])
+// {
+//     return dp[ind1][ind2] = 1 + helper(dp, a, b, ind1 - 1, ind2 - 1);
+// }
+
+// return dp[ind1][ind2] = max(helper(dp, a, b, ind1 - 1, ind2), helper(dp, a, b, ind1, ind2 - 1));
+// }
+
+// int longestCommonSubsequence(string text1, string text2)
+// {
+//     int m = text1.size();
+//     int n = text2.size();
+//     vector<vector<int>> dp(m + 1, vector<int>(n + 1, -1));
+//     return helper(dp, text1, text2, m - 1, n - 1);
+// }
+
+// Tabulation:Index shifting concept is thier revise it
+
+// int longestCommonSubsequence(string text1, string text2)
+// {
+//     int m = text1.size();
+//     int n = text2.size();
+//     vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+//     for (int i = 0; i <= n; i++)
+//     {
+//         dp[0][i] = 0;
+//     }
+//     for (int i = 0; i <= m; i++)
+//     {
+//         dp[i][0] = 0;
+//     }
+//     for (int i = 1; i <= m; i++)
+//     {
+//         for (int j = 1; j <= n; j++)
+//         {
+//             if (text1[i - 1] == text2[j - 1])
+//             {
+//                 dp[i][j] = 1 + dp[i - 1][j - 1];
+//             }
+//             else
+
+//                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+//         }
+//     }
+//     return dp[m][n];
+// }
+
+// Space optimization to two vectors
+
+// int longestCommonSubsequence(string text1, string text2)
+// {
+//     int m = text1.size();
+//     int n = text2.size();
+//     vector<int> prev(n + 1, 0);
+//     vector<int> cur(n + 1, 0);
+//     for (int i = 0; i <= n; i++)
+//     {
+//         prev[i] = 0;
+//     }
+//     for (int i = 1; i <= m; i++)
+//     {
+//         for (int j = 1; j <= n; j++)
+//         {
+//             if (text1[i - 1] == text2[j - 1])
+//             {
+//                 cur[j] = 1 + prev[j - 1];
+//             }
+//             else
+
+//                 cur[j] = max(prev[j], cur[j - 1]);
+//         }
+//         prev = cur;
+//     }
+//     return prev[n];
+// }
+
+// Print Longest Common Subsequence
+
+// int longestCommonSubsequence(string s1, string s2)
+// {
+//     int n = s1.size();
+//     int m = s2.size();
+
+//     vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+//     for (int i = 0; i <= n; i++)
+//     {
+//         dp[i][0] = 0;
+//     }
+//     for (int i = 0; i <= m; i++)
+//     {
+//         dp[0][i] = 0;
+//     }
+
+//     for (int ind1 = 1; ind1 <= n; ind1++)
+//     {
+//         for (int ind2 = 1; ind2 <= m; ind2++)
+//         {
+//             if (s1[ind1 - 1] == s2[ind2 - 1])
+//                 dp[ind1][ind2] = 1 + dp[ind1 - 1][ind2 - 1];
+//             else
+//                 dp[ind1][ind2] = 0 + max(dp[ind1 - 1][ind2], dp[ind1][ind2 - 1]);
+//         }
+//     }
+
+//     int len = dp[n][m];
+//     int i = n;
+//     int j = m;
+//     int index = len = 1;
+
+//     string str = "";
+//     for (int k = 1; k <= len; k++)
+//     {
+//         str += "$";
+//     }
+
+//     while (i > 0 && j > 0)
+//     {
+//         if (s1[i - 1] == s2[j - 1])
+//         {
+//             str[index] = s1[i - 1];
+//             index--;
+//             i--;
+//             j--;
+//         }
+//         else if (dp[i - 1] == dp[j - 1])
+//         {
+//             i--;
+//         }
+//         else
+//         {
+//             j--;
+//         }
+//     }
+
+//     // str have the required subsequencen
+// }
+
+// Given two strings str1 and str2, find the length of their longest common substring.A substring is a contiguous sequence of characters within a string.
+
+// int longestCommonSubstr(string s1, string s2)
+// {
+//     int n = s1.size();
+//     int m = s2.size();
+
+//     vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+//     for (int i = 0; i <= n; i++)
+//     {
+//         dp[i][0] = 0;
+//     }
+//     for (int i = 0; i <= m; i++)
+//     {
+//         dp[0][i] = 0;
+//     }
+//     int ans = INT_MIN;
+//     for (int ind1 = 1; ind1 <= n; ind1++)
+//     {
+//         for (int ind2 = 1; ind2 <= m; ind2++)
+//         {
+//             if (s1[ind1 - 1] == s2[ind2 - 1])
+//             {
+//                 dp[ind1][ind2] = 1 + dp[ind1 - 1][ind2 - 1];
+//                 ans = max(ans, dp[ind1][ind2]);
+//             }
+//             else
+//                 dp[ind1][ind2] = 0;
+//         }
+//     }
+//     return ans;
+// }
+
+// 516. Longest Palindromic Subsequence Given a string s, find the longest palindromic subsequence's length in s. A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
+
+int longestCommonSubsequence(string text1, string text2)
+{
+    int m = text1.size();
+    int n = text2.size();
+    vector<int> prev(n + 1, 0);
+    vector<int> cur(n + 1, 0);
+    for (int i = 0; i <= n; i++)
+    {
+        prev[i] = 0;
+    }
+    for (int i = 1; i <= m; i++)
+    {
+        for (int j = 1; j <= n; j++)
+        {
+            if (text1[i - 1] == text2[j - 1])
+            {
+                cur[j] = 1 + prev[j - 1];
+            }
+            else
+
+                cur[j] = max(prev[j], cur[j - 1]);
+        }
+        prev = cur;
+    }
+    return prev[n];
+}
+
+int longestPalindromeSubseq(string s)
+{
+    string revS = s;
+    reverse(revS.begin(), revS.end());
+    return longestCommonSubsequence(revS, s);
+}
+
+// 1312. Minimum Insertion Steps to Make a String Palindrome :Given a string s. In one step you can insert any character at any index of the string.Return the minimum number of steps to make s palindrome.A Palindrome String is one that reads the same backward as well as forward.
+
+int minInsertions(string s)
+{
+    int size = s.size();
+    return size - longestPalindromeSubseq(s);
+}
 
 int main()
 {
-
     return 0;
 }
